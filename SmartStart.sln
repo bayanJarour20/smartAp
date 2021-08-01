@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30709.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{923FCA84-38C6-4B14-9EC8-98D1F370F3EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart", "SmartStart\SmartStart.csproj", "{51B1AE1D-5944-4630-B638-9A3C9B6B726B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BoundedContext", "BoundedContext", "{28C3C037-984D-45EB-9752-2C0324412A9F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{928A0020-F759-497B-9697-3D8AD1C74AD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKernel", "{1EEC3142-AC40-488F-9BBD-4D6F046C51CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.Model", "SmartStart.Model\SmartStart.Model.csproj", "{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.SqlServer", "SmartStart.SqlServer\SmartStart.SqlServer.csproj", "{F63A47E1-3596-4562-987A-8B1A4DEA47F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.SharedKernel", "SmartStart.SharedKernel\SmartStart.SharedKernel.csproj", "{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51B1AE1D-5944-4630-B638-9A3C9B6B726B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B1AE1D-5944-4630-B638-9A3C9B6B726B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B1AE1D-5944-4630-B638-9A3C9B6B726B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B1AE1D-5944-4630-B638-9A3C9B6B726B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F63A47E1-3596-4562-987A-8B1A4DEA47F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F63A47E1-3596-4562-987A-8B1A4DEA47F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F63A47E1-3596-4562-987A-8B1A4DEA47F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F63A47E1-3596-4562-987A-8B1A4DEA47F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{51B1AE1D-5944-4630-B638-9A3C9B6B726B} = {923FCA84-38C6-4B14-9EC8-98D1F370F3EF}
+		{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB} = {928A0020-F759-497B-9697-3D8AD1C74AD4}
+		{F63A47E1-3596-4562-987A-8B1A4DEA47F9} = {928A0020-F759-497B-9697-3D8AD1C74AD4}
+		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891} = {1EEC3142-AC40-488F-9BBD-4D6F046C51CD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0083D5BF-0FC1-4508-92E4-72DFF2641218}
+	EndGlobalSection
+EndGlobal
