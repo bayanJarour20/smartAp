@@ -3,6 +3,7 @@ using Elkood.Web.Helper.Validations.Constants;
 using Elkood.Web.Helper.Validations.Enum;
 using Elkood.Web.Infrastructure.ModelEntity.Base;
 using Elkood.Web.Infrastructure.ModelEntity.Interface;
+using SmartStart.Model.Business;
 using SmartStart.Model.General;
 using SmartStart.SharedKernel.Enums;
 using System;
@@ -48,5 +49,6 @@ namespace SmartStart.Model.Main
         public ICollection<SubjectTag> SubjectTags { get; set; }
         public ICollection<Exam> Exams { get; set; }
         public ICollection<SubjectAppUser> SubjectAppUsers { get; set; }
+        public ICollection<PackageSubject> Packages{ get; set; }
     }
 }
