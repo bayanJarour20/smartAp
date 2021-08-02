@@ -17,7 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.Model", "SmartSt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.SqlServer", "SmartStart.SqlServer\SmartStart.SqlServer.csproj", "{F63A47E1-3596-4562-987A-8B1A4DEA47F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.SharedKernel", "SmartStart.SharedKernel\SmartStart.SharedKernel.csproj", "{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.SharedKernel", "SmartStart.SharedKernel\SmartStart.SharedKernel.csproj", "{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.Repository.General", "SmartStart.Repository.General\SmartStart.Repository.General.csproj", "{7BE7AD9D-346C-426D-836A-4349D6DFB2EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.DataTransferObject", "SmartStart.DataTransferObject\SmartStart.DataTransferObject.csproj", "{FEF045DE-8E80-44FF-B293-8304F681C58A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BE7AD9D-346C-426D-836A-4349D6DFB2EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BE7AD9D-346C-426D-836A-4349D6DFB2EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BE7AD9D-346C-426D-836A-4349D6DFB2EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BE7AD9D-346C-426D-836A-4349D6DFB2EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEF045DE-8E80-44FF-B293-8304F681C58A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEF045DE-8E80-44FF-B293-8304F681C58A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEF045DE-8E80-44FF-B293-8304F681C58A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEF045DE-8E80-44FF-B293-8304F681C58A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +62,8 @@ Global
 		{E3AD9DB5-AE2B-47F7-8A38-3790A85608CB} = {928A0020-F759-497B-9697-3D8AD1C74AD4}
 		{F63A47E1-3596-4562-987A-8B1A4DEA47F9} = {928A0020-F759-497B-9697-3D8AD1C74AD4}
 		{60A7AE88-7241-4FB2-8F7E-F1C3B2FB4891} = {1EEC3142-AC40-488F-9BBD-4D6F046C51CD}
+		{7BE7AD9D-346C-426D-836A-4349D6DFB2EF} = {28C3C037-984D-45EB-9752-2C0324412A9F}
+		{FEF045DE-8E80-44FF-B293-8304F681C58A} = {28C3C037-984D-45EB-9752-2C0324412A9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0083D5BF-0FC1-4508-92E4-72DFF2641218}
