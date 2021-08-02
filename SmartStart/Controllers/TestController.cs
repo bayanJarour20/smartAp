@@ -11,6 +11,7 @@ namespace SmartStart.Controllers
     [Route("api/[controller]/[action]")]
     public class TestController : ControllerBase
     {
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return new JsonResult("Ok");

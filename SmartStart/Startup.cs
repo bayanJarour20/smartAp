@@ -101,7 +101,7 @@ namespace SmartStart
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tarafoua", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Smart Start", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -142,7 +142,7 @@ namespace SmartStart
             app.UseSwaggerUI(c =>
             {
                 c.DocExpansion(DocExpansion.None);
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tarafoua v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Smart Start v1");
             });
 
             app.UseCors("CorsPolicy");
