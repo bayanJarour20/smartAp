@@ -1,12 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>af2f503a-f495-42a7-898b-a1c39d55faa9</UserSecretsId>
+		<SpaRoot>clientApp\</SpaRoot>
+		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Elkood.Web" Version="0.8.7.2" />
-  </ItemGroup>
+
+
+	<ItemGroup>
+		<Content Remove="$(ClientApp)" />
+		<None Include="$(ClientApp)" Exclude="$(ClientApp)node_modules\**" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Elkood.Web" Version="0.8.7.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+		<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+		<PackageReference Include="VueCliMiddleware" Version="5.0.0" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SmartStart.SharedKernel\SmartStart.SharedKernel.csproj" />

@@ -4,6 +4,7 @@ using Elkood.Web.Helper.Validations.Enum;
 using Elkood.Web.Infrastructure.ModelEntity.Base;
 using Elkood.Web.Infrastructure.ModelEntity.Interface;
 using SmartStart.Model.General;
+using SmartStart.SharedKernel.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +42,8 @@ namespace SmartStart.Model.Main
         public Faculty Faculty { get; set; }
 
 
+        [Required]
+        public bool IsFree { get; set; }
 
         public ICollection<SubjectTag> SubjectTags { get; set; }
         public ICollection<Exam> Exams { get; set; }
