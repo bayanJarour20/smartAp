@@ -26,8 +26,6 @@ namespace SmartStart.Model.Main
         [Required]
         public string Name { get; set; }
 
-        [ColumnDataType(DataBaseTypes.SMALLINT)]
-        public int Year { get; set; }
 
         [ColumnDataType(DataBaseTypes.TINYINT)]
         public SubjectTypes Type { get; set; }
