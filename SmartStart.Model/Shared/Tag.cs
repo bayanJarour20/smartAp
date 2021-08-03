@@ -31,5 +31,6 @@ namespace SmartStart.Model.Shared
         public ICollection<ExamTag> ExamTags { get; set; }
         public ICollection<QuestionTag> QuestionTags { get; set; }
         public ICollection<SubjectTag> SubjectTags { get; set; }
+
     }
 }

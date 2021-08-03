@@ -10,7 +10,7 @@ using SmartStart.SqlServer.DataBase;
 namespace SmartStart.SqlServer.Migrations
 {
     [DbContext(typeof(SmartStartDbContext))]
-    [Migration("20210803102720_add-SubjectFaculty")]
+    [Migration("20210803152443_add-SubjectFaculty")]
     partial class addSubjectFaculty
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

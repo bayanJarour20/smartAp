@@ -1,6 +1,7 @@
 ﻿using Elkood.Web.Helper.Validations.Attribute.DataBaseAnnotations;
 using Elkood.Web.Helper.Validations.Enum;
 using SmartStart.Model.General;
+using SmartStart.Model.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,5 +23,13 @@ namespace SmartStart.Model.Main
 
         [ColumnDataType(DataBaseTypes.SMALLINT)]
         public int Year { get; set; }
+
+        [Required]
+        public Guid SemesterId { get; set; }
+        public Tag Semester { get; set; }
+        
+        [Required]
+        public Guid SectionId { get; set; }
+        public Tag Section { get; set; }
     }
 }

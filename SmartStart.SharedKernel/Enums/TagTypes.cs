@@ -10,5 +10,6 @@ namespace SmartStart.SharedKernel.Enums
         Semester,
         Doctor,
         Team,
+        Section,
     }
 }
