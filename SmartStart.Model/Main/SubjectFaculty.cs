@@ -1,5 +1,6 @@
 ﻿using Elkood.Web.Helper.Validations.Attribute.DataBaseAnnotations;
 using Elkood.Web.Helper.Validations.Enum;
+using Elkood.Web.Infrastructure.ModelEntity.Base;
 using SmartStart.Model.General;
 using SmartStart.Model.Shared;
 using System;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace SmartStart.Model.Main
 {
-    public class SubjectFaculty
+    public class SubjectFaculty : BaseEntity<Guid>
     {
         [Required]
         public Guid SubjectId { get; set; }
         public Subject Subject { get; set; }
 
         [Required]
-        public Guid QuestionId { get; set; }
+        public Guid FacultyId { get; set; }
         public Faculty Faculty { get; set; }
 
         [ColumnDataType(DataBaseTypes.SMALLINT)]

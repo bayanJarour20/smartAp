@@ -37,16 +37,12 @@ namespace SmartStart.Model.Main
         public string Description { get; set; }
 
         [Required]
-        public Guid FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
-
-
-        [Required]
         public bool IsFree { get; set; }
 
         public ICollection<SubjectTag> SubjectTags { get; set; }
         public ICollection<Exam> Exams { get; set; }
         public ICollection<SubjectAppUser> SubjectAppUsers { get; set; }
         public ICollection<PackageSubject> Packages{ get; set; }
+        public ICollection<SubjectFaculty> Faculties{ get; set; }
     }
 }

@@ -8,6 +8,7 @@ using SmartStart.SharedKernel.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace SmartStart.Model.Shared
@@ -31,6 +32,12 @@ namespace SmartStart.Model.Shared
         public ICollection<ExamTag> ExamTags { get; set; }
         public ICollection<QuestionTag> QuestionTags { get; set; }
         public ICollection<SubjectTag> SubjectTags { get; set; }
+
+        [InverseProperty("Semester")]
+        public ICollection<SubjectFaculty> SubjectFacultysSemester { get; set; }
+
+        [InverseProperty("Section")]
+        public ICollection<SubjectFaculty> SubjectFacultysSection { get; set; }
 
     }
 }

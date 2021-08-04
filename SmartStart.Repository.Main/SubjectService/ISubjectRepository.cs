@@ -9,6 +9,6 @@ namespace SmartStart.Repository.Main.SubjectService
 {
     public interface ISubjectRepository
     {
-        //Task<OperationResult<IEnumerable<SubjectDto>>> GetAll(int? year, Guid? semester, Guid? facultyId);
+        Task<OperationResult<IEnumerable<SubjectDto>>> GetAll(int? year, Guid? semesterId, Guid? facultyId);
     }
 }

@@ -17,7 +17,7 @@ namespace SmartStart.Model.General
     {
         public Faculty()
         {
-            Subjects = new HashSet<Subject>();
+            Subjects = new HashSet<SubjectFaculty>();
             AppUsers = new HashSet<AppUser>();
         }
 
@@ -36,7 +36,7 @@ namespace SmartStart.Model.General
         public Guid UniversityId { get; set; }
         public University University { get; set; }
 
-        public ICollection<Subject> Subjects { get; set; }
         public ICollection<AppUser> AppUsers { get; set; }
+        public ICollection<SubjectFaculty> Subjects { get; set; }
     }
 }

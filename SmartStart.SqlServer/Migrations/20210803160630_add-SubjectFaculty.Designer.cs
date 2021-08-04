@@ -10,7 +10,7 @@ using SmartStart.SqlServer.DataBase;
 namespace SmartStart.SqlServer.Migrations
 {
     [DbContext(typeof(SmartStartDbContext))]
-    [Migration("20210803152443_add-SubjectFaculty")]
+    [Migration("20210803160630_add-SubjectFaculty")]
     partial class addSubjectFaculty
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -913,9 +913,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("FacultyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(255)");
 
@@ -935,8 +932,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DateCreated");
-
-                    b.HasIndex("FacultyId");
 
                     b.ToTable("Subjects");
                 });
@@ -983,6 +978,60 @@ namespace SmartStart.SqlServer.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("SubjectAppUsers");
+                });
+
+            modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateDeleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FacultyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SemesterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<short>("Year")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DateCreated");
+
+                    b.HasIndex("FacultyId");
+
+                    b.HasIndex("SectionId");
+
+                    b.HasIndex("SemesterId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("SubjectFaculty");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.SubjectTag", b =>
@@ -1712,17 +1761,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("SmartStart.Model.Main.Subject", b =>
-                {
-                    b.HasOne("SmartStart.Model.General.Faculty", "Faculty")
-                        .WithMany("Subjects")
-                        .HasForeignKey("FacultyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Faculty");
-                });
-
             modelBuilder.Entity("SmartStart.Model.Main.SubjectAppUser", b =>
                 {
                     b.HasOne("SmartStart.Model.Security.AppUser", "AppUser")
@@ -1738,6 +1776,41 @@ namespace SmartStart.SqlServer.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
+                {
+                    b.HasOne("SmartStart.Model.General.Faculty", "Faculty")
+                        .WithMany("Subjects")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartStart.Model.Shared.Tag", "Section")
+                        .WithMany("SubjectFacultysSection")
+                        .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartStart.Model.Shared.Tag", "Semester")
+                        .WithMany("SubjectFacultysSemester")
+                        .HasForeignKey("SemesterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartStart.Model.Main.Subject", "Subject")
+                        .WithMany("Faculties")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
+
+                    b.Navigation("Section");
+
+                    b.Navigation("Semester");
 
                     b.Navigation("Subject");
                 });
@@ -1871,6 +1944,8 @@ namespace SmartStart.SqlServer.Migrations
                 {
                     b.Navigation("Exams");
 
+                    b.Navigation("Faculties");
+
                     b.Navigation("Packages");
 
                     b.Navigation("SubjectAppUsers");
@@ -1910,6 +1985,10 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("ExamTags");
 
                     b.Navigation("QuestionTags");
+
+                    b.Navigation("SubjectFacultysSection");
+
+                    b.Navigation("SubjectFacultysSemester");
 
                     b.Navigation("SubjectTags");
                 });
