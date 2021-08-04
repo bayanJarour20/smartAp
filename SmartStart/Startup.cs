@@ -1,4 +1,5 @@
 using Elkood.Web.Domain.ConfigureServices;
+using Elkood.Web.Service.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,7 +54,8 @@ namespace SmartStart
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
             }).AddEntityFrameworkStores<SmartStartDbContext>().AddDefaultTokenProviders();
-
+            
+            services.AddElRepositoryInject("SmartStart.Repository.Main");
 
 
             services.AddSpaStaticFiles(configuration: options => { options.RootPath = "clientApp"; });

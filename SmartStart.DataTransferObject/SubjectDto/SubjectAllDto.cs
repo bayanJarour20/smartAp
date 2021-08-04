@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartStart.DataTransferObject.SubjectDto
 {
-    class SubjectAllDto : SubjectDetailsDto
+    public class SubjectAllDto : SubjectDetailsDto
     {
         public int ExamCount { get; set; }
         public int BankCount { get; set; }

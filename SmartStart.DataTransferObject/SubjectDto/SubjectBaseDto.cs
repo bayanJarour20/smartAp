@@ -8,7 +8,7 @@ namespace SmartStart.DataTransferObject.SubjectDto
 {
     public class SubjectBaseDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }
