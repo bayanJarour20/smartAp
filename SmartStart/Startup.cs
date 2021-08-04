@@ -1,4 +1,5 @@
 using Elkood.Web.Domain.ConfigureServices;
+using Elkood.Web.Infrastructure.Configuration;
 using Elkood.Web.Service.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SmartStart.Model.Security;
 using SmartStart.SqlServer.DataBase;
+using SmartStart.SqlServer.DataBase.Seed;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
@@ -58,6 +60,7 @@ namespace SmartStart
             services.AddElRepositoryInject("SmartStart.Repository.Main", 
                                            "SmartStart.Repository.General");
 
+            services.AddElRepositoryInject("SmartStart.Repository.General");
 
             services.AddSpaStaticFiles(configuration: options => { options.RootPath = "clientApp"; });
             services.AddCors(options =>
@@ -169,6 +172,13 @@ namespace SmartStart
                                    forceKill: true,
                            wsl: false // Set to true if you are using WSL on windows. For other operating systems it will be ignored
                                    );
+            });
+
+            app.UseSqlServerSeed<SmartStartDbContext>(async (context, provider) => {
+                await context.Database.MigrateAsync();
+                await context.Database.EnsureCreatedAsync();
+                //await SecuritySeed.InitializeAsync(provider);
+                await DataSeed.InitializeAsync(provider);
             });
 
         }
