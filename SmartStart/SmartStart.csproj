@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
     <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
   </ItemGroup>
 

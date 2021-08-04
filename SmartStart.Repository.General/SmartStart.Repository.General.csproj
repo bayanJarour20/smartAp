@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CityService\" />
-    <Folder Include="UniversityService\" />
+    <PackageReference Include="Elkood.Web" Version="0.8.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartStart.DataTransferObject\SmartStart.DataTransferObject.csproj" />
+    <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>
