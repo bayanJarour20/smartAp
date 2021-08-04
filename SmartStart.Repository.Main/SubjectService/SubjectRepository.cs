@@ -39,19 +39,19 @@ namespace SmartStart.Repository.Main.SubjectService
         private Func<OperationResult<IEnumerable<SubjectDto>>, Task<OperationResult<IEnumerable<SubjectDto>>>> _getAll(int? year, Guid? semesterId, Guid? facultyId)
             => async operation => {
 
-                var res = await Query.Where(s => s.Faculties.Any(f => f.Year == year) 
-                                            && s.Faculties.Any(f => f.SemesterId == semesterId)
-                                            && s.Faculties.Any(f => f.FacultyId == facultyId))
-                                    .Select(s => new SubjectDto 
-                                    {
-                                        Id = s.Id, 
-                                        Name = s.Name,
-                                        BankCount = s.Exams.Count(e => e.Type == TabTypes.Bank),
-                                        ExamCount = s.Exams.Count(e => e.Type == TabTypes.Exam),
-                                        InterviewCount = s.Exams.Count(e => e.Type == TabTypes.Interview),
-                                        MicroscopeCount = s.Exams.Count(e => e.Type == TabTypes.Microscope),
-                                        DateCreate = s.DateCreated
-                                    }).ToListAsync();
+                var res = await Query.Where(s => s.Faculties.Any(f => f.Year == year)
+                                              && s.Faculties.Any(f => f.SemesterId == semesterId)
+                                              && s.Faculties.Any(f => f.FacultyId == facultyId))
+                                     .Select(s => new SubjectDto
+                                     {
+                                         Id = s.Id,
+                                         Name = s.Name,
+                                         BankCount = s.Exams.Count(e => e.Type == TabTypes.Bank),
+                                         ExamCount = s.Exams.Count(e => e.Type == TabTypes.Exam),
+                                         InterviewCount = s.Exams.Count(e => e.Type == TabTypes.Interview),
+                                         MicroscopeCount = s.Exams.Count(e => e.Type == TabTypes.Microscope),
+                                         DateCreate = s.DateCreated
+                                     }).ToListAsync();
                 return operation.SetSuccess(res);
             };
         private Func<OperationResult<SubjectDto>, Task<OperationResult<SubjectDto>>> _setSubject(SubjectDetailsDto subjectDto)

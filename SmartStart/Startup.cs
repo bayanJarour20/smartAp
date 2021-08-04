@@ -55,7 +55,8 @@ namespace SmartStart
                 options.Password.RequireLowercase = false;
             }).AddEntityFrameworkStores<SmartStartDbContext>().AddDefaultTokenProviders();
             
-            services.AddElRepositoryInject("SmartStart.Repository.Main");
+            services.AddElRepositoryInject("SmartStart.Repository.Main", 
+                                           "SmartStart.Repository.General");
 
 
             services.AddSpaStaticFiles(configuration: options => { options.RootPath = "clientApp"; });
