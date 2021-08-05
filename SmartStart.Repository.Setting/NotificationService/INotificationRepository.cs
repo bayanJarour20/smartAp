@@ -13,7 +13,7 @@ namespace SmartStart.Repository.Setting.NotificationService
     {
         Task<OperationResult<IEnumerable<NotificationToMeDto>>> GetNotifications(Guid id);
         Task<OperationResult<IEnumerable<NotificationUsersDto>>> GetAll();
-        //Task<OperationResult<NotificationUsersDto>> Add(NotificationUsersDto notificationDto);
+        Task<OperationResult<NotificationUsersDto>> Add(NotificationUsersDto notificationDto);
         Task<OperationResult<bool>> Delete(Guid id);
     }
 }

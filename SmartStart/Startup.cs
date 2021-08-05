@@ -58,9 +58,11 @@ namespace SmartStart
             }).AddEntityFrameworkStores<SmartStartDbContext>().AddDefaultTokenProviders();
             
             services.AddElRepositoryInject("SmartStart.Repository.Main", 
-                                           "SmartStart.Repository.General");
+                                           "SmartStart.Repository.General",
+                                           "SmartStart.Repository.Setting");
 
-            services.AddElRepositoryInject("SmartStart.Repository.General");
+
+            services.AddHttpClient("fcm", c => c.BaseAddress = new Uri("https://fcm.googleapis.com"));
 
             services.AddSpaStaticFiles(configuration: options => { options.RootPath = "clientApp"; });
             services.AddCors(options =>
