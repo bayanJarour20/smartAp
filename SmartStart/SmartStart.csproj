@@ -1,9 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
+	<ClientApp>ClientApp\</ClientApp>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+	<ItemGroup>
+		<Content Remove="$(ClientApp)**" />
+		<None Include="$(ClientApp)**" Exclude="$(ClientApp)node_modules\**" />
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Elkood.Web" Version="0.8.7.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.8" />
@@ -26,38 +31,26 @@
     <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
   </ItemGroup>
 
-	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build">
-		<!-- Build Target:  Ensure Node.js is installed -->
+	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(ClientApp)node_modules') ">
+		<!-- Ensure Node.js is installed -->
 		<Exec Command="node --version" ContinueOnError="true">
 			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
 		</Exec>
-		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js isnt installed or is not on your path VAR." />
+		<Message Text="Running npm install..." />
+		<Exec WorkingDirectory="$(ClientApp)" Command="npm install" />
 	</Target>
-	<Target Name="DebugEnsureNpm" AfterTargets="DebugEnsureNodeEnv">
-		<!-- Build Target:  Ensure Node.js is installed -->
-		<Exec Command="npm --version" ContinueOnError="true">
-			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-		</Exec>
-	</Target>
-	<Target Name="EnsureNodeModulesInstalled" BeforeTargets="Build" Inputs="package.json" Outputs="packages-lock.json">
-		<!-- Build Target: Restore NPM packages using npm -->
-		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
 
-		<!--<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />-->
-	</Target>
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-		<!-- Build Target: Run webpack dist build -->
-		<Message Importance="high" Text="Running npm build..." />
-		<!--<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />-->
+		<Exec WorkingDirectory="$(ClientApp)" Command="npm install" />
+		<Exec WorkingDirectory="$(ClientApp)" Command="npm run build" />
 
-		<!-- Include the newly-built files in the publish output -->
 		<ItemGroup>
-			<DistFiles Include="$(SpaRoot)dist\**" />
+			<DistFiles Include="$(ClientApp)dist\**" />
 			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
 				<RelativePath>%(DistFiles.Identity)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
-
 </Project>

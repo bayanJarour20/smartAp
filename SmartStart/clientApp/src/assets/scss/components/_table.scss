@@ -1,0 +1,26 @@
+.pagination {
+    .page-item{
+        padding-top: 1px;
+    }
+  .prev-item,
+  .next-item {
+    padding-top: 0;
+    .page-link {
+      padding: 5px 0;
+    }
+  }
+  .page-item.active{
+    height: 32px;
+    margin-top: 1px;
+    .page-link {
+      padding: 10px;
+      width: 39px;
+      top: -4px;
+    }
+  }
+}
+.vgt-right-align,
+.vgt-left-align {
+  text-align: center!important;
+  vertical-align: middle!important;
+}
