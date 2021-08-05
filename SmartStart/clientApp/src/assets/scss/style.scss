@@ -1,0 +1,30 @@
+/*================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+@import "./components/table";
+@import "./components/colabse-table";
+@import "../fonts/style.css";
+
+*{
+  font-family:'Almarai Regular';
+}
+label {
+    white-space: nowrap;
+}
+.custom-switch .custom-control-label::before {
+    height: 1.6rem!important;
+}
+.swal2-styled.swal2-confirm {
+    margin-right: 30px;
+}
+.custom-switch .custom-control-label {
+    width: 42px;
+    margin-left: 5px;
+}
+.b-form-btn-label-control.form-control > .dropdown-menu {
+    z-index: 12
+}

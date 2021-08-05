@@ -27,6 +27,7 @@ namespace SmartStart.Model.Security
             Codes = new HashSet<Code>();
             UserCodes = new HashSet<Code>();
             Feedbacks = new HashSet<Feedback>();
+            Faculties = new HashSet<FacultyPOSUser>();
         }
 
         [ColumnDataType(DataBaseTypes.NVARCHAR, TypeConstants.MediumString)]
@@ -64,6 +65,9 @@ namespace SmartStart.Model.Security
         public DateTime? DateActivated { get; set; }
 
 
+        public string GenerationStamp { get; set; }
+
+
         public Guid? FacultyId { get; set; }
         public Faculty Faculty { get; set; }
 
@@ -75,6 +79,7 @@ namespace SmartStart.Model.Security
         public ICollection<Rate> Rates { get; set; }
         public ICollection<SubjectAppUser> SubjectAppUsers { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
+        public ICollection<FacultyPOSUser> Faculties { get; set; }
 
 
         [InverseProperty(nameof(Code.Seller))]

@@ -756,6 +756,50 @@ namespace SmartStart.SqlServer.Migrations
                     b.ToTable("ExamTags");
                 });
 
+            modelBuilder.Entity("SmartStart.Model.Main.FacultyPOSUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateDeleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DefaultSelected")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FacultyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("DateCreated");
+
+                    b.HasIndex("FacultyId");
+
+                    b.ToTable("FacultyPOSUser");
+                });
+
             modelBuilder.Entity("SmartStart.Model.Main.Question", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1134,6 +1178,9 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
+
+                    b.Property<string>("GenerationStamp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -1721,6 +1768,25 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("SmartStart.Model.Main.FacultyPOSUser", b =>
+                {
+                    b.HasOne("SmartStart.Model.Security.AppUser", "AppUser")
+                        .WithMany("Faculties")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartStart.Model.General.Faculty", "Faculty")
+                        .WithMany()
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Faculty");
+                });
+
             modelBuilder.Entity("SmartStart.Model.Main.QuestionDocument", b =>
                 {
                     b.HasOne("SmartStart.Model.Shared.Document", "Document")
@@ -1954,6 +2020,8 @@ namespace SmartStart.SqlServer.Migrations
             modelBuilder.Entity("SmartStart.Model.Security.AppUser", b =>
                 {
                     b.Navigation("Codes");
+
+                    b.Navigation("Faculties");
 
                     b.Navigation("Feedbacks");
 
