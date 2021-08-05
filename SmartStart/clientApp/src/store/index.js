@@ -10,6 +10,7 @@ import university from './global-store/university'
 import filter from './global-store/filter'
 import globalStore from './global-store'
 
+import faculties from "./content-management/faculties"
 import home from "./home" 
 
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     verticalMenu,
     home,
 
+    faculties,
     filter,
     globalStore,
     university,

@@ -7,6 +7,7 @@ import store from "@/store";
 // import { isUserLoggedIn } from "@/auth/utils";
 
 import docs from "./docs";
+import contentManagement from "./content-management";
 
 Vue.use(VueRouter);
 
@@ -37,7 +38,8 @@ const router = new VueRouter({
                 ],
             }),
         },
-        
+        ...contentManagement,
+
         // test components
         ...docs,
         {
