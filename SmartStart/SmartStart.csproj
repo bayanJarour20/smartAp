@@ -27,7 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Main\SmartStart.Repository.Main.csproj" />
+    <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
+    <ProjectReference Include="..\SmartStart.Repository.Setting\SmartStart.Repository.Setting.csproj" />
     <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
   </ItemGroup>
 

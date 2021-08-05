@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartStart.DataTransferObject\SmartStart.DataTransferObject.csproj" />
+    <ProjectReference Include="..\SmartStart.Model\SmartStart.Model.csproj" />
     <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
   </ItemGroup>
 
