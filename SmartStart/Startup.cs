@@ -58,7 +58,8 @@ namespace SmartStart
             }).AddEntityFrameworkStores<SmartStartDbContext>().AddDefaultTokenProviders();
             
             services.AddElRepositoryInject("SmartStart.Repository.Main", 
-                                           "SmartStart.Repository.General");
+                                           "SmartStart.Repository.General",
+                                           "SmartStart.REpository.Setting");
 
             services.AddElRepositoryInject("SmartStart.Repository.General");
 
