@@ -8,6 +8,7 @@ import {
     uniSun,
     uniPlus,
     uniHomeAlt,
+    uniTrashAlt,
     uniCalendarAlt,
     uniUser,
     uniDesktop,
@@ -29,7 +30,18 @@ import {
     uniBooks,
     uniFileAlt,
     uniEnvelopeAlt,
-    uniMoneyWithdrawal
+    uniMoneyWithdrawal,
+    uniSearch,
+    uniTimes,
+    uniFileBlank,
+    uniFolderOpen,
+    uniFolder,
+    uniAngleRight,
+    uniAngleLeft,
+    uniAngleUp,
+    uniEllipsisV,
+    uniSync,
+    uniAngleDown
 } from "vue-unicons/src/icons";
 
 Unicon.add([
@@ -46,8 +58,20 @@ Unicon.add([
     uniBell,
     uniCircle,
     uniHomeAlt,
+    uniFileBlank,
     uniCalendarAlt,
+    uniSearch,
     uniUser,
+    uniTrashAlt,
+    uniTimes,
+    uniFolderOpen,
+    uniFolder,
+    uniAngleRight,
+    uniAngleUp,
+    uniAngleLeft,
+    uniAngleDown,
+    uniEllipsisV,
+    uniSync,
     // end
     uniBuilding,
     uniBooks,
