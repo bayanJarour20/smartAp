@@ -18,7 +18,7 @@ namespace SmartStart.Controllers
     {
         public AdvertisementController(IAdvertisementRepository repository) : base(repository) { }
 
-        [HttpPost, ElAuthorize]
+        [HttpPost]
         public async Task<IActionResult> Upload([FromForm] UploadAdvertisementViewModel upload)
            => await repository.Upload(upload, upload.File).ToJsonResultAsync();
 
