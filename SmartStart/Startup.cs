@@ -59,7 +59,8 @@ namespace SmartStart
             
             services.AddElRepositoryInject("SmartStart.Repository.Main", 
                                            "SmartStart.Repository.General",
-                                           "SmartStart.Repository.Setting");
+                                           "SmartStart.Repository.Setting",
+                                           "SmartStart.Repository.Security");
 
 
             services.AddHttpClient("fcm", c => c.BaseAddress = new Uri("https://fcm.googleapis.com"));
@@ -76,6 +77,9 @@ namespace SmartStart
                 });
             });
             services.AddDataProtection();
+
+            services.AddStackExchangeRedisCache(options => options.Configuration = this.Configuration["Redis:ConnectionString"]);
+
 
             #region -   jwt   -
 
