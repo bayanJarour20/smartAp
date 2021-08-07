@@ -31,7 +31,7 @@
                                 message: 'يجب تحديد حقل الجامعة'
                             }
                         ]"
-                        :options="university"
+                        :options="universitiesList"
                         name="university"
                         v-model="facultyDto.universityId"
                         :clearable="true"
@@ -91,11 +91,12 @@ export default {
     computed: {
         ...mapState({
             facultyDto: state => state.faculties.facultyDto,
-            university: state => state.university.universities
+            universitiesList: state => state.globalStore.universitiesList
         })
     },
     created() {
         this.fetchUniversity();
+       
     },
     methods: {
         ...mapActions(["fetchUniversity", "actionFaculty", "deleteFaculty"]),

@@ -164,6 +164,7 @@ export default {
             });
         },
         fetchUniversity({ commit }) {
+            
             api.get("University/GetAll", ({ data }) => {
                 commit("Fetch_University", data);
             });
