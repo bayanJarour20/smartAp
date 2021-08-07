@@ -62,7 +62,7 @@ namespace SmartStart.Repository.General.CityService
                 await Context.AddAsync(cityModel);
                 await Context.SaveChangesAsync();
 
-                cityDto.Id = cityDto.Id;
+                cityDto.Id = cityModel.Id;
 
                 return operation.SetSuccess(cityDto);
 
