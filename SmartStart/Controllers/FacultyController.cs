@@ -29,7 +29,7 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> RemoveFaculty(Guid facultyId)
             => await repository.RemoveFaculty(facultyId).ToJsonResultAsync();
 
-        [HttpPut]
+        [HttpDelete]
         public async Task<IActionResult> RemoveFaculties(List<Guid> facultyIds)
             => await repository.RemoveFaculties(facultyIds).ToJsonResultAsync();
     }
