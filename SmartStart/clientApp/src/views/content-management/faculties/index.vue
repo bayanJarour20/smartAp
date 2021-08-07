@@ -3,12 +3,13 @@
         <EKTable
             :items="facultiesList"
             :columns="columns"
-            selectedLabel="name"
+            selectedLabel="id"
             @details="openEditFaculityDialog"
             @delete-selected="fireDeleteEvent"
         >
         </EKTable>
         <createFacultie ref="editFacultieDialog" title="تعديل كلية" isEdit />
+        
     </div>
 </template>
 <script>
@@ -31,8 +32,8 @@ export default {
             },
             {
                 label: "عدد السنوات",
-                field: "numberOfYear",
-                sortable: false
+                field: "numOfYears",
+               
             },
             {
                 label: "تفاصيل",
@@ -45,13 +46,14 @@ export default {
         this.getFacultiesDetails()
     },
     methods: {
-        ...mapActions(["getFacultiesDetails"]),
+        ...mapActions(["getFacultiesDetails","deleteFacultyList"]),
         openEditFaculityDialog(p) {
             this.$store.commit('Set_Facultie_Dto', p.row)
             this.$refs.editFacultieDialog.openDialog();
         },
         fireDeleteEvent(list) {
-            console.log(list)
+           
+          this.deleteFacultyList(list)
         }
     },
     beforeDestroy() {

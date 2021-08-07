@@ -5,7 +5,7 @@ export default {
         facultyDto: {
             id: '',
             name: '',
-            numberOfYear: 0,
+            numOfYears: 0,
             file: null,
             imagePath: '',
             universityId: 0
@@ -38,17 +38,34 @@ export default {
                     state.facultyDto, {
                         id: '',
                         name: '',
-                        numberOfYear: 0,
+                        numOfYears: 0,
                         file: null,
                         imagePath: '',
                         universityId: 0
                     }
-                )
+                ),
+                console.log(state.facultyDto)
+
             }
         },
         Delete_Faculty(state, id){ 
             state.faculties.splice(
                 state.faculties.findIndex(item => item.id == id), 1)
+        },
+        Delete_Faculty_List(state,payload){
+            let MapOfIds = new Map(); 
+            var idx; 
+            var tempList = []; 
+            for(idx = 0 ; idx < payload.length ; idx++) {
+                 MapOfIds.set(payload[idx] , 1);
+            }
+            for(idx = 0 ; idx < state.faculties.length ; idx++) {
+                if(MapOfIds.has(state.faculties[idx].id) === false) {
+                    tempList.push(state.faculties[idx]); 
+                }
+            }
+            state.faculties = tempList; 
+         
         }
     },
     actions: {
@@ -64,14 +81,23 @@ export default {
                 } else {
                     commit("Update_Faculty", data);
                 }
-            })
+            },
+            !payload.id ?{ success: 'تم إضافة الكلية  بنجاح', error: "فشل الإضافة الكلية "}:{success: 'تم التعديل في الكلية  بنجاح', error: "فشل التعديل في الكلية " })
         },
         deleteFaculty({commit}, id) {
-            api.delete("Faculty/RemoveFaculty?id=" + id, ({ data }) => {
+            
+            api.delete("Faculty/RemoveFaculty?facultyId=" + id, ({ data }) => {
                 if(data) {
                     commit("Delete_Faculty", id);
                 }
-            })
+            },{confirm: 'هل تريد فعلاً حذف الكلية', success: 'تم حذف الكلية بنجاح', error: "فشل حذف الكلية" })
+        },
+        deleteFacultyList({commit}, id) {
+            api.put("Faculty/RemoveFaculties",id,({ data }) => {
+                if(data) {
+                    commit("Delete_Faculty_List", id);
+                }
+            },{confirm: 'هل تريد فعلاً حذف الكليات المحددة', success: 'تم حذف الكليات المحددة بنجاح', error: "فشل حذف الكليات المحددة " })
         }
     }
 };
