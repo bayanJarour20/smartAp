@@ -59,9 +59,10 @@ namespace SmartStart
             
             services.AddElRepositoryInject("SmartStart.Repository.Main", 
                                            "SmartStart.Repository.General",
-                                           "SmartStart.REpository.Setting");
+                                           "SmartStart.Repository.Setting");
 
-            services.AddElRepositoryInject("SmartStart.Repository.General");
+
+            services.AddHttpClient("fcm", c => c.BaseAddress = new Uri("https://fcm.googleapis.com"));
 
             services.AddSpaStaticFiles(configuration: options => { options.RootPath = "clientApp"; });
             services.AddCors(options =>
@@ -175,12 +176,12 @@ namespace SmartStart
                                    );
             });
 
-            app.UseSqlServerSeed<SmartStartDbContext>(async (context, provider) => {
-                await context.Database.MigrateAsync();
-                await context.Database.EnsureCreatedAsync();
-                //await SecuritySeed.InitializeAsync(provider);
-                await DataSeed.InitializeAsync(provider);
-            });
+            //app.UseSqlServerSeed<SmartStartDbContext>(async (context, provider) => {
+            //    await context.Database.MigrateAsync();
+            //    await context.Database.EnsureCreatedAsync();
+            //    //await SecuritySeed.InitializeAsync(provider);
+            //    await DataSeed.InitializeAsync(provider);
+            //});
 
         }
     }

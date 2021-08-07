@@ -5,7 +5,7 @@ export default {
         totalTagsList: [],
         universitiesList: [],
         citiesList: [],
-        facList: [],
+
         cityDto: {
             id: 0,
             name: ""
@@ -20,7 +20,8 @@ export default {
             name: "",
             type: 0
         },
-        year: [
+
+        subjectYear: [
             { id: 1, name: "الأولى" },
             { id: 2, name: "الثانية" },
             { id: 3, name: "الثالثة" },
@@ -42,7 +43,8 @@ export default {
         },
         teams({ totalTagsList }) {
             return totalTagsList.filter(item => item.type == 3);
-        },  sections({ totalTagsList }) {
+        },
+        sections({ totalTagsList }) {
             return totalTagsList.filter(item => item.type == 4);
         },
         years() {
@@ -67,10 +69,7 @@ export default {
         Fetch_City(state, payload) {
             state.citiesList = payload;
         },
-        FaculitiesList(state, payload) {
-            state.facList = payload;
-        },
-
+        
         Create_Tag(state, payload) {
             state.totalTagsList.unshift(payload);
         },
@@ -158,24 +157,20 @@ export default {
                 commit("Get_Basic_Exams", data);
             });
         },
+
         fetchTotalTag({ commit }) {
             api.get("Tag/Fetch", ({ data }) => {
                 commit("Total_Tag_Fetch", data);
             });
         },
         fetchUniversity({ commit }) {
-            api.get("University/Fetch", ({ data }) => {
+            api.get("University/GetAll", ({ data }) => {
                 commit("Fetch_University", data);
             });
         },
         fetchCity({ commit }) {
-            api.get("City/Fetch", ({ data }) => {
+            api.get("City/GetAllCites", ({ data }) => {
                 commit("Fetch_City", data);
-            });
-        },
-        fetchFaculitiesList({ commit }) {
-            api.get("Faculty/GetAll", ({ data }) => {
-                commit("FaculitiesList", data);
             });
         },
 
@@ -259,7 +254,7 @@ export default {
                 );
             } else {
                 api.put(
-                    "University/Modify",
+                    "University/Update",
                     {
                         id: payload.id,
                         name: payload.name,
@@ -320,8 +315,7 @@ export default {
             );
         },
         deleteUniversity({ commit }, id) {
-            api.delete(
-                "University/Delete?id=" + id,
+            api.delete("University/Delete?id=" + id,
                 ({ data }) => {
                     if (data) {
                         commit("Delete_University", id);
@@ -331,6 +325,22 @@ export default {
                     confirm: "هل انت متأكد من حذف الجامعة",
                     success: "تم حذف الجامعة بنجاح",
                     error: "فشل الجامعة المدينة"
+                }
+            );
+        },
+        // TODO: complete this
+        deleteRangeUniversity(ctx, ids) {
+            api.delete("​University/DeleteRange", ids,
+                ({ data }) => {
+                    if (data) {
+                        console.log(data)
+                        // commit("Delete_University", id);
+                    }
+                },
+                {
+                    confirm: "هل انت متأكد من حذف الجامعات المحددة",
+                    success: "تم حذف الجامعات بنجاح",
+                    error: "فشل الجامعات المدينة"
                 }
             );
         },

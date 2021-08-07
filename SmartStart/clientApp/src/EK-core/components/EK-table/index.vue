@@ -1,5 +1,5 @@
 <template>
-    <div v-if="list.length > 0">
+    <div>
         <b-card no-body class="mb-1">
             <b-card-header class="py-0">
                 <b-button
@@ -12,6 +12,7 @@
                 >
                     <unicon name="plus" width="18"></unicon>
                 </b-button>
+                <h5 class="ml-auto mb-0" v-if="title">{{title}}</h5>
                 <b-button
                     size="sm"
                     variant="flat-secondary"
@@ -26,6 +27,7 @@
             </b-card-header>
             <b-card-body class="p-0">
                 <vue-good-table
+                    v-if="list.length > 0"
                     @on-selected-rows-change="selectionChanged"
                     :columns="columns"
                     :rows="activeItemsList"
@@ -68,16 +70,17 @@
                         </span>
                     </template>
                 </vue-good-table>
+                <div v-else class="text-center justify-content-center mt-2">
+                    <h4>لا يوجد بيانات متاحة</h4>
+                </div>
             </b-card-body>
             <b-card-footer class="p-1 border-top-0"></b-card-footer>
         </b-card>
-        <b-col cols="12" class="d-flex justify-content-center mb-3">
+        <b-col cols="12" v-if="list.length > 0" class="d-flex justify-content-center mb-3">
             <EKPagination :items="list" v-model="activeItemsList" />
         </b-col>
     </div>
-    <div v-else class="text-center justify-content-center mt-2">
-        <h4>لا يوجد بيانات متاحة</h4>
-    </div>
+    
 </template>
 <script>
 import { VueGoodTable } from "vue-good-table";
@@ -126,7 +129,8 @@ export default {
         isPlus: {
             type: Boolean,
             dafault: () => false
-        }
+        },
+        title: String
     },
     data: () => ({
         activeItemsList: [],
