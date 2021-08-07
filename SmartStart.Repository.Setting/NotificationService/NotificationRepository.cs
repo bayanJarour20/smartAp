@@ -1,9 +1,11 @@
 ﻿using Elkood.Web.Common.ContextResult.OperationContext;
 using Elkood.Web.Service.BoundedContext;
+using Elkood.Web.Service.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SmartStart.DataTransferObject.NotificationDto;
 using SmartStart.Model.Setting;
 using SmartStart.SharedKernel.Enums;
+using SmartStart.SharedKernel.ExtensionMethods;
 using SmartStart.SqlServer.DataBase;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace SmartStart.Repository.Setting.NotificationService
 {
+    [ElRepository]
     public class NotificationRepository : ElRepository<SmartStartDbContext, Guid, Notification>, INotificationRepository
     {
         private readonly IHttpClientFactory httpClient;
@@ -31,8 +34,8 @@ namespace SmartStart.Repository.Setting.NotificationService
         public async Task<OperationResult<IEnumerable<NotificationUsersDto>>> GetAll()
             => await RepositoryHandler(_getAll());
 
-        //public async Task<OperationResult<NotificationUsersDto>> Add(NotificationUsersDto notificationDto)
-        //    => await RepositoryHandler(_add(notificationDto));
+        public async Task<OperationResult<NotificationUsersDto>> Add(NotificationUsersDto notificationDto)
+            => await RepositoryHandler(_add(notificationDto));
 
         public async Task<OperationResult<bool>> Delete(Guid id)
             => await RepositoryHandler(_delete(id));
@@ -73,53 +76,53 @@ namespace SmartStart.Repository.Setting.NotificationService
                 return operation.SetSuccess(notifications);
             };
 
-        //private Func<OperationResult<NotificationUsersDto>, Task<OperationResult<NotificationUsersDto>>> _add(NotificationUsersDto notificationDto)
-        //    => async operation =>
-        //    {
+        private Func<OperationResult<NotificationUsersDto>, Task<OperationResult<NotificationUsersDto>>> _add(NotificationUsersDto notificationDto)
+            => async operation =>
+            {
 
-        //        using (var transaction = await Context.Database.BeginTransactionAsync())
-        //        {
+                using (var transaction = await Context.Database.BeginTransactionAsync())
+                {
 
-        //            try
-        //            {
-        //                var notification = new Notification()
-        //                {
-        //                    Title = notificationDto.Title,
-        //                    Body = notificationDto.Body,
-        //                    Date = notificationDto.Date.ToLocalTime(),
-        //                    Type = notificationDto.NotificationType,
-        //                    UserNotifications = notificationDto.UserIds?.Select(id => new UserNotification
-        //                    {
-        //                        AppUserId = id,
-        //                    }).ToList(),
-        //                };
+                    try
+                    {
+                        var notification = new Notification()
+                        {
+                            Title = notificationDto.Title,
+                            Body = notificationDto.Body,
+                            Date = notificationDto.Date.ToLocalTime(),
+                            Type = notificationDto.NotificationType,
+                            UserNotifications = notificationDto.UserIds?.Select(id => new UserNotification
+                            {
+                                AppUserId = id,
+                            }).ToList(),
+                        };
 
-        //                await Context.AddAsync(notification);
-        //                await Context.SaveChangesAsync();
-        //                notificationDto.Id = notification.Id;
+                        await Context.AddAsync(notification);
+                        await Context.SaveChangesAsync();
+                        notificationDto.Id = notification.Id;
 
 
-        //                var res = await SendNotification(notificationDto);
-        //                if (!res.IsSuccess)
-        //                {
-        //                    await transaction.RollbackAsync();
-        //                    if (res.HasException())
-        //                        return operation.SetException(res.Exception);
-        //                    return operation.SetFailed(res.Message);
-        //                }
+                        var res = await SendNotification(notificationDto);
+                        if (!res.IsSuccess)
+                        {
+                            await transaction.RollbackAsync();
+                            if (res.HasException())
+                                return operation.SetException(res.Exception);
+                            return operation.SetFailed(res.Message);
+                        }
 
-        //                await transaction.CommitAsync();
-        //                return operation.SetSuccess(notificationDto);
+                        await transaction.CommitAsync();
+                        return operation.SetSuccess(notificationDto);
 
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                await transaction.RollbackAsync();
-        //                return operation.SetException(e);
-        //            }
-        //        }
+                    }
+                    catch (Exception e)
+                    {
+                        await transaction.RollbackAsync();
+                        return operation.SetException(e);
+                    }
+                }
 
-        //    };
+            };
 
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _delete(Guid id)
             => async operation =>
