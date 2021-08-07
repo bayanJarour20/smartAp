@@ -33,7 +33,7 @@ export default {
             {
                 label: "عدد السنوات",
                 field: "numOfYears",
-               
+                type:  'number'
             },
             {
                 label: "تفاصيل",

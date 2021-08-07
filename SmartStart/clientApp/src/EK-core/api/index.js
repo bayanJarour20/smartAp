@@ -79,7 +79,8 @@ export default {
             success: "success",
             error: "error"
         },
-        body = {}
+        body = {},
+        header = {}
     ) => {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -101,7 +102,7 @@ export default {
             .then(result => {
                 if (result.value) {
                     axiosIns
-                        .delete(path, body)
+                        .delete(path, {header, data: body})
                         .then(data => {
                             if (data.status == 200) {
                                 toast.open({

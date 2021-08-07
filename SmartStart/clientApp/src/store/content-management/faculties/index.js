@@ -45,7 +45,6 @@ export default {
                     }
                 ),
                 console.log(state.facultyDto)
-
             }
         },
         Delete_Faculty(state, id){ 
@@ -92,12 +91,14 @@ export default {
                 }
             },{confirm: 'هل تريد فعلاً حذف الكلية', success: 'تم حذف الكلية بنجاح', error: "فشل حذف الكلية" })
         },
-        deleteFacultyList({commit}, id) {
-            api.put("Faculty/RemoveFaculties",id,({ data }) => {
+        deleteFacultyList({commit}, ids) {
+            console.log(ids)
+            api.delete("Faculty/RemoveFaculties",({ data }) => {
                 if(data) {
-                    commit("Delete_Faculty_List", id);
+                    commit("Delete_Faculty_List", ids);
                 }
-            },{confirm: 'هل تريد فعلاً حذف الكليات المحددة', success: 'تم حذف الكليات المحددة بنجاح', error: "فشل حذف الكليات المحددة " })
+            },{confirm: 'هل تريد فعلا حذف الكليات المحددة', success: 'تم حذف الكليات المحددة بنجاح', error: "فشل حذف الكليات المحددة " },
+            ids)
         }
     }
 };
