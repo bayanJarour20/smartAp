@@ -181,12 +181,13 @@ namespace SmartStart
                                    );
             });
 
-            //app.UseSqlServerSeed<SmartStartDbContext>(async (context, provider) => {
-            //    await context.Database.MigrateAsync();
-            //    await context.Database.EnsureCreatedAsync();
-            //    //await SecuritySeed.InitializeAsync(provider);
-            //    await DataSeed.InitializeAsync(provider);
-            //});
+            app.UseSqlServerSeed<SmartStartDbContext>(async (context, provider) =>
+            {
+                await context.Database.MigrateAsync();
+                await context.Database.EnsureCreatedAsync();
+                await SecuritySeedData.SeedAsync(provider);
+                //await DataSeed.InitializeAsync(provider);
+            });
 
         }
     }
