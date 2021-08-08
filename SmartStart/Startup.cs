@@ -60,7 +60,8 @@ namespace SmartStart
             services.AddElRepositoryInject("SmartStart.Repository.Main", 
                                            "SmartStart.Repository.General",
                                            "SmartStart.Repository.Setting",
-                                           "SmartStart.Repository.Security");
+                                           "SmartStart.Repository.Security",
+                                           "SmartStart.Repository.Shared");
 
 
             services.AddHttpClient("fcm", c => c.BaseAddress = new Uri("https://fcm.googleapis.com"));

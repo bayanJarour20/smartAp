@@ -34,6 +34,7 @@
     <ProjectReference Include="..\SmartStart.Repository.Security\SmartStart.Repository.Security.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Setting\SmartStart.Repository.Setting.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Setting\SmartStart.Repository.Setting.csproj" />
+    <ProjectReference Include="..\SmartStart.Repository.Shared\SmartStart.Repository.Shared.csproj" />
     <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
   </ItemGroup>
 
