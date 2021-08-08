@@ -288,7 +288,7 @@ export default {
                 );
             } else {
                 api.put(
-                    "City/Modify",
+                    "City/Update",
                     {
                         id: payload.id,
                         name: payload.name
@@ -303,7 +303,7 @@ export default {
                 );
             }
         },
-
+        
         deleteCity({ commit }, id) {
             api.delete(
                 "City/Delete?id=" + id,
