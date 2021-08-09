@@ -12,7 +12,6 @@
                 @search="search"
             >
                 <template #body>
-                    
                     <EKInputText
                         :rules="[
                             {
@@ -37,14 +36,13 @@
                         label='صورة الإعلان'
                         required
                         title="تحميل صورة"
-                        @input="advertisingDto.imageFile = $event"
+                        @input="advertisingDto.File = $event"
                         :value="advertisingDto.imagePath
                                     ? $store.getters['app/domainHost'] +
                                         '/' +
                                         advertisingDto.imagePath : ''
                                 "
-                    ></EKInputImage>
-                
+                    ></EKInputImage>                
                 </template>
                 <template #footer>
                     <div class="d-flex align-items-center px-1 py-1 border-top">
@@ -107,30 +105,19 @@ export default {
                 let datesArr = this.advertisingDtoDate.split("to");
                 if (
                     success &&
-                    (this.advertisingDto.imageFile || this.advertisingDto.imagePath) &&
-                    (((this.advertisingDto.videoFile || this.advertisingDto.videoPath) || this.advertisingDto.type == 0)) &&
+                    (this.advertisingDto.File || this.advertisingDto.imagePath) &&
                     datesArr.length == 2
                 ) {
                     this.advertisingDto.startDate = new Date(datesArr[0]);
                     this.advertisingDto.endDate = new Date(datesArr[1]);
                     var AdsFormData = new FormData();
                     if (this.advertisingDto.id == "") {
-                        AdsFormData.append("type", this.advertisingDto.type);
                         AdsFormData.append(
-                            "imageFile",
-                            this.advertisingDto.imageFile
+                            "File",
+                            this.advertisingDto.File
                         );
                         AdsFormData.append("title", this.advertisingDto.title);
-                        if(this.advertisingDto.type == 2) {
-                            AdsFormData.append(
-                                "videoFile",
-                                this.advertisingDto.videoFile
-                            );
-                            AdsFormData.append(
-                                "videoPath",
-                                this.advertisingDto.videoPath
-                            );
-                        }
+                      
                         AdsFormData.append(
                             "imagePath",
                             this.advertisingDto.imagePath
@@ -150,24 +137,11 @@ export default {
                     } else {
                         AdsFormData.append("id", this.advertisingDto.id);
                         AdsFormData.append(
-                            "type",
-                            this.advertisingDto.type
-                        );
-                        AdsFormData.append(
-                            "imageFile",
-                            this.advertisingDto.imageFile
+                            "File",
+                            this.advertisingDto.File
                         );
                         AdsFormData.append("title", this.advertisingDto.title);
-                        if(this.advertisingDto.type == 2) {
-                            AdsFormData.append(
-                                "videoFile",
-                                this.advertisingDto.videoFile
-                            );
-                            AdsFormData.append(
-                                "videoPath",
-                                this.advertisingDto.videoPath
-                            );
-                        }
+                      
                         AdsFormData.append(
                             "imagePath",
                             this.advertisingDto.imagePath
