@@ -27,8 +27,8 @@ namespace SmartStart.DataTransferObject.AccountDto
         public UserTypes Type { get; set; }
         public Guid? FacultyId { get; set; }
         public int SubscriptionCount { get; set; }
-        public SmartStartRoles Role { get; set; }
-        public List<Guid> FacultiesIds { get; set; }
+        public SmartStartRoles? Role { get; set; }
+        //public List<Guid> FacultiesIds { get; set; }
         public static explicit operator AppUserDto(AppUser user)
         {
             return new AppUserDto()
@@ -44,6 +44,7 @@ namespace SmartStart.DataTransferObject.AccountDto
                 DateActivated = user.DateActivated,
                 Gender = user.Gender,
                 DateCreated = user.DateCreated,
+                Role = SmartStartRoles.User,
                 SubscriptionDate = user.SubscriptionDate,
                 SubscriptionCount = user.UserCodes.Count,
                 Type = user.Type,
