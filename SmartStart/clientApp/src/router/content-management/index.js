@@ -83,4 +83,48 @@ export default [
             ]
         }),
     },
+     // --- subjects
+     {
+        path: "/subjects",
+        name: "subjects",
+        components: {
+            default: () => import("@/views/content-management/subjects/index.vue"),
+             'bread-actions' : () => import("@/views/content-management/subjects/components/create-subject.vue"),
+        },
+        meta: () => ({
+            pageTitle: "المواد",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "المواد",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/subjects/:id",
+        name: "subjects details",
+        components: {
+            default: () => import("@/views/content-management/subjects/pages/details.vue")
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "المواد",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "المواد",
+                    active: false,
+                    to:"/subjects"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
+    },
 ]

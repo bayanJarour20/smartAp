@@ -12,6 +12,8 @@ import globalStore from './global-store'
 import faculties from "./content-management/faculties"
 import advertising from './content-management/advertising'
 
+import subjects from './content-management/subjects'
+
 import feedbacks from "./content-management/contact"
 import home from "./home" 
 
@@ -28,6 +30,7 @@ export default new Vuex.Store({
     feedbacks,
     filter,
     globalStore,
+    subjects
   },
   strict: process.env.DEV,
 })
