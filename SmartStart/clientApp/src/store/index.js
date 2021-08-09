@@ -13,7 +13,9 @@ import faculties from "./content-management/faculties"
 import advertising from './content-management/advertising'
 
 import subjects from './content-management/subjects'
+import natification from "./content-management/notifications"
 
+import accounts from './accounts'
 import feedbacks from "./content-management/contact"
 import home from "./home" 
 
@@ -24,13 +26,15 @@ export default new Vuex.Store({
     app,
     appConfig,
     verticalMenu,
+    accounts,
     home,
     advertising,
     faculties,
     feedbacks,
     filter,
     globalStore,
-    subjects
+    subjects,
+    natification
   },
   strict: process.env.DEV,
 })

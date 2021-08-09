@@ -127,4 +127,23 @@ export default [
             ]
         }),
     },
+    // ---notifications
+    {
+        path: "/notifications",
+        name: "notifications",
+        components: {
+            default: () => import("@/views/content-management/notifications"),
+            'bread-actions' : () => import("@/views/content-management/notifications/components/create-notifications.vue"),
+        },
+        meta: () => ({
+            pageTitle: "الإشعارات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الإشعارات",
+                    active: true,
+                },
+            ]
+        }),
+    },
 ]
