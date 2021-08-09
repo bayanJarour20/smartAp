@@ -10,6 +10,7 @@ import filter from './global-store/filter'
 import globalStore from './global-store'
 
 import faculties from "./content-management/faculties"
+import advertising from './content-management/advertising'
 
 import home from "./home" 
 
@@ -21,7 +22,7 @@ export default new Vuex.Store({
     appConfig,
     verticalMenu,
     home,
-
+    advertising,
     faculties,
    
     filter,

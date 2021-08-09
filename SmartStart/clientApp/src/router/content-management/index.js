@@ -20,4 +20,23 @@ export default [
             ]
         }),
     },
+    {
+        path: "/advertising",
+        name: "advertising",
+        components: {
+            default: () => import("@/views/content-management/advertising"),
+            'bread-actions' : () => import("@/views/content-management/advertising/components/button-create-advertising.vue"),
+        },
+        meta: () => ({
+            pageTitle: "الإعلانات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الإعلانات",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    
 ]
