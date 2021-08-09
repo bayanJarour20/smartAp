@@ -143,11 +143,17 @@ namespace SmartStart.Repository.Setting.NotificationService
            => async operation =>
            {
 
-               var NotificationModels = Query.Where(e => ids.Contains(e.Id)).ToList();
+               var NotificationModels = await Query.Where(e => ids.Contains(e.Id)).Include(e => e.UserNotifications).ToListAsync();
 
-               Context.Notifications.RemoveRange(NotificationModels);
 
-               await Context.SaveChangesAsync();
+               foreach(Notification item in NotificationModels)
+               {
+                   await Context.SoftDeleteTraversalAsync((Expression<Func<Notification, bool>>)(noti => noti.Id == item.Id ), noti => noti.UserNotifications);
+                   //await Context.SaveChangesAsync();
+               }
+
+
+               //await Context.SaveChangesAsync();
 
                int rowEffected = await Context.SaveChangesDeletedAsync();
                return operation.SetSuccess(true, $"{nameof(rowEffected)}: {rowEffected}");
