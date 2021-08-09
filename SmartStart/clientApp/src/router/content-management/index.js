@@ -38,5 +38,49 @@ export default [
             ]
         }),
     },
-    
+    // ---contact
+    {
+        path: "/contact",
+        name: "contact",
+        components: {
+            default: () => import("@/views/content-management/contact"),
+            'bread-actions' : () => import("@/views/content-management/contact/components/create-contact.vue"),
+        },
+        meta: () => ({
+            pageTitle: "راسلنا",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الرسائل المستلمة",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/contact/:id",
+        name: "contact details",
+        components: {
+            default: () => import("@/views/content-management/contact/pages/details.vue")
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "راسلنا",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الرسائل المستلمة",
+                
+                    active: false,
+                    to:"/contact"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
+    },
 ]
