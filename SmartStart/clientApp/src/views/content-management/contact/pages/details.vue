@@ -83,12 +83,7 @@
                                     class="mr-1"
                                     type="submit"
                                     variant="primary"
-                                    v-if="new Date(
-                                            feedbackDto.replyDate
-                                        ).getTime() ==
-                                        new Date(
-                                            '0001-01-01T00:00:00'
-                                        ).getTime()"
+                                    v-if="feedbackDto.replyDate!=null"
                                     style="max-width:100px"
                                     >إرسال رد</b-button
                                 >

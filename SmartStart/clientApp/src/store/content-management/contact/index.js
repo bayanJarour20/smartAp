@@ -11,7 +11,7 @@ export default {
             appUserName: "",
             reply: "",
             replyDate: null,
-            sendDate: null
+            // sendDate: null
         },
         feedbackFilterDto: {
             body: "",
