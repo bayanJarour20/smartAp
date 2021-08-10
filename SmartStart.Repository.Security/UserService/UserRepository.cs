@@ -247,8 +247,10 @@ namespace SmartStart.Repository.Security.UserService
                 //var UserFaculties = AllQyery.Select(user => new UserFacultyDto
                 //{
                 //    Id = user.Id,
-                //    Faculties = user.Codes.Select(e => e.CodePackages.Select( e => e.Package.PackageSubjects).s
+                //    Faculties = user.SubjectAppUsers.Select(e => e.SubjectFacultyId).Distinct().ToList()
                 //}).ToList();
+
+
 
 
                 //Dictionary<Guid, List<Guid>> dic = new Dictionary<Guid, List<Guid>>();
@@ -275,8 +277,9 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                               //FacultiesIds = dic[user.Id]
-                           }).ToListAsync();
+                               FacultiesIds = user.SubjectAppUsers.Select(e => e.Subject.FacultyId).ToList()
+                           })
+                           .ToListAsync();
 
                 return operation.SetSuccess(list);
             };
