@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartStart.DataTransferObject\SmartStart.DataTransferObject.csproj" />
+    <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
+    <ProjectReference Include="..\SmartStart.Repository.Invoice.csproj\SmartStart.Repository.Invoice.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Main\SmartStart.Repository.Main.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Security\SmartStart.Repository.Security.csproj" />
