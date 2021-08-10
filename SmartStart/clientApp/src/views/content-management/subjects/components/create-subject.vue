@@ -23,55 +23,14 @@
                     label="شرح المادة"
                     placeholder="ادخل شرح المادة"
                     name="description"
-                />
+                /> 
                 <EKInputSelect
-                    v-model="subjectDto.facultyId"
-                    label="تابعة لكلية"
-                    placeholder="اختر تابعة لكلية"
-                    :rules="[
-                        {
-                            type: 'required',
-                            message: 'الكلية إجبارية'
-                        }
-                    ]"
-                    :options="faculties"
-                    name="select"
-                    :clearable="true"
-                />
-                <EKInputText
-                    v-model="subjectDto.year"
-                    :rules="[{ type: 'required', message: 'سنة المادة إجباري' }, { type: 'min_value:0', message: 'الحقل يجب ان يحوي قيمة موجبة' }]"
-                    label="سنة المادة"
-                    placeholder="ادخل سنة المادة"
-                    type="number"
-                    name="year"
-                />
-                <EKInputSelect
-                    v-model="subjectDto.semesterId"
-                    label="الفصل"
-                    placeholder="اختر الفصل"
-                    :rules="[{ type: 'required', message: 'الفصل إجباري' }]"
-                    :options="semester"
-                    name="semesterId"
-                    :clearable="true"
-                />
-                <EKInputSelect
-                    v-model="subjectDto.tagIds"
+                    v-model="subjectDto.doctors"
                     label="مدرسو المادة"
                     placeholder="اختر مدرسو المادة"
-                      :options="doctors"
+                    :options="doctors"
                     name="tagIds"
                     multiple
-                    :clearable="true"
-                />
-                <EKInputSelect
-                    label="تصنيف المادة"
-                    placeholder="اختر تصنيف المادة"
-                    :rules="[{ type: 'required', message: 'تصنيف المادة إجباري' }]"
-                    :options="tagsList"
-                    v-model="tags"
-                    multiple
-                    name="tags"
                     :clearable="true"
                 />
                 <b-form-group label="نوع المادة">
@@ -80,12 +39,18 @@
                         <b-form-radio v-model="subjectDto.type" value="1">عملي</b-form-radio>
                     </div>
                 </b-form-group>
+                <b-form-group label="سعر المادة">
+                    <div class="d-flex justify-content-between">
+                        <b-form-radio v-model="subjectDto.isFree" value="true">مجانية</b-form-radio>
+                        <b-form-radio v-model="subjectDto.isFree" value="false">ليست مجانية</b-form-radio>
+                    </div>
+                </b-form-group>
                 <EKInputImage
                     label="صورة المادة"
                     title="upload image"
-                    :value="subjectDto.imagePath"
-                    @input="subjectDto.file = $event"
-                ></EKInputImage>
+                    v-model="subjectDto.imagePath"
+                    
+                ></EKInputImage>        
             </template>
         </EKDialog>
     </b-form>
@@ -130,24 +95,17 @@ export default {
                 if (success) {
                     var subjectFormData = new FormData();
                     subjectFormData.append('name', this.subjectDto.name)
-                    subjectFormData.append('year', this.subjectDto.year)
-                    subjectFormData.append('file', this.subjectDto.file)
                     subjectFormData.append('type', this.subjectDto.type)
-                    subjectFormData.append('facultyId', this.subjectDto.facultyId)
-                    subjectFormData.append('semesterId', this.subjectDto.semesterId)
                     subjectFormData.append('description', this.subjectDto.description)
-                    
-                    if(this.subjectDto.imagePath) {
+                    subjectFormData.append('isFree', this.subjectDto.isFree)
+                   
+                        
                         subjectFormData.append('imagePath', this.subjectDto.imagePath)
-                    }
-                    this.subjectDto.tagIds.forEach((doctorId, index) => {
-                        subjectFormData.append('tagIds[' + index + ']', doctorId);
-                    })
                     
-                    this.tags.forEach((doctorId, index) => {
-                        subjectFormData.append('tagIds[' + (this.subjectDto.tagIds.length + index) + ']', doctorId);
+                     this.subjectDto.doctors.forEach((doctorId, index) => {
+                        subjectFormData.append('doctors[' + index + ']', doctorId);
                     })
-                    
+                                       
                     this.uploadSubject({
                         id: this.subjectDto.id,
                         formData: subjectFormData

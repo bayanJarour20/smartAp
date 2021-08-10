@@ -19,6 +19,7 @@ import accounts from './accounts'
 import feedbacks from "./content-management/contact"
 import home from "./home" 
 
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({

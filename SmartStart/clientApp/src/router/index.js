@@ -9,6 +9,8 @@ import store from "@/store";
 import docs from "./docs";
 import contentManagement from "./content-management";
 
+import accountsSetting from "./accounts-setting";
+
 Vue.use(VueRouter);
 
 export const All = "all";
@@ -39,7 +41,7 @@ const router = new VueRouter({
             }),
         },
         ...contentManagement,
-
+        ...accountsSetting,
         // test components
         {
             path: "/settings",
