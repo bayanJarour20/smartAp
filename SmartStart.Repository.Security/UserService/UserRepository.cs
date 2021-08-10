@@ -240,7 +240,7 @@ namespace SmartStart.Repository.Security.UserService
                 var AllQyery = _query<AppUser>().Include(f => f.UserCodes)
                                                  .Include(x => x.SubjectAppUsers)
                                                  .ThenInclude(x => x.Subject)
-                                                 .ThenInclude(x => x.Faculties)
+                                                 //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
 
