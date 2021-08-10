@@ -28,6 +28,9 @@ namespace SmartStart.DataTransferObject.AccountDto
         public Guid? FacultyId { get; set; }
         public int SubscriptionCount { get; set; }
         public SmartStartRoles? Role { get; set; }
+
+        public List<Guid> FacultiesIds { get; set; }
+
         //public List<Guid> FacultiesIds { get; set; }
         public static explicit operator AppUserDto(AppUser user)
         {
