@@ -1,4 +1,5 @@
-﻿using Elkood.Web.Helper.ExtensionMethods.Boolean;
+﻿using Elkood.Web.Common.ContextResult.OperationContext;
+using Elkood.Web.Helper.ExtensionMethods.Boolean;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,5 +29,7 @@ namespace SmartStart.SharedKernel.ExtensionMethods
         }
         public static string ToEmail(this string value, string inc = "SmartStart", string org = "me") => $"{value}@{inc}.{org}";
         public static string EnsureEmail(this string value) => new EmailAddressAttribute().IsValid(value).NestedIF(value, value.ToEmail());
+
+        public static bool HasException(this OperatinResultBase operatin) => operatin.OperationResultType == OperationResultTypes.Exception;
     }
 }

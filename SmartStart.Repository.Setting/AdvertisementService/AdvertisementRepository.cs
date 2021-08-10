@@ -1,6 +1,7 @@
 ﻿using Elkood.Web.Common.ContextResult.OperationContext;
 using Elkood.Web.Helper.ExtensionMethods.String;
 using Elkood.Web.Service.BoundedContext.General;
+using Elkood.Web.Service.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace SmartStart.Repository.Setting.AdvertisementService
 {
+    [ElRepository]
     public class AdvertisementRepository : ElRepositoryGeneral<SmartStartDbContext, Guid, Advertisement, AdvertisementDto>, IAdvertisementRepository
     {
         private readonly IWebHostEnvironment webHostEnvironment;
@@ -130,12 +132,12 @@ namespace SmartStart.Repository.Setting.AdvertisementService
             {
                 if(file != null)
                 {
-                    var documentsDirectory = Path.Combine("wwwroot", "Documents", "Advertiment_Images");
+                    var documentsDirectory = Path.Combine("wwwroot", "Documents", "Advertisement_Image");
                     if (!Directory.Exists(documentsDirectory))
                     {
                         Directory.CreateDirectory(documentsDirectory);
                     }
-                    path = Path.Combine("Documents", "Advertisement_Image", Guid.NewGuid().ToString(), "_", file.FileName);
+                    path = Path.Combine("Documents", "Advertisement_Image", Guid.NewGuid().ToString() + "_" + file.FileName);
                     string fileName = Path.Combine(webHostEnvironment.WebRootPath, path);
                     using (var fileStream = new FileStream(fileName, FileMode.Create))
                     {

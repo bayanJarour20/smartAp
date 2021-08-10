@@ -36,6 +36,7 @@ namespace SmartStart.Controllers
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         [DisableRequestSizeLimit]
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin)]
+        [HttpPost]
         public async Task<IActionResult> Upload([FromForm] UploadAdvertisementViewModel upload)
            => await repository.Upload(upload, upload.File).ToJsonResultAsync();
 
