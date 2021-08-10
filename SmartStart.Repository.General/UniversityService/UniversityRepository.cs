@@ -116,11 +116,11 @@ namespace SmartStart.Repository.General.UniversityService
 
                 ids.ToList().ForEach(id =>
                 {
-                     Context.SoftDelete<University>(id);
+                    Context.SoftDelete<University>(id);
                 });
 
 
-                await Context.SaveChangesAsync(); ;
+                await Context.SaveChangesAsync();
 
                 return operation.SetSuccess(true);
             };

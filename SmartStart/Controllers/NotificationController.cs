@@ -37,5 +37,9 @@ namespace SmartStart.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete([Required] Guid id) => await repository.Delete(id).IntoAsync(n => n).ToJsonResultAsync();
 
+        [HttpDelete]
+        public async Task<IActionResult> DeleteRange([Required] IEnumerable<Guid> ids) => await repository.DeleteRange(ids).IntoAsync(n => n).ToJsonResultAsync();
+
+
     }
 }
