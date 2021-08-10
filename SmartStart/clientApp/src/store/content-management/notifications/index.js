@@ -70,7 +70,8 @@ export default {
         newNotification({ commit }, payload) {
             api.post("Notification/Add", payload, ({ data }) => {
                 commit("Upload_Notification_Create", data);
-            });
+            },
+            { success: 'تم إضافة الإشعار بنجاح', error: "فشل إضافة الإشعار المحددة " });
         },
         getNotification({ commit }) {
             api.get("Notification/GetAll", ({ data }) => {
@@ -82,7 +83,7 @@ export default {
                 if(data) {
                     commit("delete_nafitication_List", ids);
                 }
-            },{confirm: 'هل تريد فعلا حذف الكليات المحددة', success: 'تم حذف الكليات المحددة بنجاح', error: "فشل حذف الكليات المحددة " },
+            },{confirm: 'هل تريد فعلا حذف الإشعارات المحددة', success: 'تم حذف الإشعارات المحددة بنجاح', error: "فشل حذف الإشعارات المحددة " },
             ids)
         },
         deleteNotification({ commit }, payload) {
@@ -90,7 +91,7 @@ export default {
                 if(data.isSuccess) {
                     commit("Delete_Notification", payload);
                 }
-            },{confirm: 'هل تريد فعلا حذف الكلية ', success: 'تم حذف الكلية  بنجاح', error: "فشل حذف الكلية  " });
+            },{confirm: 'هل تريد فعلا حذف الإشعار ', success: 'تم حذف الإشعار  بنجاح', error: "فشل حذف الإشعار  " });
         }
     }
 };

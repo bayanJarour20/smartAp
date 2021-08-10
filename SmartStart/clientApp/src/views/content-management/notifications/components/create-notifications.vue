@@ -5,10 +5,10 @@
             :title="!isEdit ? 'إرسال إشعار' : 'تفاصيل الإشعار'"
             :placeholder="!isEdit ? 'ابحث عن إشعار ما...' : ''"
             :btnText="!isEdit ? 'إرسال إشعار' : ''"
-            @ok="onSubmit"
+           
             @close="$store.commit('Reset_Notification_Dto')"
             :isEdit="isEdit"
-            @delete="deleteNotification(notificationDto.id)"
+            
             @search="search"
         >
             <template #body>
@@ -39,8 +39,14 @@
                     v-model="notificationFilterDto.cityId"
                     :clearable="true"
                 />
+                <label v-if=" filterdUserListForNotification!=0 ">إرسال إلى</label>
+                    <div v-if=" filterdUserListForNotification!=0 " class="d-flex align-items-center my-50">                      
+                        <b-checkbox  v-model="type"></b-checkbox>
+                        <label class="m-0" v-if="!notificationDto.notificationType">جميع الطلاب</label>
+                        <label class="m-0" v-if="notificationDto.notificationType">جميع نقاط البيع</label>
+                    </div>
                 <EKInputSelect
-                    v-if="!notificationDto.notificationType"
+                    v-if="!notificationDto.notificationType && !type && filterdUserListForNotification!=0"
                     label="الطالب"
                     placeholder="اختر الطالب"
                     name="selectstudent"
@@ -49,9 +55,8 @@
                     v-model="notificationDto.userIds"
                     :clearable="true"
                 />
-                
                 <EKInputSelect
-                    v-else
+                    v-if="notificationDto.notificationType && !type && filterdUserListForNotification!=0 "
                     label="نقطة البيع"
                     placeholder="اختر نقطة البيع"
                     name="selectsell"
@@ -60,7 +65,12 @@
                     v-model="notificationDto.userIds"
                     :clearable="true"
                 />
+                  <label class="text-danger" v-if="filterdUserListForNotification==0  && !notificationDto.notificationType " > لا يوجد ولا طالب للإرسال له</label>
+                  <label class="text-danger" v-if="filterdUserListForNotification==0  && notificationDto.notificationType " > لا يوجد ولا نقطة بيع للإرسال لها</label>
+                  <label class="text-danger" v-if="notificationDto.userIds.length==0 && !notificationDto.notificationType && filterdUserListForNotification!=0  && !type"> الرجاء اختيار طلاب محددين</label>
+                  <label class="text-danger" v-if="notificationDto.userIds.length==0 && notificationDto.notificationType && filterdUserListForNotification!=0 && !type"> الرجاء اختيار نقطة بيع محددة</label>
                 <hr>
+               
                 <EKInputText
                     :rules="[{ type: 'required', message: ' العنوان مطلوب' }]"
                     label="عنوان الإشعار"
@@ -76,6 +86,20 @@
                     name="body"
                 />
             </template>
+            <template #footer>
+            <slot name="footer">
+                <div class="d-flex align-items-center px-1 py-1 border-top">
+                    <b-button variant="outline-danger" class="mr-auto" v-if="isEdit" @click="deleteNotification(notificationDto.id)">حذف</b-button>
+                    <b-button
+                        variant="outline-secondary"
+                        class=" "
+                        @click="close()"
+                        >إلغاء</b-button
+                    >
+                    <b-button variant="primary" class="ml-auto" v-if="!isEdit" @click="onSubmit">حفظ</b-button>
+                </div>
+            </slot>
+        </template>
         </EKDialog>
     </ValidationObserver>
 </template>
@@ -100,7 +124,8 @@ export default {
     },
     data() {
         return {
-            currentState: false
+            currentState: false,
+            type:false
         };
     },
     computed: {
@@ -123,7 +148,7 @@ export default {
         ...mapActions(["deleteNotification", "newNotification", "getFacultiesDetails", "fetchCity", "fetchTotalTag", "getUsers"]),
         onSubmit() {
             this.$refs.observer.validate().then(success => {
-                if (success) {
+                if (success && this.filterdUserListForNotification!=0 && this.notificationDto.userIds.length!=0) {
                     this.newNotification({
                         title: this.notificationDto.title,
                         body: this.notificationDto.body,
@@ -136,6 +161,9 @@ export default {
         },
         open() {
             this.$refs.notificationDialog.open()
+        },
+        close() {
+            this.$refs.notificationDialog.close()
         },
         search(query) {
             this.$store.commit('Set_Search_Dto', {
