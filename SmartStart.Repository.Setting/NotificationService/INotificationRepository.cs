@@ -15,5 +15,7 @@ namespace SmartStart.Repository.Setting.NotificationService
         Task<OperationResult<IEnumerable<NotificationUsersDto>>> GetAll();
         Task<OperationResult<NotificationUsersDto>> Add(NotificationUsersDto notificationDto);
         Task<OperationResult<bool>> Delete(Guid id);
+
+        Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids);
     }
 }
