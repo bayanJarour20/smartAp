@@ -1,4 +1,5 @@
-﻿using SmartStart.Model.Security;
+﻿using SmartStart.DataTransferObject.FacultyDto;
+using SmartStart.Model.Security;
 using SmartStart.SharedKernel.Enums;
 using SmartStart.SharedKernel.Security;
 using System;
@@ -25,11 +26,14 @@ namespace SmartStart.DataTransferObject.AccountDto
         public DateTime? SubscriptionDate { get; set; }
         public bool Gender { get; set; }
         public UserTypes Type { get; set; }
-        public Guid? FacultyId { get; set; }
         public int SubscriptionCount { get; set; }
         public SmartStartRoles? Role { get; set; }
 
         public List<Guid> FacultiesIds { get; set; }
+
+
+        public List<FacultySelectDto> Faculties { get; set; }
+
 
         //public List<Guid> FacultiesIds { get; set; }
         public static explicit operator AppUserDto(AppUser user)
@@ -50,8 +54,7 @@ namespace SmartStart.DataTransferObject.AccountDto
                 Role = SmartStartRoles.User,
                 SubscriptionDate = user.SubscriptionDate,
                 SubscriptionCount = user.UserCodes.Count,
-                Type = user.Type,
-                FacultyId = user.FacultyId
+                Type = user.Type
             };
         }
     }
