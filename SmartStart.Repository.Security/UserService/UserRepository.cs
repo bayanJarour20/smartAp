@@ -243,22 +243,20 @@ namespace SmartStart.Repository.Security.UserService
                                                  //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
-
-                //var UserFaculties = AllQyery.Select(user => new UserFacultyDto
-                //{
-                //    Id = user.Id,
-                //    Faculties = user.SubjectAppUsers.Select(e => e.SubjectFacultyId).Distinct().ToList()
-                //}).ToList();
-
-
+                var UserFaculties = AllQyery.Select(user => new UserFacultyDto
+                {
+                    Id = user.Id,
+                    Faculties = user.SubjectAppUsers.Select(e => e.SubjectFacultyId).ToList()
+                })
+                .ToList();
 
 
-                //Dictionary<Guid, List<Guid>> dic = new Dictionary<Guid, List<Guid>>();
+                Dictionary<Guid, List<Guid>> dic = new Dictionary<Guid, List<Guid>>();
 
-                //for (int i = 0; i < UserFaculties.Count(); i++)
-                //{
-                //    dic[UserFaculties[i].Id] = UserFaculties[i].Faculties.Distinct().ToList();
-                //}
+                for (int i = 0; i < UserFaculties.Count(); i++)
+                {
+                    dic[UserFaculties[i].Id] = UserFaculties[i].Faculties.Distinct().ToList();
+                }
 
                 var list = await AllQyery.OrderByDescending(w => w.DateCreated)
                            .Select(user => new AppUserDto
@@ -277,7 +275,7 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                               FacultiesIds = user.SubjectAppUsers.Select(e => e.Subject.FacultyId).ToList()
+                               FacultiesIds = dic[user.Id]
                            })
                            .ToListAsync();
 
