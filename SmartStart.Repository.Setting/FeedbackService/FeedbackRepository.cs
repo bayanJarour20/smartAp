@@ -24,12 +24,14 @@ namespace SmartStart.Repository.Setting.FeedbackService
         public async Task<OperationResult<IEnumerable<FeedbackDetailsDto>>> GetAll()
             => await RepositoryHandler(_getAll());
 
-        
-
         public async Task<OperationResult<FeedbackDetailsDto>> Details(Guid id)
             => await RepositoryHandler(_details(id));
 
-        
+        public async Task<OperationResult<bool>> MultiDelete(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_multiDelete(ids));
+
+
+
         private Func<OperationResult<IEnumerable<FeedbackDetailsDto>>, Task<OperationResult<IEnumerable<FeedbackDetailsDto>>>> _getAll()
             => async operation => operation.SetSuccess(await Query.Select(Store.Query.SelectorDetails).ToListAsync());
 
@@ -37,6 +39,15 @@ namespace SmartStart.Repository.Setting.FeedbackService
             => async operation => 
             (await Query.Where(Store.Filter.FK(id)).Select(Store.Query.SelectorDetails).FirstOrDefaultAsync()).ToOperationResult();
 
-
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDelete(IEnumerable<Guid> ids)
+            => async operation =>
+            {
+                var Exams = await Query.Where(f => ids.Contains(f.Id)).ToListAsync();
+                if (Exams == null)
+                    return (OperationResultTypes.NotExist, $"{ids} not exists.");
+                Exams.ForEach(e => Context.SoftDelete(e));
+                await Context.SaveChangesAsync();
+                return operation.SetSuccess(true);
+            };
     }
 }

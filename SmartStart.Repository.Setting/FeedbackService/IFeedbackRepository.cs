@@ -14,5 +14,6 @@ namespace SmartStart.Repository.Setting.FeedbackService
     {
         Task<OperationResult<IEnumerable<FeedbackDetailsDto>>> GetAll();
         Task<OperationResult<FeedbackDetailsDto>> Details(Guid id);
+        Task<OperationResult<bool>> MultiDelete(IEnumerable<Guid> ids);
     }
 }
