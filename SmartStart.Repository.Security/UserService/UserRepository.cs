@@ -246,7 +246,7 @@ namespace SmartStart.Repository.Security.UserService
                 var UserFaculties = AllQyery.Select(user => new UserFacultyDto
                 {
                     Id = user.Id,
-                    Faculties = user.SubjectAppUsers.Select(e => e.SubjectFacultyId).ToList()
+                    Faculties = user.SubjectFacultyAppUsers.Select(e => e.SubjectFacultyId).ToList()
                 })
                 .ToList();
 
