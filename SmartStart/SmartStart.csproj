@@ -10,7 +10,7 @@
 		<None Include="$(ClientApp)**" Exclude="$(ClientApp)node_modules\**" />
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Elkood.Web" Version="0.8.7.2" />
+    <PackageReference Include="Elkood.Web" Version="0.8.7.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
@@ -31,6 +31,7 @@
     <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Main\SmartStart.Repository.Main.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.General\SmartStart.Repository.General.csproj" />
+    <ProjectReference Include="..\SmartStart.Repository.PointOfSale\SmartStart.Repository.PointOfSale.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Security\SmartStart.Repository.Security.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Setting\SmartStart.Repository.Setting.csproj" />
     <ProjectReference Include="..\SmartStart.Repository.Setting\SmartStart.Repository.Setting.csproj" />

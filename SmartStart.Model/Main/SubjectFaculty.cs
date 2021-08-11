@@ -14,6 +14,10 @@ namespace SmartStart.Model.Main
 {
     public class SubjectFaculty : BaseEntity<Guid>
     {
+        public SubjectFaculty()
+        {
+            SubjectFacultyAppUsers = new HashSet<SubjectFacultyAppUser>();
+        }
         [Required]
         public Guid SubjectId { get; set; }
         public Subject Subject { get; set; }
@@ -32,5 +36,7 @@ namespace SmartStart.Model.Main
         [Required]
         public Guid SectionId { get; set; }
         public Tag Section { get; set; }
+
+        public ICollection<SubjectFacultyAppUser>  SubjectFacultyAppUsers { get; set; }
     }
 }

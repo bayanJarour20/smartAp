@@ -31,12 +31,14 @@ namespace SmartStart.Repository.Main.SubjectService
 
         public async Task<OperationResult<IEnumerable<SubjectDto>>> GetAll(int? year, Guid? semesterId, Guid? facultyId)
             => await RepositoryHandler(_getAll(year, semesterId, facultyId));
-        public async Task<OperationResult<SubjectDetailsDto>> SetSubject(SubjectDetailsDto subjectDto, IFormFile image)
+        public async Task<OperationResult<SubjectAllDto>> SetSubject(SubjectDetailsDto subjectDto, IFormFile image)
             => await RepositoryHandler(_setSubject(subjectDto, image));
         public async Task<OperationResult<SubjectAllDto>> SubjectDetails(Guid subjectId)
             => await RepositoryHandler(_subjectDetails(subjectId));
         public async Task<OperationResult<bool>> RemoveSubject(Guid subjectId)
             => await RepositoryHandler(_removeSubject(subjectId));
+        public async Task<OperationResult<bool>> RemoveSubjects(List<Guid> subjectIds)
+            => await RepositoryHandler(_removeSubjects(subjectIds));
 
 
         private Func<OperationResult<IEnumerable<SubjectDto>>, Task<OperationResult<IEnumerable<SubjectDto>>>> _getAll(int? year, Guid? semesterId, Guid? facultyId)
@@ -57,7 +59,7 @@ namespace SmartStart.Repository.Main.SubjectService
                                      }).ToListAsync();
                 return operation.SetSuccess(res);
             };
-        private Func<OperationResult<SubjectDetailsDto>, Task<OperationResult<SubjectDetailsDto>>> _setSubject(SubjectDetailsDto subjectDto, IFormFile image)
+        private Func<OperationResult<SubjectAllDto>, Task<OperationResult<SubjectAllDto>>> _setSubject(SubjectDetailsDto subjectDto, IFormFile image)
             => async operation => {
                 Subject subject; 
                 if(subjectDto.Id == Guid.Empty)
@@ -77,14 +79,41 @@ namespace SmartStart.Repository.Main.SubjectService
                         };
                         await Context.Subjects.AddAsync(subject);
                         subjectDto.Id = subject.Id;
+                        if (subjectDto.Doctors != null)
+                        {
+                            List<SubjectTag> temp = new List<SubjectTag>();
+                            foreach (var doctor in subjectDto.Doctors)
+                            {
+                                temp.Add(new SubjectTag
+                                {
+                                    SubjectId = subject.Id,
+                                    TagId = doctor
+                                });
+                            }
+                            await Context.SubjectTags.AddRangeAsync(temp);
+                        }
                         await Context.SaveChangesAsync();
-                        return operation.SetSuccess(subjectDto);
+                        return operation.SetSuccess(new SubjectAllDto
+                        {
+                            Id = subjectDto.Id,
+                            DateCreate = subject.DateCreated,
+                            BankCount = 0,
+                            ExamCount = 0,
+                            InterviewCount = 0, 
+                            MicroscopeCount = 0, 
+                            ImagePath = subject.ImagePath,
+                            IsFree = subject.IsFree,
+                            Name = subject.Name,
+                            Type = subject.Type,
+                            Description = subject.Description,
+                            Doctors = subjectDto.Doctors, 
+                        });
                     }
                     return operation.SetFailed("Failed upload, Message: " + result.FullExceptionMessage);
                 }
                 subject = await TrackingQuery.Include(s => s.SubjectTags)
-                                                .ThenInclude(t => t.Tag)
-                                                .Where(s => s.Id == subjectDto.Id).SingleOrDefaultAsync();
+                                             .ThenInclude(t => t.Tag)
+                                             .Where(s => s.Id == subjectDto.Id).SingleOrDefaultAsync();
                 if (subject is not null)
                 {
                     if (subject.ImagePath != subjectDto.ImagePath || image != null)
@@ -102,9 +131,11 @@ namespace SmartStart.Repository.Main.SubjectService
                         subject.Type = subjectDto.Type;
                         Context.Subjects.Update(subject);
                         await Context.SaveChangesAsync();
-                        return operation.SetSuccess(subjectDto);
                     }
-                    return operation.SetFailed("Failed upload, Message: " + result.FullExceptionMessage);
+                    else
+                    {
+                        return operation.SetFailed("Failed upload, Message: " + result.FullExceptionMessage);
+                    }
                 }
                 else 
                 {
@@ -129,7 +160,21 @@ namespace SmartStart.Repository.Main.SubjectService
                     await Context.SubjectTags.AddRangeAsync(temp);
                 }
                 await Context.SaveChangesAsync(); 
-                return operation.SetSuccess(subjectDto); 
+                return operation.SetSuccess(new SubjectAllDto
+                {
+                    Id = subject.Id,
+                    BankCount = subject.Exams.Count(e => e.Type == TabTypes.Bank),
+                    ExamCount = subject.Exams.Count(e => e.Type == TabTypes.Exam),
+                    InterviewCount = subject.Exams.Count(e => e.Type == TabTypes.Interview),
+                    MicroscopeCount = subject.Exams.Count(e => e.Type == TabTypes.Microscope),
+                    DateCreate = subject.DateCreated,
+                    Description = subject.Description,
+                    Doctors = subjectDto.Doctors,
+                    IsFree = subject.IsFree,
+                    ImagePath = subject.ImagePath,
+                    Name = subject.Name,
+                    Type = subject.Type
+                });
             };
         private Func<OperationResult<SubjectAllDto>, Task<OperationResult<SubjectAllDto>>> _subjectDetails(Guid subjectId)
             => async operation => {
@@ -177,7 +222,21 @@ namespace SmartStart.Repository.Main.SubjectService
                 await Context.SaveChangesAsync();
                 return operation.SetSuccess(true);
             };
-
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSubjects(List<Guid> subjectIds)
+            => async operation => {
+                var subjects = await TrackingQuery.Where(s => subjectIds.Contains(s.Id)).ToListAsync();
+                if (subjects == null)
+                {
+                    return operation.SetSuccess(false);
+                }
+                foreach (var faculty in subjects)
+                {
+                    faculty.DateDeleted = DateTime.Now;
+                }
+                Context.UpdateRange(subjects);
+                await Context.SaveChangesAsync();
+                return operation.SetSuccess(true);
+            };
 
 
         #region Helper Functions

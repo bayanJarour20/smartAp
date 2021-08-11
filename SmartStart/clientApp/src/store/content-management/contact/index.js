@@ -8,10 +8,10 @@ export default {
             title: "",
             body: "",
             appUserId: "",
-            appUserName: "",
+            appHserName: "",
             reply: "",
             replyDate: null,
-            sendDate: null
+            // sendDate: null
         },
         feedbackFilterDto: {
             body: "",
@@ -40,7 +40,7 @@ export default {
     },
     actions: {
         getFeedbackDetails({ commit }) {
-            api.get("Feedback/Fetch", ({ data }) => {
+            api.get("Feedback/GetAll", ({ data }) => {
                 commit("Get_Feedbacks_Details", data);
             });
         },
@@ -50,18 +50,18 @@ export default {
             })
         },
         actionFeedback({commit}, payload) {
-            api.put('Feedback/Modify', payload, ({data}) => {
+            api.post('Feedback/Update', payload, ({data}) => {
                 if(!payload.id) {
                     commit('Set_Feedback_Dto', data)
                 }
-            })
+            },{success: "تم تعديل الرسالة بنجاح", error: "فشل تعديل الرسالة"})
         },
         deleteFeedback(ctx, id) {
             api.delete("Feedback/Delete?id=" + id, ({ data }) => {
                 if(data) {
                     router.push('/contact')
                 }
-            }, {success: "تم حذف الرسالة بنجاح", error: "فشل حذف الرسالة"});
+            }, {confirm:"هل أنت متأكد  من حذف هذه الرسالة",success: "تم حذف الرسالة بنجاح", error: "فشل حذف الرسالة"});
         },
     }
 };
