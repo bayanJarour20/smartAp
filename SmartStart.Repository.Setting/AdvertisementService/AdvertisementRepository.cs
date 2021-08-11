@@ -70,7 +70,8 @@ namespace SmartStart.Repository.Setting.AdvertisementService
                 }
                 if(advertisement is not null)
                 {
-                    TryDeleteFile(advertisement.ImagePath);
+                    if(advertisement.ImagePath != dto.ImagePath || file != null)
+                        TryDeleteFile(advertisement.ImagePath);
                 }
                 var newFile = TryUploadFile(file, out string newPath);
                 if (newFile.IsSuccess)
