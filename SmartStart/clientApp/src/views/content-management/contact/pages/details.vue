@@ -7,10 +7,10 @@
                         <b-row>
                             <b-col cols="12" md="4">
                                 <EKInputText
-                                    v-model="feedbackDto.appUserName"
+                                    v-model="feedbackDto.appHserName"
                                     label="اسم الطالب "
                                     readonly
-                                    name="appUserName"
+                                    name="appHserName"
                                 />
                             </b-col>
                             <b-col cols="12" md="4">
@@ -81,6 +81,7 @@
                         <b-col>
                             <div class="d-flex">
                                 <b-button
+
                                     class="mr-1"
                                     type="submit"
                                     variant="primary"
