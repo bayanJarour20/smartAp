@@ -12,6 +12,9 @@ import globalStore from './global-store'
 import faculties from "./content-management/faculties"
 import advertising from './content-management/advertising'
 
+import codes from "./activiation-codes/codes.js"
+import packages from "./activiation-codes/packages.js"
+import invoices from "./invoices"
 import subjects from './content-management/subjects'
 import natification from "./content-management/notifications"
 
@@ -27,7 +30,10 @@ export default new Vuex.Store({
     app,
     appConfig,
     verticalMenu,
+    codes,
+    packages,
     accounts,
+    invoices,
     home,
     advertising,
     faculties,
