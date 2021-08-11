@@ -49,19 +49,22 @@ namespace SmartStart.Repository.Invoice.CodeService
 
         private Func<OperationResult<IEnumerable<CodeSubjectsPriceDto>>, Task<OperationResult<IEnumerable<CodeSubjectsPriceDto>>>> _getCodes(Guid userId)
             => async operation => {
-                var list = (await Query.Where(code => code.UserId == userId)
+                var list = (await Query.Include(code => code.CodePackages)
+                                       .ThenInclude(p => p.Package)
+                                       .ThenInclude(p => p.PackageSubjectFaculties)
+                                       .Where(code => code.UserId == userId)
                                        .Select(code => new
                                        {
                                            Id = code.Id,
                                            Value = code.Value,
                                            Hash = code.Hash,
                                            MaxEndDate = code.MaxEndDate,
-                                           Subjects = code.CodePackages.SelectMany(cp => cp.Package.PackageSubjects
+                                           Subjects = code.CodePackages.SelectMany(cp => cp.Package.PackageSubjectFaculties
                                                                        .Select(pe => new
                                                                        {
                                                                            pe.Price,
-                                                                           pe.SubjectId,
-                                                                           pe.Subject.Name
+                                                                           pe.SubjectFaculty.SubjectId,
+                                                                           pe.SubjectFaculty.Subject.Name
                                                                        })),
                                        }).ToListAsync())
                                        .Select(code => new CodeSubjectsPriceDto
@@ -89,7 +92,8 @@ namespace SmartStart.Repository.Invoice.CodeService
             => async operation => {
                 var one = await TrackingQuery.Include(x => x.CodePackages)
                                              .ThenInclude(x => x.Package)
-                                             .ThenInclude(x => x.PackageSubjects)
+                                             .ThenInclude(x => x.PackageSubjectFaculties)
+                                             .ThenInclude(x => x.SubjectFaculty)
                                              .Where(code => code.Hash == hash 
                                                          && !code.DateActivated.HasValue 
                                                          && !code.UserId.HasValue)
@@ -101,7 +105,7 @@ namespace SmartStart.Repository.Invoice.CodeService
                 one.UserId = userId;
                 one.DateActivated = DateTime.Now.ToLocalTime();
 
-                var subjectIds = one.CodePackages.SelectMany(x => x.Package.PackageSubjects.Select(x => x.SubjectId));
+                var subjectIds = one.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFaculty.SubjectId));
 
                 Context.AddRange(subjectIds.Except(await _query<SubjectFacultyAppUser>().Where(s => s.AppUserId == Context.CurrentUserId)
                                                                                         .Select(s => s.SubjectFacultyId)
