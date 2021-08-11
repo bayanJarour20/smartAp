@@ -54,14 +54,14 @@ export default {
                 if(!payload.id) {
                     commit('Set_Feedback_Dto', data)
                 }
-            })
+            },{success: "تم تعديل الرسالة بنجاح", error: "فشل تعديل الرسالة"})
         },
         deleteFeedback(ctx, id) {
             api.delete("Feedback/Delete?id=" + id, ({ data }) => {
                 if(data) {
                     router.push('/contact')
                 }
-            }, {success: "تم حذف الرسالة بنجاح", error: "فشل حذف الرسالة"});
+            }, {confirm:"هل أنت متأكد  من حذف هذه الرسالة",success: "تم حذف الرسالة بنجاح", error: "فشل حذف الرسالة"});
         },
     }
 };
