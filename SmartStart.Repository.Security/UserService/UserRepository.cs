@@ -240,11 +240,23 @@ namespace SmartStart.Repository.Security.UserService
                 var AllQyery = _query<AppUser>().Include(f => f.UserCodes)
                                                  .Include(x => x.SubjectAppUsers)
                                                  .ThenInclude(x => x.Subject)
-                                                 .ThenInclude(x => x.Faculties)
-                                                 .Where(x => x.DateDeleted == null)
+                                                 //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
+                var UserFaculties = AllQyery.Select(user => new UserFacultyDto
+                {
+                    Id = user.Id,
+                    Faculties = user.SubjectAppUsers.Select(e => e.SubjectFacultyId).ToList()
+                })
+                .ToList();
 
+
+                Dictionary<Guid, List<Guid>> dic = new Dictionary<Guid, List<Guid>>();
+
+                for (int i = 0; i < UserFaculties.Count(); i++)
+                {
+                    dic[UserFaculties[i].Id] = UserFaculties[i].Faculties.Distinct().ToList();
+                }
 
                 var list = await AllQyery.OrderByDescending(w => w.DateCreated)
                            .Select(user => new AppUserDto
@@ -263,7 +275,9 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                           }).ToListAsync();
+                               FacultiesIds = dic[user.Id]
+                           })
+                           .ToListAsync();
 
                 return operation.SetSuccess(list);
             };

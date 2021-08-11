@@ -1,7 +1,7 @@
 // TODO : filters + multi delete
 <template>
     <div>
-        <!-- // selectedLabel --- opthinal props - default value: id -->
+        
         <EKTable
             :items="feedbacks"
             :columns="columns"
@@ -41,7 +41,7 @@ export default {
             },
             {
                 label: "اسم الطالب",
-                field: "appUserName"
+                field: "appHserName"
             },
             {
                 label: "تاريخ الإرسال",

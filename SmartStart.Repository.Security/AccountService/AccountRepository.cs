@@ -115,7 +115,7 @@ namespace SmartStart.Repository.Security.AccountService
                     if (updateResult.Succeeded)
                     {
                         AccountDto accountDto = await FillAccount(user, true);
-                        accountDto.HasSubject = await Context.SubjectAppUsers.AnyAsync(su => su.AppUserId == accountDto.Id);
+                        accountDto.HasSubject = await Context.SubjectFacultyAppUsers.AnyAsync(su => su.AppUserId == accountDto.Id);
                         AssignRefreshTokenIfRememberMe(signinDto.RememberMe, accountDto);
 
                         await TemporaryFillingInBlacklist(user);

@@ -14,6 +14,6 @@ namespace SmartStart.Repository.Shared.TagService
     public interface ITagRepository : IElRepositoryGeneral<Guid, Tag, TagDto>
     {
         public Task<OperationResult<IEnumerable<TagDto>>> Filter(TagTypes type);
-
+        Task<OperationResult<bool>> RemoveTags(List<Guid> tagIds);
     }
 }
