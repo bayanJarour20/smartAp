@@ -27,7 +27,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
 
             await InsureCreateSuperAdminAsync(userManager, roleManager, newRole);
             await InsureCreateSellerAsync(userManager, roleManager, newRole);
-            //await InsureCreateUserAsync(userManager, roleManager, newRole);
+            await InsureCreateUserAsync(userManager, roleManager, newRole);
             //await InsureCreateGuidSellerAsync(userManager);
         }
         //private static async Task InsureCreateGuidSellerAsync(UserManager<AppUser> userManager)
@@ -216,7 +216,6 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                             new PackageSubject()
                                             {
                                                 Price = 400,
-
                                                 Subject = new Subject()
                                                 {
                                                     Name = "البرمجة 1",
@@ -237,6 +236,16 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                                         Name ="حلب"
                                                                     }
                                                                 }
+                                                            },
+                                                            Section = new Tag()
+                                                            {
+                                                                Name = "قسم البرمجيات", 
+                                                                Type = TagTypes.Section
+                                                            },
+                                                            Semester = new Tag()
+                                                            {
+                                                                Name = "فصل أول",
+                                                                Type = TagTypes.Semester
                                                             }
                                                         }
                                                     },
