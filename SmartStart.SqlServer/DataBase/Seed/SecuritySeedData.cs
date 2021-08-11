@@ -28,34 +28,8 @@ namespace SmartStart.SqlServer.DataBase.Seed
             await InsureCreateSuperAdminAsync(userManager, roleManager, newRole);
             await InsureCreateSellerAsync(userManager, roleManager, newRole);
             await InsureCreateUserAsync(userManager, roleManager, newRole);
-            //await InsureCreateGuidSellerAsync(userManager);
+            await InsureCreateGuidSellerAsync(userManager);
         }
-        //private static async Task InsureCreateGuidSellerAsync(UserManager<AppUser> userManager)
-        //{
-        //    var seller = await userManager.FindByIdAsync("AC140878-B8C0-47F6-AAC7-6E6E601A238B");
-
-        //    if (seller is null)
-        //    {
-        //        seller = new AppUser()
-        //        {
-        //            Id = new("{AC140878-B8C0-47F6-AAC7-6E6E601A238B}"),
-        //            UserName = "TarafouaSeller",
-        //            Name = "TarafouaSeller",
-        //            Email = "TarafouaSeller@Tarafoua.com",
-        //            Type = SharedKernel.Enums.UserTypes.Seller,
-        //            MoneyLimit = 9000000,
-        //        };
-
-        //        var createResult = await userManager.CreateAsync(seller, "tarafouaseller1234");
-
-        //        if (createResult.Succeeded)
-        //        {
-        //            await userManager.AddToRoleAsync(seller, TarafouaRoles.Seller.ToString());
-        //            return;
-        //        }
-        //        throw new Exception(String.Join("\n", createResult.Errors.Select(error => error.Description)));
-        //    }
-        //}
 
         private static async Task<IEnumerable<string>> CreateNewRoles(RoleManager<IdentityRole<Guid>> roleManager)
         {
@@ -432,7 +406,28 @@ namespace SmartStart.SqlServer.DataBase.Seed
                 throw new Exception(String.Join("\n", createResult.Errors.Select(error => error.Description)));
             }
         }
-
-
+        private static async Task InsureCreateGuidSellerAsync(UserManager<AppUser> userManager)
+        {
+            var seller = await userManager.FindByIdAsync("AC140878-B8C0-47F6-AAC7-6E6E601A238B");
+            if (seller is null)
+            {
+                seller = new AppUser()
+                {
+                    Id = new("{AC140878-B8C0-47F6-AAC7-6E6E601A238B}"),
+                    UserName = "SmartStartSeller",
+                    Name = "SmartStartSeller",
+                    Email = "SmartStartSeller@SmartStart.com",
+                    Type = UserTypes.Seller,
+                    MoneyLimit = 9000000,
+                };
+                var createResult = await userManager.CreateAsync(seller, "smartstartseller1234");
+                if (createResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(seller, SmartStartRoles.Seller.ToString());
+                    return;
+                }
+                throw new Exception(String.Join("\n", createResult.Errors.Select(error => error.Description)));
+            }
+        }
     }
 }
