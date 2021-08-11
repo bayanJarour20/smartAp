@@ -7,10 +7,10 @@
                         <b-row>
                             <b-col cols="12" md="4">
                                 <EKInputText
-                                    v-model="feedbackDto.appUserName"
+                                    v-model="feedbackDto.appHserName"
                                     label="اسم الطالب "
                                     readonly
-                                    name="appUserName"
+                                    name="appHserName"
                                 />
                             </b-col>
                             <b-col cols="12" md="4">
@@ -24,12 +24,7 @@
                             <b-col cols="12" md="4">
                                 <EKInputText
                                     :value="
-                                        new Date(
-                                            feedbackDto.replyDate
-                                        ).getTime() ==
-                                        new Date(
-                                            '0001-01-01T00:00:00'
-                                        ).getTime()
+                                        !feedbackDto.replyDate
                                             ? ''
                                             : moment(feedbackDto.replyDate).format('MMMM Do YYYY, h:mm:ss a')
                                     "
@@ -59,12 +54,9 @@
                                 <EKInputTextarea
                                     v-model="feedbackDto.reply"
                                     label="الرد على الرسالة"
-                                    :readonly="new Date(
-                                            feedbackDto.replyDate
-                                        ).getTime() !=
-                                        new Date(
-                                            '0001-01-01T00:00:00'
-                                        ).getTime()"
+                                    :readonly="
+                                            !!feedbackDto.replyDate
+                                        "
                                     :rules="[
                                         { type: 'required', message: 'نص الرد مطلوب' }
                                     ]"
@@ -80,10 +72,11 @@
                         <b-col>
                             <div class="d-flex">
                                 <b-button
+
                                     class="mr-1"
                                     type="submit"
                                     variant="primary"
-                                    v-if="feedbackDto.replyDate!=null"
+                                    v-if="!feedbackDto.replyDate"
                                     style="max-width:100px"
                                     >إرسال رد</b-button
                                 >

@@ -8,7 +8,7 @@ export default {
             title: "",
             body: "",
             appUserId: "",
-            appUserName: "",
+            appHserName: "",
             reply: "",
             replyDate: null,
             // sendDate: null
@@ -40,7 +40,7 @@ export default {
     },
     actions: {
         getFeedbackDetails({ commit }) {
-            api.get("Feedback/Fetch", ({ data }) => {
+            api.get("Feedback/GetAll", ({ data }) => {
                 commit("Get_Feedbacks_Details", data);
             });
         },
@@ -50,7 +50,7 @@ export default {
             })
         },
         actionFeedback({commit}, payload) {
-            api.put('Feedback/Modify', payload, ({data}) => {
+            api.post('Feedback/Update', payload, ({data}) => {
                 if(!payload.id) {
                     commit('Set_Feedback_Dto', data)
                 }

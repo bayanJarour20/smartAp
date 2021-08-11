@@ -9,9 +9,9 @@
             @details="openContactDetails"
             @delete-selected="fireDeleteEvent"
         >
-            <!-- <template slot="items.sendDate" slot-scope="{value}">
+            <template slot="items.sendDate" slot-scope="{value}">
                 {{ moment(value).format("MMMM Do YYYY, h:mm:ss a") }}
-            </template> -->
+            </template>
         </EKTable>
     </div>
 </template>
@@ -41,7 +41,7 @@ export default {
             },
             {
                 label: "اسم الطالب",
-                field: "appUserName"
+                field: "appHserName"
             },
             {
                 label: "تاريخ الإرسال",
