@@ -192,12 +192,12 @@ namespace SmartStart.SqlServer.DataBase.Seed
                             DiscountRate = 0.1f 
                         } 
                     },
-                    Codes = new List<Code>() 
+                    Codes = new List<Code>()
                     {
-                        new Code() 
-                        { 
-                            DiscountRate = 0, 
-                            Value = 1000, 
+                        new Code()
+                        {
+                            DiscountRate = 0,
+                            Value = 1000,
                             Hash = "rtyk6q",
                             SellerId = (await userManager.FindByNameAsync("Seller")).Id,
                             CodePackages = new List<CodePackage>()
@@ -215,12 +215,12 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                         {
                                             new PackageSubject()
                                             {
-                                                Price = 400, 
-                                                
+                                                Price = 400,
+
                                                 Subject = new Subject()
                                                 {
                                                     Name = "البرمجة 1",
-                                                    Description = "وصف مادة البرمجة 1", 
+                                                    Description = "وصف مادة البرمجة 1",
                                                     IsFree = false,
                                                     Faculties = new List<SubjectFaculty>()
                                                     {
@@ -259,6 +259,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                             },
                                                         }
                                                     },
+                                                    Type = SubjectTypes.Academic,
                                                     Exams = new List<Exam>()
                                                     {
                                                         new Exam()
@@ -286,624 +287,136 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                                 },
                                                                 new ExamTag()
                                                                 {
-                                                                    Tag =new Model.Shared.Tag(){
-                                                                    Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      }
+                                                                    Tag = new Tag()
+                                                                    {
+                                                                        Name = "الفصل الاول",
+                                                                        Type = TagTypes.Semester,
+                                                                    }
                                                                   },
-                                                              },
-
-                                                              Type =SharedKernel.Enums.TabTypes.Microscope,
-                                                              //QuestionDocuments = new List<QuestionDocument>(){
-                                                              //new QuestionDocument()
-                                                              //{
-                                                              //    Document =new Model.Shared.Document()
-                                                              //    {
-                                                              //        Name = "صورة تلسسكوب ما",
-                                                              //        Path= @"\Documents\Telescopeblahblah\asda.jpg",
-                                                              //        Type=SharedKernel.Enums.DocumentTypes.Image,
-                                                              //    },
-                                                              //},
-                                                              // new QuestionDocument()
-                                                              //{
-                                                              //    Document =new Model.Shared.Document()
-                                                              //    {
-                                                              //        Name = "صورة تلسسكوب2 ما",
-                                                              //        Path= @"\Documents\Telescopeblahblah\sadasd.jpg",
-                                                              //        Type=SharedKernel.Enums.DocumentTypes.Image,
-                                                              //    },
-                                                              //}
-
-                                                              //},
-
-
-                                                          },
-
-
-                                                    }
+                                                            },
+                                                            Type = TabTypes.Microscope
+                                                        },
+                                                        new Exam()
+                                                        {
+                                                            Name = Guid.NewGuid() + "دورة",
+                                                            Year = 2018,
+                                                            Price = 600,
+                                                            ExamTags = new List<ExamTag>()
+                                                            {
+                                                                new ExamTag()
+                                                                {
+                                                                    Tag = new Tag()
+                                                                    {
+                                                                        Name = "وسم",
+                                                                        Type = TagTypes.Tag,
+                                                                    }
+                                                                },
+                                                                new ExamTag()
+                                                                {
+                                                                    Tag = new Tag()
+                                                                    {
+                                                                        Name = "دكتور اسامه",
+                                                                        Type = TagTypes.Doctor,
+                                                                    },
+                                                                },
+                                                                new ExamTag()
+                                                                {
+                                                                    Tag = new Tag()
+                                                                    {
+                                                                        Name = "الفصل الاول",
+                                                                        Type = TagTypes.Semester,
+                                                                    }
+                                                                  },
+                                                            },
+                                                            Type = TabTypes.Exam,
+                                                            ExamQuestions = new  List<ExamQuestion>()
+                                                            {
+                                                                new ExamQuestion()
+                                                                {
+                                                                    Question = new Question()
+                                                                    {
+                                                                        Title = "السؤال الاول",
+                                                                        Hint = "مساعدة",
+                                                                        IsCorrected = false,
+                                                                        AnswerType = AnswerTypes.MultiChoice,
+                                                                        Answers = new List<Answer>()
+                                                                        {
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 1",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 2",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 3",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 4",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                        }
+                                                                    },
+                                                                },
+                                                                new ExamQuestion()
+                                                                {
+                                                                    Question = new Question()
+                                                                    {
+                                                                        Title = "السؤال الثاني",
+                                                                        Hint = "مساعدة",
+                                                                        IsCorrected = false,
+                                                                        AnswerType = AnswerTypes.MultiChoice,
+                                                                        Answers = new List<Answer>()
+                                                                        {
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 1",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 2",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 3",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                            new Answer()
+                                                                            {
+                                                                                Title = "اجابة 4",
+                                                                                IsCorrect = true,
+                                                                            },
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
                                                 }
                                             }
-                                        }
-                                                  PackageExams = new List<PackageExam>(){
-
-                                                      new PackageExam()
-                                                      {
-                                                          Price=400,
-                                                          Exam = new Exam()
-                                                          {
-                                                              Name =Guid.NewGuid() + "دورة",
-                                                              Year=2019,
-                                                              Price=500,
-                                                              Subject = new Subject()
-                                                              {
-                                                                  Faculty= new Faculty(){
-                                                                  Name = "كلية ما",
-                                                                  University =new University()
-                                                                  {
-                                                                      Name ="جامعة ما",
-                                                                      City= new City()
-                                                                      {
-                                                                          Name ="مدينة ما"
-                                                                      }
-                                                                  }
-                                                                  },
-                                                                  Type=SharedKernel.Enums.SubjectTypes.Academic,
-                                                                  Name ="تشريح",
-                                                                  SubjectTags = new List<SubjectTag>(){
-                                                                  new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور محمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                   new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      },
-                                                                  }
-                                                                  },
-
-                                                              },
-                                                              ExamTags = new List<ExamTag>()
-                                                              {
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="وسم",
-                                                                      Type = SharedKernel.Enums.TagTypes.Tag,
-                                                                      }
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور أحمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      }
-                                                                  },
-                                                              },
-
-                                                              Type =SharedKernel.Enums.TabTypes.Microscope,
-                                                              //QuestionDocuments = new List<QuestionDocument>(){
-                                                              //new QuestionDocument()
-                                                              //{
-                                                              //    Document =new Model.Shared.Document()
-                                                              //    {
-                                                              //        Name = "صورة تلسسكوب ما",
-                                                              //        Path= @"\Documents\Telescopeblahblah\asda.jpg",
-                                                              //        Type=SharedKernel.Enums.DocumentTypes.Image,
-                                                              //    },
-                                                              //},
-                                                              // new QuestionDocument()
-                                                              //{
-                                                              //    Document =new Model.Shared.Document()
-                                                              //    {
-                                                              //        Name = "صورة تلسسكوب2 ما",
-                                                              //        Path= @"\Documents\Telescopeblahblah\sadasd.jpg",
-                                                              //        Type=SharedKernel.Enums.DocumentTypes.Image,
-                                                              //    },
-                                                              //}
-
-                                                              //},
-
-
-                                                          },
-
-
-
-
-                                                      },
-
-                                                      new PackageExam()
-                                                      {
-                                                          Price=234,
-
-                                                             Exam = new Exam()
-                                                          {
-                                                              Name =Guid.NewGuid() + "دورة",
-                                                              Year=2019,
-                                                              Price=500,
-                                                              Subject = new Subject()
-                                                              {
-                                                                  Faculty= new Faculty(){
-                                                                  Name = "كلية ما",
-                                                                  University =new University()
-                                                                  {
-                                                                      Name ="جامعة ما",
-                                                                      City= new City()
-                                                                      {
-                                                                          Name ="مدينة ما"
-                                                                      }
-                                                                  }
-                                                                  },
-                                                                  Type=SharedKernel.Enums.SubjectTypes.Academic,
-                                                                  Name ="تشريح",
-                                                                  SubjectTags = new List<SubjectTag>(){
-                                                                  new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور محمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                   new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      },
-                                                                  }
-                                                                  },
-
-                                                              },
-                                                              ExamTags = new List<ExamTag>()
-                                                              {
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="وسم",
-                                                                      Type = SharedKernel.Enums.TagTypes.Tag,
-                                                                      }
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور أحمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      }
-                                                                  },
-                                                              },
-
-                                                              Type =SharedKernel.Enums.TabTypes.Exam,
-
-                                                              ExamQuestions = new  List<ExamQuestion>()
-                                                              {
-                                                                  new ExamQuestion()
-                                                                  {
-
-                                                                      Question = new Question()
-                                                                      {
-                                                                          Title ="السوال الاول",
-                                                                          Hint = "مساعدة",
-                                                                          IsCorrected=false,
-                                                                          AnswerType =SharedKernel.Enums.AnswerTypes.MultiChoice,
-                                                                          Answers =new List<Answer>()
-                                                                          {
-                                                                              new Answer(){
-                                                                              Title ="اجابة 1",
-                                                                              IsCorrect =true,
-                                                                              },
-                                                                               new Answer(){
-                                                                              Title ="اجابة 2",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                new Answer(){
-                                                                              Title ="اجابة 3",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                 new Answer(){
-                                                                              Title ="اجابة 4",
-                                                                              IsCorrect =false,
-                                                                              //CorrectAnswer= new Answer()
-                                                                              //{
-                                                                              //      Title ="اجابة 4 تصحيح",
-                                                                              //    Option ="false",
-                                                                              //    IsCurrect =false,
-                                                                              //    }
-                                                                              },
-                                                                          }
-                                                                      }
-
-                                                                      ,
-
-                                                                  },
-
-
-                                                                  new ExamQuestion()
-                                                                  {
-
-                                                                      Question = new Question()
-                                                                      {
-                                                                          Title ="السوال الثاني",
-                                                                          Hint = "مساعدة",
-                                                                          IsCorrected=false,
-                                                                          AnswerType =SharedKernel.Enums.AnswerTypes.MultiChoice,
-                                                                          Answers =new List<Answer>()
-                                                                          {
-                                                                              new Answer(){
-                                                                              Title ="اجابة 1",
-                                                                              IsCorrect =true,
-                                                                              },
-                                                                               new Answer(){
-                                                                              Title ="اجابة 2",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                new Answer(){
-                                                                              Title ="اجابة 3",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                 new Answer(){
-                                                                              Title ="اجابة 4",
-                                                                              IsCorrect =false,
-                                                                              //CorrectAnswer= new Answer()
-                                                                              //{
-                                                                              //      Title ="اجابة 4 تصحيح",
-                                                                              //    Option ="false",
-                                                                              //    IsCurrect =false,
-                                                                              //    }
-                                                                              },
-                                                                          }
-                                                                      }
-
-                                                                      ,
-
-                                                                  },
-                                                              }
-
-
-                                                          },
-                                                      },
-
-
-
-
-                                                            new PackageExam()
-                                                      {
-                                                          Price=234,
-
-                                                             Exam = new Exam()
-                                                          {
-                                                              Name =Guid.NewGuid() + "دورة",
-                                                              Year=2019,
-                                                              Price=500,
-                                                              Subject = new Subject()
-                                                              {
-                                                                  Faculty= new Faculty(){
-                                                                  Name = "كلية ما",
-                                                                  University =new University()
-                                                                  {
-                                                                      Name ="جامعة ما",
-                                                                      City= new City()
-                                                                      {
-                                                                          Name ="مدينة ما"
-                                                                      }
-                                                                  }
-                                                                  },
-                                                                  Type=SharedKernel.Enums.SubjectTypes.Academic,
-                                                                  Name ="تشريح",
-                                                                  SubjectTags = new List<SubjectTag>(){
-                                                                  new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور محمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                   new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      },
-                                                                  }
-                                                                  },
-
-                                                              },
-                                                              ExamTags = new List<ExamTag>()
-                                                              {
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="وسم",
-                                                                      Type = SharedKernel.Enums.TagTypes.Tag,
-                                                                      }
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور أحمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      }
-                                                                  },
-                                                              },
-
-                                                              Type =SharedKernel.Enums.TabTypes.Interview,
-
-                                                              ExamQuestions = new  List<ExamQuestion>()
-                                                              {
-                                                                  new ExamQuestion()
-                                                                  {
-
-                                                                      Question = new Question()
-                                                                      {
-                                                                          Title ="السوال",
-                                                                          Hint = "وصف",
-                                                                          IsCorrected=true,
-                                                                          AnswerType =SharedKernel.Enums.AnswerTypes.Text,
-                                                                          Answers =new List<Answer>()
-                                                                          {
-                                                                              new Answer(){
-                                                                              Title ="الجوااب للجواب",
-                                                                              IsCorrect =true,
-                                                                              },
-                                                                          }
-                                                                      }
-                                                                  }
-                                                              }
-
-
-                                                          },
-                                                      }
-                                                            ,
-
-                                                               new PackageExam()
-                                                      {
-                                                          Price=234,
-
-                                                             Exam = new Exam()
-                                                          {
-                                                              Name =Guid.NewGuid() + "دورة",
-                                                              Year=2019,
-                                                              Price=500,
-                                                              Subject = new Subject()
-                                                              {
-                                                                  Faculty= new Faculty(){
-                                                                  Name = "كلية ما",
-                                                                  University =new University()
-                                                                  {
-                                                                      Name ="جامعة ما",
-                                                                      City= new City()
-                                                                      {
-                                                                          Name ="مدينة ما"
-                                                                      }
-                                                                  }
-                                                                  },
-                                                                  Type=SharedKernel.Enums.SubjectTypes.Academic,
-                                                                  Name ="تشريح",
-                                                                  SubjectTags = new List<SubjectTag>(){
-                                                                  new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور محمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                   new SubjectTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      },
-                                                                  }
-                                                                  },
-
-                                                              },
-                                                              ExamTags = new List<ExamTag>()
-                                                              {
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="وسم",
-                                                                      Type = SharedKernel.Enums.TagTypes.Tag,
-                                                                      }
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                       Tag =new Model.Shared.Tag(){
-                                                                      Name="ديكتور أحمد",
-                                                                      Type = SharedKernel.Enums.TagTypes.Doctor,
-                                                                      },
-                                                                  },
-                                                                  new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="الفصل الاول",
-                                                                      Type = SharedKernel.Enums.TagTypes.Semester,
-                                                                      }
-                                                                  },
-                                                                          new ExamTag()
-                                                                  {
-                                                                      Tag =new Model.Shared.Tag(){
-                                                                      Name="الفريق",
-                                                                      Type = SharedKernel.Enums.TagTypes.Team
-                                                                      }
-                                                                  },
-                                                              },
-
-                                                              Type =SharedKernel.Enums.TabTypes.Bank,
-
-                                                              ExamQuestions = new  List<ExamQuestion>()
-                                                              {
-                                                                  new ExamQuestion()
-                                                                  {
-
-                                                                      Question = new Question()
-                                                                      {
-                                                                          Title ="السوال الاول",
-                                                                          Hint = "مساعدة",
-                                                                          IsCorrected=false,
-                                                                          AnswerType =SharedKernel.Enums.AnswerTypes.MultiChoice,
-                                                                          Answers =new List<Answer>()
-                                                                          {
-                                                                              new Answer(){
-                                                                              Title ="اجابة 1",
-                                                                              IsCorrect =true,
-                                                                              },
-                                                                               new Answer(){
-                                                                              Title ="اجابة 2",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                new Answer(){
-                                                                              Title ="اجابة 3",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                 new Answer(){
-                                                                              Title ="اجابة 4",
-                                                                              IsCorrect =false,
-                                                                              //CorrectAnswer= new Answer()
-                                                                              //{
-                                                                              //      Title ="اجابة 4 تصحيح",
-                                                                              //    Option ="false",
-                                                                              //    IsCurrect =false,
-                                                                              //    }
-                                                                              },
-                                                                          }
-                                                                      }
-
-                                                                      ,
-
-                                                                  },
-
-                                                                    new ExamQuestion()
-                                                                  {
-
-                                                                      Question = new Question()
-                                                                      {
-                                                                          Title ="السوال الاول",
-                                                                          Hint = "مساعدة",
-                                                                          IsCorrected=false,
-                                                                          AnswerType =SharedKernel.Enums.AnswerTypes.MultiChoice,
-                                                                          Answers =new List<Answer>()
-                                                                          {
-                                                                              new Answer(){
-                                                                              Title ="اجابة 1",
-                                                                              IsCorrect =true,
-                                                                              },
-                                                                               new Answer(){
-                                                                              Title ="اجابة 2",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                new Answer(){
-                                                                              Title ="اجابة 3",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                 new Answer(){
-                                                                              Title ="اجابة 4",
-                                                                              IsCorrect =false,
-                                                                              //CorrectAnswer= new Answer()
-                                                                              //{
-                                                                              //      Title ="اجابة 4 تصحيح",
-                                                                              //    Option ="false",
-                                                                              //    IsCurrect =false,
-                                                                              //    }
-                                                                              },
-                                                                          }
-                                                                      }
-
-                                                                      ,
-
-                                                                  },
-
-                                                                      new ExamQuestion()
-                                                                  {
-
-                                                                      Question = new Question()
-                                                                      {
-                                                                          Title ="السوال الاول",
-                                                                          Hint = "مساعدة",
-                                                                          IsCorrected=false,
-                                                                          AnswerType =SharedKernel.Enums.AnswerTypes.MultiChoice,
-                                                                          Answers =new List<Answer>()
-                                                                          {
-                                                                              new Answer(){
-                                                                              Title ="اجابة 1",
-                                                                              IsCorrect =true,
-                                                                              },
-                                                                               new Answer(){
-                                                                              Title ="اجابة 2",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                new Answer(){
-                                                                              Title ="اجابة 3",
-                                                                              IsCorrect =false,
-                                                                              },
-                                                                                 new Answer(){
-                                                                              Title ="اجابة 4",
-                                                                              IsCorrect =false,
-                                                                              //CorrectAnswer= new Answer()
-                                                                              //{
-                                                                              //      Title ="اجابة 4 تصحيح",
-                                                                              //    Option ="false",
-                                                                              //    IsCurrect =false,
-                                                                              //    }
-                                                                              },
-                                                                          }
-                                                                      }
-
-                                                                      ,
-
-                                                                  },
-                                                              }
-
-
-                                                          },
-                                                      }
-                                                  },
-
-
-                                                  },
-
-                                            },
-
-                                               new CodePackage(){
-                                                  Package = new Package(){
-                                                  Description = Guid.NewGuid()+ " وصف البكج المقدم",
-                                                  Name =Guid.NewGuid()+"اسم البكج",StartDate = DateTime.Now,
-                                                  EndDate = DateTime.Now.AddDays(15),
-                                                  Price = 1000,},}
-
-
-                                            }  } },
+                                        },
+                                        IsHidden = false,
+                                        Type = PackageTypes.Sale
+                                    }
+                                }
+                            }
+                        }
+                    }
                 };
 
                 var createResult = await userManager.CreateAsync(user, "1234");
 
                 if (createResult.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, TarafouaRoles.User.ToString());
+                    await userManager.AddToRoleAsync(user, SmartStartRoles.User.ToString());
 
                     return;
                 }
