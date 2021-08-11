@@ -1,6 +1,7 @@
 ﻿using Elkood.Web.Helper.Validations.Attribute.DataBaseAnnotations;
 using Elkood.Web.Helper.Validations.Enum;
 using Elkood.Web.Infrastructure.ModelEntity.Base;
+using SmartStart.Model.Business;
 using SmartStart.Model.General;
 using SmartStart.Model.Shared;
 using System;
@@ -14,6 +15,11 @@ namespace SmartStart.Model.Main
 {
     public class SubjectFaculty : BaseEntity<Guid>
     {
+        public SubjectFaculty()
+        {
+            SubjectFacultyAppUsers = new HashSet<SubjectFacultyAppUser>();
+            PackageSubjectFaculties = new HashSet<PackageSubjectFaculty>(); 
+        }
         [Required]
         public Guid SubjectId { get; set; }
         public Subject Subject { get; set; }
@@ -32,5 +38,8 @@ namespace SmartStart.Model.Main
         [Required]
         public Guid SectionId { get; set; }
         public Tag Section { get; set; }
+
+        public ICollection<SubjectFacultyAppUser>  SubjectFacultyAppUsers { get; set; }
+        public ICollection<PackageSubjectFaculty>  PackageSubjectFaculties { get; set; }
     }
 }

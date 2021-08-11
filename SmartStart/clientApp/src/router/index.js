@@ -9,7 +9,6 @@ import store from "@/store";
 import docs from "./docs";
 import contentManagement from "./content-management";
 import codes from "./codes"; 
-import accountsSetting from "./accounts-setting";
 
 Vue.use(VueRouter);
 
@@ -41,7 +40,6 @@ const router = new VueRouter({
             }),
         },
         ...contentManagement,
-        ...accountsSetting,
         ...codes,
         // test components
         {

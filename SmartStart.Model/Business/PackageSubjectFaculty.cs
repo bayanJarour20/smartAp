@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SmartStart.Model.Business
 {
-    public class PackageSubject : BaseEntity<Guid>
+    public class PackageSubjectFaculty : BaseEntity<Guid>
     {
         /// <summary>
         /// Entered price when connected with Package
@@ -22,7 +22,7 @@ namespace SmartStart.Model.Business
         public Package Package { get; set; }
 
         [Required]
-        public Guid SubjectId { get; set; }
-        public Subject Subject { get; set; }
+        public Guid SubjectFacultyId { get; set; }
+        public SubjectFaculty SubjectFaculty { get; set; }
     }
 }

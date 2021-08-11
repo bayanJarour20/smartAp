@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using SmartStart.DataTransferObject.AccountDto;
+using SmartStart.DataTransferObject.FacultyDto;
 using SmartStart.DataTransferObject.UserDto;
 using SmartStart.Model.Security;
 using SmartStart.SharedKernel.Enums;
@@ -73,7 +74,6 @@ namespace SmartStart.Repository.Security.UserService
                DateBlocked = user.DateBlocked,
                DateActivated = user.DateActivated,
                Type = user.Type,
-               FacultyId = user.FacultyId,
                SubscriptionCount = user.UserCodes.Count(),
                Codes = user.UserCodes.Select(code => new UserCodeDto()
                {
@@ -120,7 +120,6 @@ namespace SmartStart.Repository.Security.UserService
               User.Gender = account.Gender;
               User.DateBlocked = account.DateBlocked;
               User.DateActivated = account.DateActivated;
-              User.FacultyId = account.FacultyId;
               User.SubscriptionDate = account.SubscriptionDate;
               User.Type = UserTypes.User;
 
@@ -238,25 +237,37 @@ namespace SmartStart.Repository.Security.UserService
             => async operation => {
 
                 var AllQyery = _query<AppUser>().Include(f => f.UserCodes)
-                                                 .Include(x => x.SubjectAppUsers)
-                                                 .ThenInclude(x => x.Subject)
+                                                 .Include(x => x.SubjectFacultyAppUsers)
+                                                 .ThenInclude(x => x.SubjectFaculty)
+                                                 .ThenInclude(x => x.Faculty)
                                                  //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
-                var UserFaculties = AllQyery.Select(user => new UserFacultyDto
+                var UserFaculties = AllQyery.Select(user => new UserFacultyList
                 {
                     Id = user.Id,
-                    Faculties = user.SubjectAppUsers.Select(e => e.SubjectFacultyId).ToList()
+                    Faculties = user.SubjectFacultyAppUsers.Select(e => new FacultySelectDto
+                    {
+                        Id = e.SubjectFaculty.FacultyId,
+                        Name = e.SubjectFaculty.Faculty.Name
+                    }).ToList()
                 })
                 .ToList();
 
 
-                Dictionary<Guid, List<Guid>> dic = new Dictionary<Guid, List<Guid>>();
+                Dictionary<Guid, List<FacultySelectDto>> dic = new Dictionary<Guid, List<FacultySelectDto>>();
 
+
+               
                 for (int i = 0; i < UserFaculties.Count(); i++)
                 {
+
                     dic[UserFaculties[i].Id] = UserFaculties[i].Faculties.Distinct().ToList();
                 }
+
+
+
+
 
                 var list = await AllQyery.OrderByDescending(w => w.DateCreated)
                            .Select(user => new AppUserDto
@@ -275,7 +286,8 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                               FacultiesIds = dic[user.Id]
+                               Faculties = dic[user.Id],
+                               
                            })
                            .ToListAsync();
 

@@ -16,7 +16,7 @@ namespace SmartStart.Model.Main
 
         [Required]
         public Guid SubjectFacultyId { get; set; }
-        public SubjectFaculty Subject { get; set; }
+        public SubjectFaculty SubjectFaculty { get; set; }
 
         [Required]
         public Guid AppUserId { get; set; }

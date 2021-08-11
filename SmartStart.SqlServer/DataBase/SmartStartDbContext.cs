@@ -42,7 +42,7 @@ namespace SmartStart.SqlServer.DataBase
         public DbSet<CodePackage> CodePackages { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Package> Packages { get; set; }
-        public DbSet<PackageSubject> PackageSubjects { get; set; }
+        public DbSet<PackageSubjectFaculty> PackageSubjectFaculties { get; set; }
         public DbSet<Rate> Rates { get; set; }
         #endregion
 
@@ -57,10 +57,12 @@ namespace SmartStart.SqlServer.DataBase
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<ExamTag> ExamTags { get; set; }
+        public DbSet<FacultyPOSUser> FacultyPOSUsers { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionDocument> QuestionDocuments { get; set; }
         public DbSet<QuestionTag> QuestionTags { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<SubjectFaculty> SubjectFaculties { get; set; }
         public DbSet<SubjectFacultyAppUser> SubjectFacultyAppUsers { get; set; }
         public DbSet<SubjectTag> SubjectTags { get; set; }
         #endregion

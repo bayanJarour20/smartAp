@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Elkood.Web" Version="0.8.7.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartStart.Model\SmartStart.Model.csproj" />
+    <ProjectReference Include="..\SmartStart.SharedKernel\SmartStart.SharedKernel.csproj" />
+    <ProjectReference Include="..\SmartStart.SqlServer\SmartStart.SqlServer.csproj" />
+  </ItemGroup>
+
+</Project>

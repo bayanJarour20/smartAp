@@ -28,34 +28,8 @@ namespace SmartStart.SqlServer.DataBase.Seed
             await InsureCreateSuperAdminAsync(userManager, roleManager, newRole);
             await InsureCreateSellerAsync(userManager, roleManager, newRole);
             await InsureCreateUserAsync(userManager, roleManager, newRole);
-            //await InsureCreateGuidSellerAsync(userManager);
+            await InsureCreateGuidSellerAsync(userManager);
         }
-        //private static async Task InsureCreateGuidSellerAsync(UserManager<AppUser> userManager)
-        //{
-        //    var seller = await userManager.FindByIdAsync("AC140878-B8C0-47F6-AAC7-6E6E601A238B");
-
-        //    if (seller is null)
-        //    {
-        //        seller = new AppUser()
-        //        {
-        //            Id = new("{AC140878-B8C0-47F6-AAC7-6E6E601A238B}"),
-        //            UserName = "TarafouaSeller",
-        //            Name = "TarafouaSeller",
-        //            Email = "TarafouaSeller@Tarafoua.com",
-        //            Type = SharedKernel.Enums.UserTypes.Seller,
-        //            MoneyLimit = 9000000,
-        //        };
-
-        //        var createResult = await userManager.CreateAsync(seller, "tarafouaseller1234");
-
-        //        if (createResult.Succeeded)
-        //        {
-        //            await userManager.AddToRoleAsync(seller, TarafouaRoles.Seller.ToString());
-        //            return;
-        //        }
-        //        throw new Exception(String.Join("\n", createResult.Errors.Select(error => error.Description)));
-        //    }
-        //}
 
         private static async Task<IEnumerable<string>> CreateNewRoles(RoleManager<IdentityRole<Guid>> roleManager)
         {
@@ -211,65 +185,79 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                         StartDate = DateTime.Now,
                                         EndDate = DateTime.Now.AddDays(15),
                                         Price = 1000,
-                                        PackageSubjects = new List<PackageSubject>()
+                                        PackageSubjectFaculties = new List<PackageSubjectFaculty>()
                                         {
-                                            new PackageSubject()
+                                            new PackageSubjectFaculty()
                                             {
                                                 Price = 400,
-                                                Subject = new Subject()
+                                                SubjectFaculty = new SubjectFaculty ()
                                                 {
-                                                    Name = "البرمجة 1",
-                                                    Description = "وصف مادة البرمجة 1",
-                                                    IsFree = false,
-                                                    Faculties = new List<SubjectFaculty>()
+                                                    Faculty = new Faculty()
                                                     {
-                                                        new SubjectFaculty()
+                                                        Name = "كلية الهندسة المعلوماتية",
+                                                        University =new University()
                                                         {
-                                                            Faculty = new Faculty()
+                                                            Name ="جامعة حلب",
+                                                            City= new City()
                                                             {
-                                                                Name = "كلية الهندسة المعلوماتية",
-                                                                University =new University()
-                                                                {
-                                                                    Name ="جامعة حلب",
-                                                                    City= new City()
-                                                                    {
-                                                                        Name ="حلب"
-                                                                    }
-                                                                }
-                                                            },
-                                                            Section = new Tag()
-                                                            {
-                                                                Name = "قسم البرمجيات", 
-                                                                Type = TagTypes.Section
-                                                            },
-                                                            Semester = new Tag()
-                                                            {
-                                                                Name = "فصل أول",
-                                                                Type = TagTypes.Semester
+                                                                Name ="حلب"
                                                             }
                                                         }
                                                     },
-                                                    SubjectTags = new List<SubjectTag>()
+                                                    Subject = new Subject()
                                                     {
-                                                        new SubjectTag()
+                                                        Name = "البرمجة 1",
+                                                        Description = "وصف مادة البرمجة 1",
+                                                        IsFree = false,
+                                                        Faculties = new List<SubjectFaculty>()
                                                         {
-                                                            Tag = new Tag()
+                                                            new SubjectFaculty()
                                                             {
-                                                                Name = "دكتور اسامه",
-                                                                Type = TagTypes.Doctor,
-                                                            },
+                                                                Faculty = new Faculty()
+                                                                {
+                                                                    Name = "كلية الهندسة المعلوماتية",
+                                                                    University =new University()
+                                                                    {
+                                                                        Name ="جامعة حلب",
+                                                                        City= new City()
+                                                                        {
+                                                                            Name ="حلب"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                Section = new Tag()
+                                                                {
+                                                                    Name = "قسم البرمجيات",
+                                                                    Type = TagTypes.Section
+                                                                },
+                                                                Semester = new Tag()
+                                                                {
+                                                                    Name = "فصل أول",
+                                                                    Type = TagTypes.Semester
+                                                                }
+                                                            }
                                                         },
-                                                        new SubjectTag()
+                                                        SubjectTags = new List<SubjectTag>()
                                                         {
-                                                            Tag = new Tag()
+                                                            new SubjectTag()
                                                             {
-                                                                Name = "الفصل الاول",
-                                                                Type = TagTypes.Semester,
+                                                                Tag = new Tag()
+                                                                {
+                                                                    Name = "دكتور اسامه",
+                                                                    Type = TagTypes.Doctor,
+                                                                },
                                                             },
-                                                        }
-                                                    },
-                                                    Type = SubjectTypes.Academic,
-                                                    Exams = new List<Exam>()
+                                                            new SubjectTag()
+                                                            {
+                                                                Tag = new Tag()
+                                                                {
+                                                                    Name = "الفصل الاول",
+                                                                    Type = TagTypes.Semester,
+                                                                },
+                                                            }
+                                                        },
+                                                        Type = SubjectTypes.Academic,
+                                                        Exams = new List<Exam>()
                                                     {
                                                         new Exam()
                                                         {
@@ -409,6 +397,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                             }
                                                         }
                                                     },
+                                                    }
                                                 }
                                             }
                                         },
@@ -432,7 +421,28 @@ namespace SmartStart.SqlServer.DataBase.Seed
                 throw new Exception(String.Join("\n", createResult.Errors.Select(error => error.Description)));
             }
         }
-
-
+        private static async Task InsureCreateGuidSellerAsync(UserManager<AppUser> userManager)
+        {
+            var seller = await userManager.FindByIdAsync("AC140878-B8C0-47F6-AAC7-6E6E601A238B");
+            if (seller is null)
+            {
+                seller = new AppUser()
+                {
+                    Id = new("{AC140878-B8C0-47F6-AAC7-6E6E601A238B}"),
+                    UserName = "SmartStartSeller",
+                    Name = "SmartStartSeller",
+                    Email = "SmartStartSeller@SmartStart.com",
+                    Type = UserTypes.Seller,
+                    MoneyLimit = 9000000,
+                };
+                var createResult = await userManager.CreateAsync(seller, "smartstartseller1234");
+                if (createResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(seller, SmartStartRoles.Seller.ToString());
+                    return;
+                }
+                throw new Exception(String.Join("\n", createResult.Errors.Select(error => error.Description)));
+            }
+        }
     }
 }

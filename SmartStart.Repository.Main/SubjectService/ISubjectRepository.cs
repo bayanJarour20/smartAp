@@ -12,7 +12,7 @@ namespace SmartStart.Repository.Main.SubjectService
     public interface ISubjectRepository : IElRepository
     {
         Task<OperationResult<IEnumerable<SubjectDto>>> GetAll(int? year, Guid? semesterId, Guid? facultyId);
-        Task<OperationResult<SubjectDetailsDto>> SetSubject(SubjectDetailsDto subjectDto, IFormFile image);
+        Task<OperationResult<SubjectAllDto>> SetSubject(SubjectDetailsDto subjectDto, IFormFile image);
         Task<OperationResult<SubjectAllDto>> SubjectDetails(Guid subjectId);
         Task<OperationResult<bool>> RemoveSubject(Guid subjectId);
         Task<OperationResult<bool>> RemoveSubjects(List<Guid> subjectIds);
