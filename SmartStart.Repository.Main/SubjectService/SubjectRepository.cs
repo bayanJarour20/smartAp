@@ -37,6 +37,8 @@ namespace SmartStart.Repository.Main.SubjectService
             => await RepositoryHandler(_subjectDetails(subjectId));
         public async Task<OperationResult<bool>> RemoveSubject(Guid subjectId)
             => await RepositoryHandler(_removeSubject(subjectId));
+        public async Task<OperationResult<bool>> RemoveSubjects(List<Guid> subjectIds)
+            => await RepositoryHandler(_removeSubjects(subjectIds));
 
 
         private Func<OperationResult<IEnumerable<SubjectDto>>, Task<OperationResult<IEnumerable<SubjectDto>>>> _getAll(int? year, Guid? semesterId, Guid? facultyId)
@@ -77,6 +79,19 @@ namespace SmartStart.Repository.Main.SubjectService
                         };
                         await Context.Subjects.AddAsync(subject);
                         subjectDto.Id = subject.Id;
+                        if (subjectDto.Doctors != null)
+                        {
+                            List<SubjectTag> temp = new List<SubjectTag>();
+                            foreach (var doctor in subjectDto.Doctors)
+                            {
+                                temp.Add(new SubjectTag
+                                {
+                                    SubjectId = subject.Id,
+                                    TagId = doctor
+                                });
+                            }
+                            await Context.SubjectTags.AddRangeAsync(temp);
+                        }
                         await Context.SaveChangesAsync();
                         return operation.SetSuccess(subjectDto);
                     }
@@ -177,7 +192,21 @@ namespace SmartStart.Repository.Main.SubjectService
                 await Context.SaveChangesAsync();
                 return operation.SetSuccess(true);
             };
-
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSubjects(List<Guid> subjectIds)
+            => async operation => {
+                var subjects = await TrackingQuery.Where(s => subjectIds.Contains(s.Id)).ToListAsync();
+                if (subjects == null)
+                {
+                    return operation.SetSuccess(false);
+                }
+                foreach (var faculty in subjects)
+                {
+                    faculty.DateDeleted = DateTime.Now;
+                }
+                Context.UpdateRange(subjects);
+                await Context.SaveChangesAsync();
+                return operation.SetSuccess(true);
+            };
 
 
         #region Helper Functions

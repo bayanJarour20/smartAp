@@ -15,5 +15,6 @@ namespace SmartStart.Repository.Main.SubjectService
         Task<OperationResult<SubjectDetailsDto>> SetSubject(SubjectDetailsDto subjectDto, IFormFile image);
         Task<OperationResult<SubjectAllDto>> SubjectDetails(Guid subjectId);
         Task<OperationResult<bool>> RemoveSubject(Guid subjectId);
+        Task<OperationResult<bool>> RemoveSubjects(List<Guid> subjectIds);
     }
 }
