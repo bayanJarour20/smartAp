@@ -15,7 +15,11 @@
                             </b-col>
                             <b-col cols="12" md="4">
                                 <EKInputText
-                                    :value="moment(feedbackDto.sendDate).format('MMMM Do YYYY, h:mm:ss a')"
+                                    :value="
+                                        moment(feedbackDto.sendDate).format(
+                                            'MMMM Do YYYY, h:mm:ss a'
+                                        )
+                                    "
                                     label="تاريخ الإرسال"
                                     readonly
                                     name="sendDate"
@@ -24,14 +28,13 @@
                             <b-col cols="12" md="4">
                                 <EKInputText
                                     :value="
-                                        new Date(
-                                            feedbackDto.replyDate
-                                        ).getTime() ==
-                                        new Date(
-                                            '0001-01-01T00:00:00'
-                                        ).getTime()
+                                            !feedbackDto.replyDate
                                             ? ''
-                                            : moment(feedbackDto.replyDate).format('MMMM Do YYYY, h:mm:ss a')
+                                            : moment(
+                                                  feedbackDto.replyDate
+                                              ).format(
+                                                  'MMMM Do YYYY, h:mm:ss a'
+                                              )
                                     "
                                     label="تاريخ الرد"
                                     placeholder="لم يتم الرد بعد"
@@ -59,14 +62,12 @@
                                 <EKInputTextarea
                                     v-model="feedbackDto.reply"
                                     label="الرد على الرسالة"
-                                    :readonly="new Date(
-                                            feedbackDto.replyDate
-                                        ).getTime() !=
-                                        new Date(
-                                            '0001-01-01T00:00:00'
-                                        ).getTime()"
+                                    :readonly="!!feedbackDto.replyDate"
                                     :rules="[
-                                        { type: 'required', message: 'نص الرد مطلوب' }
+                                        {
+                                            type: 'required',
+                                            message: 'نص الرد مطلوب'
+                                        }
                                     ]"
                                     placeholder="يمكنك كتابة رد هنا ..."
                                     name="reply"
@@ -83,12 +84,7 @@
                                     class="mr-1"
                                     type="submit"
                                     variant="primary"
-                                    v-if="new Date(
-                                            feedbackDto.replyDate
-                                        ).getTime() ==
-                                        new Date(
-                                            '0001-01-01T00:00:00'
-                                        ).getTime()"
+                                    v-if="!feedbackDto.replyDate"
                                     style="max-width:100px"
                                     >إرسال رد</b-button
                                 >
@@ -147,7 +143,7 @@ export default {
         ...mapActions([
             "getFeedbackDetail",
             "actionFeedback",
-            "deleteFeedback",
+            "deleteFeedback"
         ]),
         onSubmit() {
             this.$refs.observer.validate().then(success => {
