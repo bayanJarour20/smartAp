@@ -61,6 +61,7 @@ namespace SmartStart
                                            "SmartStart.Repository.General",
                                            "SmartStart.Repository.Setting",
                                            "SmartStart.Repository.Security",
+                                           "SmartStart.Repository.Invoice");
                                            "SmartStart.Repository.Shared",
                                            "SmartStart.Repository.PointOfSale");
 
