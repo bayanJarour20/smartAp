@@ -239,16 +239,17 @@ namespace SmartStart.Repository.Security.UserService
                 var AllQyery = _query<AppUser>().Include(f => f.UserCodes)
                                                  .Include(x => x.SubjectFacultyAppUsers)
                                                  .ThenInclude(x => x.SubjectFaculty)
+                                                 .ThenInclude(x => x.Faculty)
                                                  //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
                 var UserFaculties = AllQyery.Select(user => new UserFacultyList
                 {
                     Id = user.Id,
-                    Faculties = user.SubjectAppUsers.Select(e => new FacultySelectDto
+                    Faculties = user.SubjectFacultyAppUsers.Select(e => new FacultySelectDto
                     {
-                        Id = e.Subject.Faculty.Id,
-                        Name = e.Subject.Faculty.Name
+                        Id = e.SubjectFaculty.FacultyId,
+                        Name = e.SubjectFaculty.Faculty.Name
                     }).ToList()
                 })
                 .ToList();
