@@ -33,6 +33,7 @@ export default {
     },
     getters: {
         tagsList({ totalTagsList }) {
+            console.log(totalTagsList)
             return totalTagsList.filter(item => item.type == 0);
         },
         semester({ totalTagsList }) {
@@ -61,6 +62,7 @@ export default {
             store.state.banks.banksList = payload.banks;
         },
         Total_Tag_Fetch(state, payload) {
+            console.log(payload)
             state.totalTagsList = payload;
         },
         Fetch_University(state, payload) {
@@ -163,6 +165,20 @@ export default {
                 }
             }
             state.citiesList = tempList;
+        },
+        delete_Tag_List(state,payload){
+            let MapOfIds = new Map(); 
+            var idx; 
+            var tempList = []; 
+            for(idx = 0 ; idx < payload.length ; idx++) {
+                 MapOfIds.set(payload[idx] , 1);
+            }
+            for(idx = 0 ; idx < state.totalTagsList.length ; idx++) {
+                if(MapOfIds.has(state.totalTagsList[idx].id) === false) {
+                    tempList.push(state.totalTagsList[idx]); 
+                }
+            }
+            state.totalTagsList = tempList;
         },
         delete_University_List(state,payload){
             let MapOfIds = new Map(); 
@@ -338,7 +354,14 @@ export default {
                 );
             }
         },
-      
+        deleteTagList({commit},ids){
+            api.delete("Tag/RemoveTags",({ data }) => {
+                if(data) {
+                    commit("delete_Tag_List", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف المدن المحددة', success: 'تم حذف المدن المحددة بنجاح', error: "فشل حذف المدن المحددة " },
+            ids)
+        },
         deleteCityList({commit}, ids) {
             
             api.delete("City/DeleteRange",({ data }) => {
