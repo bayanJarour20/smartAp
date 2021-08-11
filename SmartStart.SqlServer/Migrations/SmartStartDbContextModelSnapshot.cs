@@ -797,7 +797,7 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("FacultyPOSUser");
+                    b.ToTable("FacultyPOSUsers");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.Question", b =>
@@ -1029,7 +1029,7 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("SubjectFaculty");
+                    b.ToTable("SubjectFaculties");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.SubjectFacultyAppUser", b =>
@@ -1863,20 +1863,20 @@ namespace SmartStart.SqlServer.Migrations
             modelBuilder.Entity("SmartStart.Model.Main.SubjectFacultyAppUser", b =>
                 {
                     b.HasOne("SmartStart.Model.Security.AppUser", "AppUser")
-                        .WithMany("SubjectAppUsers")
+                        .WithMany("SubjectFacultyAppUsers")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartStart.Model.Main.SubjectFaculty", "Subject")
-                        .WithMany()
+                    b.HasOne("SmartStart.Model.Main.SubjectFaculty", "SubjectFaculty")
+                        .WithMany("SubjectFacultyAppUsers")
                         .HasForeignKey("SubjectFacultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
 
-                    b.Navigation("Subject");
+                    b.Navigation("SubjectFaculty");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.SubjectTag", b =>
@@ -2015,6 +2015,11 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("SubjectTags");
                 });
 
+            modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
+                {
+                    b.Navigation("SubjectFacultyAppUsers");
+                });
+
             modelBuilder.Entity("SmartStart.Model.Security.AppUser", b =>
                 {
                     b.Navigation("Codes");
@@ -2027,7 +2032,7 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.Navigation("Rates");
 
-                    b.Navigation("SubjectAppUsers");
+                    b.Navigation("SubjectFacultyAppUsers");
 
                     b.Navigation("UserCodes");
 
