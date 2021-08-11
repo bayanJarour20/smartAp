@@ -20,12 +20,30 @@ namespace SmartStart.Repository.Shared.TagService
         public TagRepository(SmartStartDbContext context) : base(context) { }
 
         public async Task<OperationResult<IEnumerable<TagDto>>> Filter(TagTypes type)
-        => await RepositoryHandler(_filter(type));
+            => await RepositoryHandler(_filter(type));
+        public async Task<OperationResult<bool>> RemoveTags(List<Guid> tagIds)
+            => await RepositoryHandler(_removeTags(tagIds));
 
         private Func<OperationResult<IEnumerable<TagDto>>, Task<OperationResult<IEnumerable<TagDto>>>> _filter(TagTypes type)
-        => async operation => {
-            var list = await Query.Where(tag => tag.Type == type).Select(TagDto.Selector).ToListAsync();
-            return operation.SetSuccess(list);
-        };
+            => async operation => {
+                var list = await Query.Where(tag => tag.Type == type).Select(TagDto.Selector).ToListAsync();
+                return operation.SetSuccess(list);
+            };
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeTags(List<Guid> tagIds)
+            => async operation => {
+                var tags = await TrackingQuery.Where(s => tagIds.Contains(s.Id)).ToListAsync();
+                if (tags == null)
+                {
+                    return operation.SetSuccess(false);
+                }
+                foreach (var tag in tags)
+                {
+                    tag.DateDeleted = DateTime.Now;
+                }
+                Context.UpdateRange(tags);
+                await Context.SaveChangesAsync();
+                return operation.SetSuccess(true);
+            };
+
     }
 }
