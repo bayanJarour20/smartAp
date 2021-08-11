@@ -3,6 +3,7 @@ using Elkood.Web.Helper.Validations.Constants;
 using Elkood.Web.Helper.Validations.Enum;
 using Elkood.Web.Infrastructure.ModelEntity.Base;
 using SmartStart.Model.Security;
+using SmartStart.SharedKernel.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,6 +39,8 @@ namespace SmartStart.Model.Business
         [ColumnDataType(DataBaseTypes.DATETIME2)]
         public DateTime MaxEndDate { get; set; }
 
+        [ColumnDataType(DataBaseTypes.TINYINT)]
+        public CodeTypes Type { get; set; }
 
         [Required]
         public Guid SellerId { get; set; }
