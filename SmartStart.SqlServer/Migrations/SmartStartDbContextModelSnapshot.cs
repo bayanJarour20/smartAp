@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartStart.SqlServer.DataBase;
 
 namespace SmartStart.SqlServer.Migrations
 {
     [DbContext(typeof(SmartStartDbContext))]
-    [Migration("20210807150139_test")]
-    partial class test
+    partial class SmartStartDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -405,7 +403,7 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("PackageExams");
+                    b.ToTable("PackageSubjects");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Business.Rate", b =>
@@ -980,50 +978,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("SmartStart.Model.Main.SubjectAppUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("DefaultSelected")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("DateCreated");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("SubjectAppUsers");
-                });
-
             modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1076,6 +1030,50 @@ namespace SmartStart.SqlServer.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("SubjectFaculties");
+                });
+
+            modelBuilder.Entity("SmartStart.Model.Main.SubjectFacultyAppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateDeleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DefaultSelected")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubjectFacultyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("DateCreated");
+
+                    b.HasIndex("SubjectFacultyId");
+
+                    b.ToTable("SubjectFacultyAppUsers");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.SubjectTag", b =>
@@ -1827,25 +1825,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("SmartStart.Model.Main.SubjectAppUser", b =>
-                {
-                    b.HasOne("SmartStart.Model.Security.AppUser", "AppUser")
-                        .WithMany("SubjectAppUsers")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartStart.Model.Main.Subject", "Subject")
-                        .WithMany("SubjectAppUsers")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Subject");
-                });
-
             modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
                 {
                     b.HasOne("SmartStart.Model.General.Faculty", "Faculty")
@@ -1879,6 +1858,25 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("Semester");
 
                     b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("SmartStart.Model.Main.SubjectFacultyAppUser", b =>
+                {
+                    b.HasOne("SmartStart.Model.Security.AppUser", "AppUser")
+                        .WithMany("SubjectFacultyAppUsers")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartStart.Model.Main.SubjectFaculty", "SubjectFaculty")
+                        .WithMany("SubjectFacultyAppUsers")
+                        .HasForeignKey("SubjectFacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("SubjectFaculty");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.SubjectTag", b =>
@@ -2014,9 +2012,12 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.Navigation("Packages");
 
-                    b.Navigation("SubjectAppUsers");
-
                     b.Navigation("SubjectTags");
+                });
+
+            modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
+                {
+                    b.Navigation("SubjectFacultyAppUsers");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Security.AppUser", b =>
@@ -2031,7 +2032,7 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.Navigation("Rates");
 
-                    b.Navigation("SubjectAppUsers");
+                    b.Navigation("SubjectFacultyAppUsers");
 
                     b.Navigation("UserCodes");
 

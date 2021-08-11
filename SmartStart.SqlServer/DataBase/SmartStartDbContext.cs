@@ -62,7 +62,6 @@ namespace SmartStart.SqlServer.DataBase
         public DbSet<QuestionDocument> QuestionDocuments { get; set; }
         public DbSet<QuestionTag> QuestionTags { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<SubjectAppUser> SubjectAppUsers { get; set; }
         public DbSet<SubjectFaculty> SubjectFaculties { get; set; }
         public DbSet<SubjectFacultyAppUser> SubjectFacultyAppUsers { get; set; }
         public DbSet<SubjectTag> SubjectTags { get; set; }

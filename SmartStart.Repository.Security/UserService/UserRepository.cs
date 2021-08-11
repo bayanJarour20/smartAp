@@ -238,8 +238,8 @@ namespace SmartStart.Repository.Security.UserService
             => async operation => {
 
                 var AllQyery = _query<AppUser>().Include(f => f.UserCodes)
-                                                 .Include(x => x.SubjectAppUsers)
-                                                 .ThenInclude(x => x.Subject)
+                                                 .Include(x => x.SubjectFacultyAppUsers)
+                                                 .ThenInclude(x => x.SubjectFaculty)
                                                  //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
@@ -277,7 +277,7 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                               FacultiesIds = user.SubjectAppUsers.Select(e => e.Subject.FacultyId).ToList()
+                               FacultiesIds = user.SubjectFacultyAppUsers.Select(e => e.SubjectFaculty.FacultyId).ToList()
                            })
                            .ToListAsync();
 
