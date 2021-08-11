@@ -12,7 +12,7 @@ export const $themeConfig = {
         appName: "Smart Start", // Will update name in navigation menu (Branding)
         // eslint-disable-next-line global-require
         appLogoImage: require("@/assets/images/logo/tarafo_logo.png"), // Will update logo in navigation menu (Branding)
-        domainPath: "https://localhost:44352"
+        domainPath: "https://localhost:44375"
         //domainPath: "http://tarafou.elkood.com"
     },
     layout: {

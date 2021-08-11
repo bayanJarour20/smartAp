@@ -13,5 +13,13 @@ namespace SmartStart.Repository.General.CityService
     public interface ICityRepositroy : IElRepositoryGeneral<Guid, City, CityDto>
     {
         Task<OperationResult<IEnumerable<CityDto>>> GetCities();
+
+        Task<OperationResult<CityDto>> Add(CityDto cityDto);
+
+        Task<OperationResult<CityDto>> Update(CityDto cityDto);
+
+        Task<OperationResult<bool>> Delete(Guid id);
+
+        Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids);
     }
 }

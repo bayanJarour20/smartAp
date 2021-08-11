@@ -41,6 +41,22 @@ const router = new VueRouter({
         ...contentManagement,
 
         // test components
+        {
+            path: "/settings",
+            name: "settings",
+            component: () => import("@/views/settings"),
+            meta: () => ({
+                pageTitle: "الإعدادات",
+                icon: "",
+                roles: [Admin],
+                breadcrumb: [
+                    {
+                        text: "الإعدادات",
+                        active: true,
+                    },
+                ],
+            })
+        },
         ...docs,
         {
             path: "/login",

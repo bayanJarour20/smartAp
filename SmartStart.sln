@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.Repository.Main"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.Repository.Setting", "SmartStart.Repository.Setting\SmartStart.Repository.Setting.csproj", "{74A461A5-B1E6-470F-8B3D-D880D3DA499E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.Repository.Security", "SmartStart.Repository.Security\SmartStart.Repository.Security.csproj", "{11BC9DD1-6E0C-4464-A9CE-4FA034E97E76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartStart.Repository.Security", "SmartStart.Repository.Security\SmartStart.Repository.Security.csproj", "{11BC9DD1-6E0C-4464-A9CE-4FA034E97E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.Repository.Shared", "SmartStart.Repository.Shared\SmartStart.Repository.Shared.csproj", "{2700573E-175A-432E-86F1-71248C225F7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartStart.Repository.PointOfSale", "SmartStart.Repository.PointOfSale\SmartStart.Repository.PointOfSale.csproj", "{996A96D8-D456-44D3-9F20-3C5F0BF403D7}"
 EndProject
@@ -73,6 +75,10 @@ Global
 		{11BC9DD1-6E0C-4464-A9CE-4FA034E97E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11BC9DD1-6E0C-4464-A9CE-4FA034E97E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11BC9DD1-6E0C-4464-A9CE-4FA034E97E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2700573E-175A-432E-86F1-71248C225F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2700573E-175A-432E-86F1-71248C225F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2700573E-175A-432E-86F1-71248C225F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2700573E-175A-432E-86F1-71248C225F7E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{996A96D8-D456-44D3-9F20-3C5F0BF403D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{996A96D8-D456-44D3-9F20-3C5F0BF403D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{996A96D8-D456-44D3-9F20-3C5F0BF403D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -91,6 +97,7 @@ Global
 		{BBE853E7-E86A-4738-83A8-D7E2BC266A6D} = {28C3C037-984D-45EB-9752-2C0324412A9F}
 		{74A461A5-B1E6-470F-8B3D-D880D3DA499E} = {28C3C037-984D-45EB-9752-2C0324412A9F}
 		{11BC9DD1-6E0C-4464-A9CE-4FA034E97E76} = {28C3C037-984D-45EB-9752-2C0324412A9F}
+		{2700573E-175A-432E-86F1-71248C225F7E} = {28C3C037-984D-45EB-9752-2C0324412A9F}
 		{996A96D8-D456-44D3-9F20-3C5F0BF403D7} = {28C3C037-984D-45EB-9752-2C0324412A9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
