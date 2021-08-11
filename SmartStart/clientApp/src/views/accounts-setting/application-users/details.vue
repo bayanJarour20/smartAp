@@ -103,6 +103,13 @@
                                 placeholder="ادخل كلمة السر"
                                 name="passwordName"
                                 v-model="userDto.password"
+                                :rules="[
+                                    { type: 'required', message: 'كلمة السر مطلوب' },
+                                    {
+                                        type: 'min:4',
+                                        message: 'لايجب أن يقل عن أربعة'
+                                    }
+                                ]"
                             />
                         </b-col>
                         <b-col cols="12"  md="6" lg="4">
