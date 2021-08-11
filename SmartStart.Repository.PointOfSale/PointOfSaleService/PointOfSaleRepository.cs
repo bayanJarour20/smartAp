@@ -1,17 +1,24 @@
 ﻿using Elkood.Web.Common.ContextResult.OperationContext;
+using Elkood.Web.Common.Shared.ExtensionMethods;
+using Elkood.Web.Helper.ExtensionMethods.String;
 using Elkood.Web.Service.BoundedContext;
 using Elkood.Web.Service.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using SmartStart.Model.Business;
+using SmartStart.Model.Main;
 using SmartStart.Model.Security;
+using SmartStart.Model.Setting;
 using SmartStart.Repository.PointOfSale.DataTransferObject;
 using SmartStart.Repository.PointOfSale.PointOfSaleService.DataTransferObject;
 using SmartStart.SharedKernel.Enums;
+using SmartStart.SharedKernel.ExtensionMethods;
+using SmartStart.SharedKernel.Security;
 using SmartStart.SqlServer.DataBase;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,14 +75,17 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
         private Func<OperationResult<object>, Task<OperationResult<object>>> _getPointOfSales()
         => async operation => {
 
-            var list = await Query.Where(user => !user.DateDeleted.HasValue && user.Type == UserTypes.Seller && !user.DateDeleted.HasValue && user.DateActivated.HasValue).
-                            Select(user => new
-                            {
-                                Name = user.Name,
-                                PhoneNumber = user.PhoneNumber,
-                                Address = user.Address,
-                                CityName = user.City.Name
-                            }).ToListAsync();
+            var list = await Query.Where(user => !user.DateDeleted.HasValue 
+                                               && user.Type == UserTypes.Seller 
+                                               && !user.DateDeleted.HasValue 
+                                               && user.DateActivated.HasValue)
+                                  .Select(user => new
+                                  {
+                                    Name = user.Name,
+                                    PhoneNumber = user.PhoneNumber,
+                                    Address = user.Address,
+                                    CityName = user.City.Name
+                                  }).ToListAsync();
 
             return operation.SetSuccess(list);
         };
@@ -132,7 +142,7 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                 code.Packages ??= new List<PackageDto>() {
                     new PackageDto()
                     {
-                        Name = $"حزمة {code.Type.GetDisplayDescription()}",
+                        Name = $"حزمة",
                         Description = "",
                         Price = code.Value,
                         StartDate =code.DateCreated,
@@ -152,8 +162,11 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                                                         && package.StartDate <= DateTime.Now 
                                                         && package.EndDate >= DateTime.Now);
 
-                if (_query<>().Any(w => w.AppUserId == userId))
-                    defaultquery.Where(package => package.PackageExams.Any(w => w.Exam.Subject.Faculty.PosUsers.Any(w => w.AppUserId == userId)));
+                if (_query<FacultyPOSUser>().Any(w => w.AppUserId == userId))
+                    defaultquery.Where(p => p.PackageSubjects
+                                             .Any(p => p.Subject.Faculties
+                                                                   .Any(f => f.Faculty.AppUsers.Any(u => u.Id == userId)
+                                                                   )));
 
                 var result = await defaultquery.Select(Package => new PackageDto
                 {
@@ -175,56 +188,29 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             if (generateCode.PackageIds is null || !generateCode.PackageIds.Any())
                 return operation.SetFailed("it must contain a package");
 
-
-            var userMoney = await Query.Where(user => user.Id == id && !user.DateDeleted.HasValue).
-               Select(user => new
-               {
-                   user.Id,
-                   user.MoneyLimit,
-                   UnInvoiceMoney = user.Codes.Where(code => !code.InvoiceId.HasValue).Sum(code => code.Value),
-                   DiscountRate = user.Rates.OrderByDescending(rate => rate.DateCreated).Select(rate => rate.DiscountRate).FirstOrDefault(),
-               }).FirstOrDefaultAsync();
+            var userMoney = await Query.Where(user => user.Id == id && !user.DateDeleted.HasValue)
+                .Select(user => new
+                {
+                    user.Id,
+                    user.MoneyLimit,
+                    UnInvoiceMoney = user.Codes.Where(code => !code.InvoiceId.HasValue).Sum(code => code.Value),
+                    DiscountRate = user.Rates.OrderByDescending(rate => rate.DateCreated).Select(rate => rate.DiscountRate).FirstOrDefault(),
+                }).FirstOrDefaultAsync();
 
             if (userMoney is null)
                 return (OperationResultTypes.NotExist, "seller not exist");
 
-
             Code code = new Code();
             List<Package> packages = new List<Package>();
-            bool isNormal = true;
-            CodeTypes codeType = CodeTypes.Normal;
 
             generateCode.PackageIds = generateCode.PackageIds.Distinct();
 
-            if (generateCode.PackageIds.Count() == 1)
-            {
-                var packageId = generateCode.PackageIds.Single();
-
-                if (packageId == GlobalConstValues.DefaultConstPackageId)
-                    codeType = CodeTypes.Const;
-
-                if (packageId == GlobalConstValues.DefaultConstOptionalPackageId)
-                    codeType = CodeTypes.ConstOptional;
-
-                if (packageId == GlobalConstValues.DefaultOptionalPackageId)
-                    codeType = CodeTypes.Optional;
-
-                if (codeType != CodeTypes.Normal)
-                {
-                    var package = await _query<Package>().FirstOrDefaultAsync(p => p.Id == packageId);
-                    packages.Add(package);
-                    isNormal = false;
-                }
-            }
-
-            if (isNormal)
-            {
-                DateTime dateNow = DateTime.Now.ToLocalTime();
-                packages = await _query<Package>().Where(package => generateCode.PackageIds.Contains(package.Id) && !package.IsHidden && package.StartDate <= dateNow && package.EndDate >= dateNow).ToListAsync();
-                if (packages.Count != generateCode.PackageIds.Count())
-                    return (OperationResultTypes.NotExist, "once or more packages is not available anymore");
-            }
-
+            DateTime dateNow = DateTime.Now.ToLocalTime();
+            packages = await _query<Package>().Where(package => generateCode.PackageIds
+                                              .Contains(package.Id) && !package.IsHidden && package.StartDate <= dateNow && package.EndDate >= dateNow)
+                                              .ToListAsync();
+            if (packages.Count != generateCode.PackageIds.Count())
+                return (OperationResultTypes.NotExist, "once or more packages is not available anymore");
 
             if (userMoney.MoneyLimit.HasValue)
                 if (userMoney.MoneyLimit <= (userMoney.UnInvoiceMoney + packages.Sum(package => package.Price)))
@@ -233,27 +219,22 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             var maxEndDate = packages.Max(package => package.EndDate);
             var price = packages.Sum(package => package.Price);
 
-
             code = new Code()
             {
                 DiscountRate = generateCode.DiscountRate,
                 SellerId = id,
                 Value = price,
                 MaxEndDate = ExtensionMethodsShared.EndAcademicYear(),
-                Type = codeType,
             };
 
-            if (isNormal)
+            code.MaxEndDate = maxEndDate;
+            code.CodePackages = packages.Select(package => new CodePackage()
             {
-                code.MaxEndDate = maxEndDate;
-                code.CodePackages = packages.Select(package => new CodePackage()
-                {
-                    PackageId = package.Id,
-                }).ToList();
-            }
+                PackageId = package.Id,
+            }).ToList();
 
             await ExtensionMethodsShared.SolveCannotInsertDuplicateKeyUniqueIndexAsync(async () => {
-                code.Hash = ExtensionMethodsShared.GetUniqueKey(6);
+                code.Hash = ExtensionMethodsShared.GetUniqueKey(6); 
                 await Context.AddRangeAsync(code);
                 await Context.SaveChangesAsync();
             });
@@ -282,7 +263,7 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
 
         private Func<OperationResult<NotificationCollectionDto>, Task<OperationResult<NotificationCollectionDto>>> _getNotifications
             => async operation => {
-
+                
                 Collection<NotificationDto> notificationToday = new Collection<NotificationDto>();
                 Collection<NotificationDto> notification = new Collection<NotificationDto>();
                 DateTime date_now = DateTime.Today;
@@ -307,8 +288,6 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                     Notification = notification
                 });
             };
-
-
 
         private Func<OperationResult<PointOfSaleAccountDto>, Task<OperationResult<PointOfSaleAccountDto>>> _create(PointOfSaleAccountDto account)
         => async operation => {
@@ -339,7 +318,7 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             if (!identityResult.Succeeded)
                 return operation.SetFailed(String.Join(",", identityResult.Errors.Select(error => error.Description)));
 
-            var roleIdentityResult = await UserManager.AddToRoleAsync(user, TarafouaRoles.Seller.ToString());
+            var roleIdentityResult = await UserManager.AddToRoleAsync(user, SmartStartRoles.Seller.ToString());
 
             if (!roleIdentityResult.Succeeded)
                 return operation.SetFailed(String.Join(",", roleIdentityResult.Errors.Select(error => error.Description)));
@@ -384,7 +363,6 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
 
             // ensure remove all old faculty 
             Context.RemoveRange(Context.FacultyPOSUsers.Where(x => x.AppUserId == account.Id).ToList());
-
 
             var rate = (await TrackingQuery.Where(user => user.Id == account.Id)
                                            .Include(user => user.Rates)
@@ -533,9 +511,7 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             return operation.SetSuccess(one);
         };
 
-
-
-        const string DistributedLey_label = "tarafoua_user_blacklist:";
+        const string DistributedLey_label = "smartstart_user_blacklist:";
 
         private async Task PushUserInBlacklist(AppUser User, bool isUpdated = false)
         {

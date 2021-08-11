@@ -17,7 +17,6 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService.DataTransferObjec
         public DateTime DateCreated { get; set; }
         public DateTime? DateActivated { get; set; }
         public DateTime MaxEndDate { get; set; }
-        public CodeTypes Type { get; set; }
         public bool IsInvoice { get; set; }
 
     }
