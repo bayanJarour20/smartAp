@@ -150,6 +150,7 @@ export default {
             this.$refs["table"].selectedRows.forEach(row => {
                 this.selectedIds.push(row[this.selectedLabel]);
             });
+            this.selectionChanged()
             this.$emit("delete-selected", this.selectedIds);
         },
         details(props) {
