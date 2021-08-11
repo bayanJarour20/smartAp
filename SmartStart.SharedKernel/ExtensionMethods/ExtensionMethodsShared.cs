@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -90,6 +91,32 @@ namespace SmartStart.SharedKernel.ExtensionMethods
                 // 2601 whill not work with oracl or other un sql server . check for general number casting 
             }
         }
+
+        public static (IEnumerable<T> Add, IEnumerable<T> remove) IsolatedExcept<T>(this IEnumerable<T> @old, IEnumerable<T> @new)
+            => (@new.Except(old), old.Except(@new));
+
+        public static (IEnumerable<TProp> Add, IEnumerable<TProp> remove) IsolatedExcept<Told, Tnew, TProp>(this IEnumerable<Told> @old, IEnumerable<Tnew> @new, Func<Told, TProp> funcold, Func<Tnew, TProp> funcnew)
+            => @old.Select(funcold).IsolatedExcept(@new.Select(funcnew));
+
+
+        public static (IEnumerable<Tnew> Add, IEnumerable<Told> remove) IsolatedExceptOldNew<Told, Tnew, TProp>(this IEnumerable<Told> @old, IEnumerable<Tnew> @new, Func<Told, TProp> funcold, Func<Tnew, TProp> funcnew)
+        {
+            ICollection<Tnew> Add = new Collection<Tnew>();
+            //ICollection<Told> remove =  (ICollection<Told>)@old;
+            ICollection<Told> remove = new List<Told>(@old);
+            foreach (var item in @new)
+            {
+                var _old = old.Select(funcold).SingleOrDefault(x => x.Equals(funcnew(item)));
+                if (_old is null || !old.Any() || _old.ToString() == "00000000-0000-0000-0000-000000000000")
+                    Add.Add(item);
+                else
+                    remove.Remove(old.First(x => funcold(x).Equals(_old)));
+            }
+
+            return (Add, remove);
+        }
+
+
 
     }
 }
