@@ -9,14 +9,14 @@ using System.Text;
 
 namespace SmartStart.Model.Main
 {
-    public class SubjectAppUser : BaseEntity<Guid>
+    public class SubjectFacultyAppUser : BaseEntity<Guid>
     {
         [ColumnDataType(DataBaseTypes.BIT)]
         public bool DefaultSelected { get; set; }
 
         [Required]
-        public Guid SubjectId { get; set; }
-        public Subject Subject { get; set; }
+        public Guid SubjectFacultyId { get; set; }
+        public SubjectFaculty Subject { get; set; }
 
         [Required]
         public Guid AppUserId { get; set; }

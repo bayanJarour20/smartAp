@@ -1,4 +1,5 @@
-﻿using SmartStart.DataTransferObject.SharedDto;
+﻿using Microsoft.AspNetCore.Http;
+using SmartStart.DataTransferObject.SharedDto;
 using SmartStart.SharedKernel.Enums;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace SmartStart.DataTransferObject.SubjectDto
         public string Description { get; set; }
         public string ImagePath { get; set; }
         public bool IsFree { get; set; }
+        public IFormFile File { get; set; }
     }
 }

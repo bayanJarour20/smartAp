@@ -92,7 +92,7 @@ export default {
             },{confirm: 'هل تريد فعلاً حذف الكلية', success: 'تم حذف الكلية بنجاح', error: "فشل حذف الكلية" })
         },
         deleteFacultyList({commit}, ids) {
-            console.log(ids)
+            
             api.delete("Faculty/RemoveFaculties",({ data }) => {
                 if(data) {
                     commit("Delete_Faculty_List", ids);
