@@ -1,4 +1,5 @@
-﻿using Elkood.Web.MVC;
+﻿using Elkood.Web.Common.ContextResult.OperationContext;
+using Elkood.Web.MVC;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartStart.DataTransferObject.TagDto;
@@ -19,5 +20,8 @@ namespace SmartStart.Controllers
     {
         public TagController(ITagRepository repository) : base(repository) { }
 
+        [HttpDelete]
+        public async Task<IActionResult> RemoveTags(List<Guid> tagIds)
+            => await repository.RemoveTags(tagIds).ToJsonResultAsync();
     }
 }
