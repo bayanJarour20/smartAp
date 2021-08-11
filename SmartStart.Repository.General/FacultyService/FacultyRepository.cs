@@ -27,6 +27,7 @@ namespace SmartStart.Repository.General.FacultyService
         {
             this.webHostEnvironment = webHostEnvironment;
         }
+
         public async Task<OperationResult<IEnumerable<FacultyBaseDto>>> GetAll()
             => await RepositoryHandler(_getAll());
         public async Task<OperationResult<FacultyDto>> SetFaculty(FacultyDto facultyDto, IFormFile formFile)
@@ -37,8 +38,6 @@ namespace SmartStart.Repository.General.FacultyService
             => await RepositoryHandler(_removeFaculties(facultyIds));
         public async Task<OperationResult<IEnumerable<SelectDto>>> FacultySelect()
             => await RepositoryHandler(_facultySelect());
-
-
 
         private Func<OperationResult<IEnumerable<FacultyBaseDto>>, Task<OperationResult<IEnumerable<FacultyBaseDto>>>> _getAll()
             => async operation => {
@@ -134,9 +133,6 @@ namespace SmartStart.Repository.General.FacultyService
                 }).ToListAsync();
                 return operation.SetSuccess(res);
             };
-
-
-
 
         #region Helper Functions
         private OperationResult<bool> TryUploadImage(IFormFile image, out string path)
