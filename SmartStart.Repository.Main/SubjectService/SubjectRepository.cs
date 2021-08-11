@@ -77,6 +77,19 @@ namespace SmartStart.Repository.Main.SubjectService
                         };
                         await Context.Subjects.AddAsync(subject);
                         subjectDto.Id = subject.Id;
+                        if (subjectDto.Doctors != null)
+                        {
+                            List<SubjectTag> temp = new List<SubjectTag>();
+                            foreach (var doctor in subjectDto.Doctors)
+                            {
+                                temp.Add(new SubjectTag
+                                {
+                                    SubjectId = subject.Id,
+                                    TagId = doctor
+                                });
+                            }
+                            await Context.SubjectTags.AddRangeAsync(temp);
+                        }
                         await Context.SaveChangesAsync();
                         return operation.SetSuccess(subjectDto);
                     }
