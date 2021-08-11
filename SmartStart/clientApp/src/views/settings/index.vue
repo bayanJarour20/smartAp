@@ -7,8 +7,10 @@
                     :items="citiesList"
                     :columns="citiesColumn"
                     isPlus
+                    selectedLabel="id"
                     @plus="setCityDialogForm()"
                     @details="setCityDialogForm($event)"
+                    @delete-selected="deleteCity"
                 >
                 </EKTable>
             </b-col>
@@ -18,8 +20,10 @@
                     :items="universitiesList"
                     :columns="universitiesColumn"
                     isPlus
+                    selectedLabel="id"
                     @plus="setUniversityDialogForm()"
                     @details="setUniversityDialogForm($event)"
+                    @delete-selected="deleteUniversity"
                 >
                 </EKTable>
             </b-col>
@@ -231,7 +235,9 @@ export default {
         ...mapActions([
             "fetchTotalTag",
             "fetchUniversity",
-            "fetchCity"
+            "fetchCity",
+            "deleteCityList",
+            "deleteUniversityList"
         ]),
         setCityDialogForm(item) {
             if (!item) {
@@ -266,6 +272,12 @@ export default {
             } else if (type == 4) {
                 this.$refs.sectionsDialog.open()
             }
+        },
+        deleteCity(list){
+            this.deleteCityList(list)
+        },
+        deleteUniversity(list){
+          this.deleteUniversityList(list)
         }
     }
 };
