@@ -163,10 +163,9 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                                                         && package.EndDate >= DateTime.Now);
 
                 if (_query<FacultyPOSUser>().Any(w => w.AppUserId == userId))
-                    defaultquery.Where(p => p.PackageSubjects
-                                             .Any(p => p.Subject.Faculties
-                                                                   .Any(f => f.Faculty.AppUsers.Any(u => u.Id == userId)
-                                                                   )));
+                    defaultquery.Where(p => p.PackageSubjectFaculties
+                                             .Any(p => p.SubjectFaculty.Faculty.AppUsers
+                                                                       .Any(u => u.Id == userId)));
 
                 var result = await defaultquery.Select(Package => new PackageDto
                 {

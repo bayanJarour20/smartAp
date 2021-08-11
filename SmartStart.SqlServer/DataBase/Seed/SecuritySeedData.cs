@@ -185,65 +185,79 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                         StartDate = DateTime.Now,
                                         EndDate = DateTime.Now.AddDays(15),
                                         Price = 1000,
-                                        PackageSubjects = new List<PackageSubject>()
+                                        PackageSubjectFaculties = new List<PackageSubjectFaculty>()
                                         {
-                                            new PackageSubject()
+                                            new PackageSubjectFaculty()
                                             {
                                                 Price = 400,
-                                                Subject = new Subject()
+                                                SubjectFaculty = new SubjectFaculty ()
                                                 {
-                                                    Name = "البرمجة 1",
-                                                    Description = "وصف مادة البرمجة 1",
-                                                    IsFree = false,
-                                                    Faculties = new List<SubjectFaculty>()
+                                                    Faculty = new Faculty()
                                                     {
-                                                        new SubjectFaculty()
+                                                        Name = "كلية الهندسة المعلوماتية",
+                                                        University =new University()
                                                         {
-                                                            Faculty = new Faculty()
+                                                            Name ="جامعة حلب",
+                                                            City= new City()
                                                             {
-                                                                Name = "كلية الهندسة المعلوماتية",
-                                                                University =new University()
-                                                                {
-                                                                    Name ="جامعة حلب",
-                                                                    City= new City()
-                                                                    {
-                                                                        Name ="حلب"
-                                                                    }
-                                                                }
-                                                            },
-                                                            Section = new Tag()
-                                                            {
-                                                                Name = "قسم البرمجيات", 
-                                                                Type = TagTypes.Section
-                                                            },
-                                                            Semester = new Tag()
-                                                            {
-                                                                Name = "فصل أول",
-                                                                Type = TagTypes.Semester
+                                                                Name ="حلب"
                                                             }
                                                         }
                                                     },
-                                                    SubjectTags = new List<SubjectTag>()
+                                                    Subject = new Subject()
                                                     {
-                                                        new SubjectTag()
+                                                        Name = "البرمجة 1",
+                                                        Description = "وصف مادة البرمجة 1",
+                                                        IsFree = false,
+                                                        Faculties = new List<SubjectFaculty>()
                                                         {
-                                                            Tag = new Tag()
+                                                            new SubjectFaculty()
                                                             {
-                                                                Name = "دكتور اسامه",
-                                                                Type = TagTypes.Doctor,
-                                                            },
+                                                                Faculty = new Faculty()
+                                                                {
+                                                                    Name = "كلية الهندسة المعلوماتية",
+                                                                    University =new University()
+                                                                    {
+                                                                        Name ="جامعة حلب",
+                                                                        City= new City()
+                                                                        {
+                                                                            Name ="حلب"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                Section = new Tag()
+                                                                {
+                                                                    Name = "قسم البرمجيات",
+                                                                    Type = TagTypes.Section
+                                                                },
+                                                                Semester = new Tag()
+                                                                {
+                                                                    Name = "فصل أول",
+                                                                    Type = TagTypes.Semester
+                                                                }
+                                                            }
                                                         },
-                                                        new SubjectTag()
+                                                        SubjectTags = new List<SubjectTag>()
                                                         {
-                                                            Tag = new Tag()
+                                                            new SubjectTag()
                                                             {
-                                                                Name = "الفصل الاول",
-                                                                Type = TagTypes.Semester,
+                                                                Tag = new Tag()
+                                                                {
+                                                                    Name = "دكتور اسامه",
+                                                                    Type = TagTypes.Doctor,
+                                                                },
                                                             },
-                                                        }
-                                                    },
-                                                    Type = SubjectTypes.Academic,
-                                                    Exams = new List<Exam>()
+                                                            new SubjectTag()
+                                                            {
+                                                                Tag = new Tag()
+                                                                {
+                                                                    Name = "الفصل الاول",
+                                                                    Type = TagTypes.Semester,
+                                                                },
+                                                            }
+                                                        },
+                                                        Type = SubjectTypes.Academic,
+                                                        Exams = new List<Exam>()
                                                     {
                                                         new Exam()
                                                         {
@@ -383,6 +397,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                             }
                                                         }
                                                     },
+                                                    }
                                                 }
                                             }
                                         },
