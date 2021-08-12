@@ -58,8 +58,6 @@ namespace SmartStart.Repository.Invoice.PackageService
 
                  string packageName = group.First().Faculty.Name + " " + yearNames[fixYear];
 
-                 var exams = group.SelectMany(g => g.Subject.Exams);
-
                  var backpackage = await Context.Packages
                                                 .Include(p => p.PackageSubjectFaculties)
                                                 .FirstOrDefaultAsync(p => p.Name == packageName);
@@ -72,7 +70,7 @@ namespace SmartStart.Repository.Invoice.PackageService
                          Price = 4000,
                          Type = PackageTypes.Normal,
                          Description = $"تحوي على كافة الدورات المواد التابعة لـ{packageName}",
-                         PackageSubjectFaculties = exams.Select(e => new PackageSubjectFaculty()
+                         PackageSubjectFaculties = group.Select(e => new PackageSubjectFaculty()
                          {
                              SubjectFacultyId = e.Id,
                          }).ToList()
@@ -82,9 +80,18 @@ namespace SmartStart.Repository.Invoice.PackageService
                  }
                  else
                  {
-                     var except = ExtensionMethodsShared.IsolatedExcept(backpackage.PackageSubjectFaculties, exams, e => e.SubjectFacultyId, e => e.Id);
-                     Context.PackageSubjectFaculties.RemoveRange(Context.PackageSubjectFaculties.Where(x => x.PackageId == backpackage.Id && except.remove.Contains(x.SubjectFacultyId)));
-                     await Context.PackageSubjectFaculties.AddRangeAsync(except.Add.Select(x => new PackageSubjectFaculty()
+                     var except = ExtensionMethodsShared.IsolatedExcept(backpackage.PackageSubjectFaculties,
+                                                                        group,
+                                                                        e => e.SubjectFacultyId,
+                                                                        e => e.Id);
+
+                     Context.PackageSubjectFaculties
+                            .RemoveRange(Context.PackageSubjectFaculties
+                                                .Where(x => x.PackageId == backpackage.Id 
+                                                        && except.remove.Contains(x.SubjectFacultyId)));
+
+                     await Context.PackageSubjectFaculties
+                                  .AddRangeAsync(except.Add.Select(x => new PackageSubjectFaculty()
                      {
                          PackageId = backpackage.Id,
                          SubjectFacultyId = x,
@@ -170,7 +177,6 @@ namespace SmartStart.Repository.Invoice.PackageService
 
             Package one = new()
             {
-                Id = dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
                 EndDate = dto.EndDate,
@@ -178,7 +184,12 @@ namespace SmartStart.Repository.Invoice.PackageService
                 StartDate = dto.StartDate,
                 Type = dto.Type,
                 IsHidden = dto.IsHidden,
-                PackageSubjectFaculties = dto.SubjectFaculties.Select(e => new PackageSubjectFaculty() { Price = e.Price, SubjectFacultyId = e.SubjectFacultyId }).ToList(),
+                PackageSubjectFaculties = dto.SubjectFaculties
+                                             .Select(e => new PackageSubjectFaculty() 
+                                             { 
+                                                 Price = e.Price,
+                                                 SubjectFacultyId = e.SubjectFacultyId 
+                                             }).ToList(),
             };
 
             await Context.AddAsync(one);
