@@ -5,10 +5,8 @@
             :title="!isEdit ? 'إرسال إشعار' : 'تفاصيل الإشعار'"
             :placeholder="!isEdit ? 'ابحث عن إشعار ما...' : ''"
             :btnText="!isEdit ? 'إرسال إشعار' : ''"
-           
             @close="$store.commit('Reset_Notification_Dto')"
             :isEdit="isEdit"
-            
             @search="search"
         >
             <template #body>
