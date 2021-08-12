@@ -8,6 +8,7 @@ import store from "@/store";
 
 import docs from "./docs";
 import contentManagement from "./content-management";
+import codes from "./codes"; 
 
 Vue.use(VueRouter);
 
@@ -39,7 +40,7 @@ const router = new VueRouter({
             }),
         },
         ...contentManagement,
-
+        ...codes,
         // test components
         {
             path: "/settings",
