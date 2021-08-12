@@ -155,6 +155,22 @@ export default {
                 ? null
                 : new Date();
         },
+        Delete_Users_List(state,payload){
+            let MapOfIds = new Map(); 
+                var idx; 
+                var tempList = []; 
+                for(idx = 0 ; idx < payload.length ; idx++) {
+                    MapOfIds.set(payload[idx] , 1);
+                }
+                for(idx = 0 ; idx < state.usersList.length ; idx++) {
+                    if(MapOfIds.has(state.usersList[idx].id) === false) {
+                        tempList.push(state.usersList[idx]); 
+                    }
+                }
+                state.usersList = tempList; 
+        }
+        
+     
     },
     actions: {
         getRoles({ commit }){
@@ -177,7 +193,6 @@ export default {
                 });
             }
         },
-
         // pos
         createPOS({ commit }, payload) {
             api.post(
@@ -327,6 +342,10 @@ export default {
                 ({ data }) => {
                     commit("Create_User", data);
                 }
+                ,{
+                    success: "تم إضافة المستخدم بنجاح",
+                    error: "فشل  إضافة المستخدم"
+                    }
             );
         },
         userDetails({ commit }, id) {
@@ -337,6 +356,11 @@ export default {
         blockUser({ commit }, id) {
             api.put("User/Block/" + id, {}, () => {
                 commit("Block_User");
+            },
+            {
+                
+                success: "تمت العملية بنجاح",
+                error: " فشلت العملية"
             });
         },
         updateUser(ctx, payload) {
@@ -354,6 +378,12 @@ export default {
                 subscriptionDate: new Date(payload.subscriptionDate),
                 gender: payload.gender,
                 facultyId: payload.facultyId
+            }, () => {}
+            ,
+            {
+                
+                success: "تم تعديل المستخدم بنجاح",
+                error: "فشل تعديل المستخدم"
             });
         },
         deleteUser(ctx, id) {
@@ -361,8 +391,22 @@ export default {
                 if (data) {
                     router.push("/users/0");
                 }
+            },
+            {
+                confirm: "هل انت متأكد من حذف المستخدم",
+                success: "تم حذف المستخدم بنجاح",
+                error: "فشل حذف المستخدم"
             });
         },
+        deleteUsersList({ commit }, ids){
+            console.log(ids)
+            api.delete("User/DeleteRange",({ data }) => {
+                if(data) {
+                    commit("Delete_Users_List", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف المستخدمين المحددين', success: 'تم حذف المستخدمين المحددين بنجاح', error: "فشل حذف المستخدمين المحددين " },
+            ids)
+        }
 
 
     }

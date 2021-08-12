@@ -15,12 +15,15 @@ import faculties from "./content-management/faculties"
 import advertising from './content-management/advertising'
 import invoices from "./invoices"
 
+
+
 import subjects from './content-management/subjects'
 import natification from "./content-management/notifications"
 
 import accounts from './accounts'
 import feedbacks from "./content-management/contact"
 import home from "./home" 
+
 
 Vue.use(Vuex)
 
@@ -29,12 +32,14 @@ export default new Vuex.Store({
     app,
     appConfig,
     verticalMenu,
-    accounts,
-    home,
-    invoices,
-    advertising,
     codes,
     packages,
+    accounts,
+    invoices,
+    home,
+
+    advertising,
+
     faculties,
     feedbacks,
     filter,

@@ -6,8 +6,19 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="wwwroot\Documents\Subject_Image\35cf0d66-6ced-45cb-b21b-a56317b4ae0d_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
+		<Compile Remove="wwwroot\Documents\Subject_Image\3bdeba84-2cc5-4d91-8577-f942ef64a2c7_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
 		<Content Remove="$(ClientApp)**" />
+		<Content Remove="wwwroot\Documents\Subject_Image\35cf0d66-6ced-45cb-b21b-a56317b4ae0d_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
+		<Content Remove="wwwroot\Documents\Subject_Image\3bdeba84-2cc5-4d91-8577-f942ef64a2c7_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
 		<None Include="$(ClientApp)**" Exclude="$(ClientApp)node_modules\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="wwwroot\Documents\Subject_Image\35cf0d66-6ced-45cb-b21b-a56317b4ae0d_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
+	  <EmbeddedResource Remove="wwwroot\Documents\Subject_Image\3bdeba84-2cc5-4d91-8577-f942ef64a2c7_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
+	  <None Remove="wwwroot\Documents\Subject_Image\35cf0d66-6ced-45cb-b21b-a56317b4ae0d_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
+	  <None Remove="wwwroot\Documents\Subject_Image\3bdeba84-2cc5-4d91-8577-f942ef64a2c7_wooden-board-empty-table-top-blurred-background-perspective-brown-wood-table-blur-coffee-shop-background-panoramic-banner-can-be-used-mock-up-montage-products-display-design-min.jpg\**" />
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Elkood.Web" Version="0.8.7.4" />

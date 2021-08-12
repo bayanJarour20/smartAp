@@ -29,6 +29,7 @@ namespace SmartStart.Repository.Main.SubjectService
             this.webHostEnvironment = webHostEnvironment;
         }
 
+
         public async Task<OperationResult<IEnumerable<SubjectDto>>> GetAll(int? year, Guid? semesterId, Guid? facultyId)
             => await RepositoryHandler(_getAll(year, semesterId, facultyId));
         public async Task<OperationResult<SubjectAllDto>> SetSubject(SubjectDetailsDto subjectDto, IFormFile image)
@@ -55,7 +56,15 @@ namespace SmartStart.Repository.Main.SubjectService
                                          ExamCount = s.Exams.Count(e => e.Type == TabTypes.Exam),
                                          InterviewCount = s.Exams.Count(e => e.Type == TabTypes.Interview),
                                          MicroscopeCount = s.Exams.Count(e => e.Type == TabTypes.Microscope),
-                                         DateCreate = s.DateCreated
+                                         DateCreate = s.DateCreated,
+                                         subjectFaculties = s.Faculties.Select(f => new SubjectFacultyDto 
+                                         {
+                                             FacultyId = f.FacultyId,
+                                             SectionId = f.SectionId, 
+                                             SemesterId = f.SemesterId,
+                                             Year = f.Year
+                                         }).ToList()
+                                         
                                      }).ToListAsync();
                 return operation.SetSuccess(res);
             };
@@ -79,19 +88,8 @@ namespace SmartStart.Repository.Main.SubjectService
                         };
                         await Context.Subjects.AddAsync(subject);
                         subjectDto.Id = subject.Id;
-                        if (subjectDto.Doctors != null)
-                        {
-                            List<SubjectTag> temp = new List<SubjectTag>();
-                            foreach (var doctor in subjectDto.Doctors)
-                            {
-                                temp.Add(new SubjectTag
-                                {
-                                    SubjectId = subject.Id,
-                                    TagId = doctor
-                                });
-                            }
-                            await Context.SubjectTags.AddRangeAsync(temp);
-                        }
+                        await addSubjectDoctors(subjectDto.Doctors, subject.Id);
+                        await addSubjectFaculties(subjectDto.subjectFaculties, subject.Id);
                         await Context.SaveChangesAsync();
                         return operation.SetSuccess(new SubjectAllDto
                         {
@@ -106,7 +104,8 @@ namespace SmartStart.Repository.Main.SubjectService
                             Name = subject.Name,
                             Type = subject.Type,
                             Description = subject.Description,
-                            Doctors = subjectDto.Doctors, 
+                            Doctors = subjectDto.Doctors,
+                            subjectFaculties = subjectDto.subjectFaculties
                         });
                     }
                     return operation.SetFailed("Failed upload, Message: " + result.FullExceptionMessage);
@@ -142,24 +141,20 @@ namespace SmartStart.Repository.Main.SubjectService
                     return (OperationResultTypes.NotExist, $"Id :{subjectDto.Id}");
                 }
 
-                var subjectDoctors = subject.SubjectTags.Where(t => t.Tag.Type == TagTypes.Doctor);
+                var subjectDoctors = subject.SubjectTags.Where(t => t.Tag.Type == TagTypes.Doctor).ToList();
                 
-                Context.RemoveRange(subjectDoctors);
+                Context.SubjectTags.RemoveRange(subjectDoctors);
+
+                await addSubjectDoctors(subjectDto.Doctors, subject.Id);
+
+                var subjectFaculties = subject.Faculties.ToList();
                 
-                if(subjectDto.Doctors != null)
-                {
-                    List<SubjectTag> temp = new List<SubjectTag>(); 
-                    foreach (var doctor in subjectDto.Doctors)
-                    {
-                        temp.Add(new SubjectTag
-                        {
-                            SubjectId = subject.Id,
-                            TagId = doctor
-                        });
-                    }
-                    await Context.SubjectTags.AddRangeAsync(temp);
-                }
+                Context.SubjectFaculties.RemoveRange(subjectFaculties);
+                
+                await addSubjectFaculties(subjectDto.subjectFaculties, subject.Id);
+
                 await Context.SaveChangesAsync(); 
+                
                 return operation.SetSuccess(new SubjectAllDto
                 {
                     Id = subject.Id,
@@ -196,7 +191,14 @@ namespace SmartStart.Repository.Main.SubjectService
                                          ExamCount = s.Exams.Count(e => e.Type == TabTypes.Exam),
                                          InterviewCount = s.Exams.Count(e => e.Type == TabTypes.Interview),
                                          MicroscopeCount = s.Exams.Count(e => e.Type == TabTypes.Microscope),
-                                         DateCreate = s.DateCreated
+                                         DateCreate = s.DateCreated,
+                                         subjectFaculties = s.Faculties.Select(f => new SubjectFacultyDto
+                                         {
+                                             FacultyId = f.FacultyId,
+                                             SectionId = f.SectionId,
+                                             SemesterId = f.SemesterId,
+                                             Year = f.Year
+                                         }).ToList()
                                      }).SingleOrDefaultAsync();
                 return operation.SetSuccess(res);
             };
@@ -266,7 +268,6 @@ namespace SmartStart.Repository.Main.SubjectService
                 return new OperationResult<bool>().SetException(e);
             }
         }
-
         private OperationResult<bool> TryDeleteImage(string path)
         {
             if (!path.IsNullOrEmpty())
@@ -276,7 +277,41 @@ namespace SmartStart.Repository.Main.SubjectService
             }
             return new OperationResult<bool>().SetSuccess(true);
         }
+        private async Task addSubjectDoctors(List<Guid> doctors, Guid subjectId)
+        {
+            if (doctors != null)
+            {
+                List<SubjectTag> temp = new List<SubjectTag>();
+                foreach (var doctor in doctors)
+                {
+                    temp.Add(new SubjectTag
+                    {
+                        SubjectId = subjectId,
+                        TagId = doctor
+                    });
+                }
+                await Context.SubjectTags.AddRangeAsync(temp);
+            }
+        }
+        private async Task addSubjectFaculties(List<SubjectFacultyDto> faculties, Guid subjectId)
+        {
+            if (faculties != null)
+            {
+                List<SubjectFaculty> temp = new List<SubjectFaculty>();
+                foreach (var faculty in faculties)
+                {
+                    temp.Add(new SubjectFaculty
+                    {
+                        FacultyId = faculty.FacultyId,
+                        SectionId = faculty.SectionId,
+                        SemesterId = faculty.SemesterId,
+                        Year = faculty.Year,
+                        SubjectId = subjectId
+                    });
+                }
+                await Context.SubjectFaculties.AddRangeAsync(temp);
+            }
+        }
         #endregion
-
     }
 }
