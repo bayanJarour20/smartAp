@@ -13,13 +13,13 @@ namespace SmartStart.Repository.Invoice.CodeService
     {
         Task<OperationResult<IEnumerable<CodeSubjectsPriceDto>>> GetCodes(Guid userId);
         Task<OperationResult<bool>> ActivateCode(Guid userId, string hash);
-        //Task<OperationResult<bool>> ActivateCodeV2(string hash, IEnumerable<Guid> subjectIds);
-        //Task<OperationResult<object>> CheckCode(string hash);
+        Task<OperationResult<bool>> ActivateCodeV2(string hash, IEnumerable<Guid> subjectFacultyIds);
+        Task<OperationResult<object>> CheckCode(string hash);
 
 
-        //Task<OperationResult<IEnumerable<CodeDetailsDto>>> GetAll();
-        //Task<OperationResult<CodeDetailsDto>> Generate(CodeGenerateDto dto);
-        //Task<OperationResult<CodeDetailsDto>> Update(CodeGenerateDto dto);
-        //Task<OperationResult<bool>> Delete(Guid id);
+        Task<OperationResult<IEnumerable<CodeDetailsDto>>> GetAll();
+        Task<OperationResult<CodeDetailsDto>> Generate(CodeGenerateDto dto);
+        Task<OperationResult<CodeDetailsDto>> Update(CodeGenerateDto dto);
+        Task<OperationResult<bool>> Delete(Guid id);
     }
 }

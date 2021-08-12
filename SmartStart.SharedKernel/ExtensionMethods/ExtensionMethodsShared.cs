@@ -32,6 +32,13 @@ namespace SmartStart.SharedKernel.ExtensionMethods
         }
         public static string ToEmail(this string value, string inc = "SmartStart", string org = "me") => $"{value}@{inc}.{org}";
         public static string EnsureEmail(this string value) => new EmailAddressAttribute().IsValid(value).NestedIF(value, value.ToEmail());
+        public static DateTime StartAcademicYear(int month = 9)
+        {
+            var local = DateTime.Now.ToLocalTime();
+            if (local.Month < month)
+                return new DateTime(local.Year - 1, month, 1);
+            return new DateTime(local.Year, month, 1);
+        }
         public static DateTime EndAcademicYear(int month = 9)
         {
             var local = DateTime.Now.ToLocalTime();
@@ -90,6 +97,5 @@ namespace SmartStart.SharedKernel.ExtensionMethods
                 // 2601 whill not work with oracl or other un sql server . check for general number casting 
             }
         }
-
     }
 }
