@@ -187,8 +187,8 @@ namespace SmartStart
             {
                 await context.Database.MigrateAsync();
                 await context.Database.EnsureCreatedAsync();
-                //await SecuritySeedData.SeedAsync(provider);
-                //await DataSeed.InitializeAsync(provider);
+                await SecuritySeedData.SeedAsync(provider);
+                await DataSeed.InitializeAsync(provider);
             });
 
         }

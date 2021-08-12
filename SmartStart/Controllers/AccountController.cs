@@ -51,8 +51,7 @@ namespace SmartStart.Controllers
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public async Task<IActionResult> GetAllDashboard() => await repository.GetAllDashboard().ToJsonResultAsync();
        
-        [HttpPost]
-        //[HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin)]
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public async Task<IActionResult> Create(AppUserDto account) => await repository.Create(account).ToJsonResultAsync();
 
         [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin)]
