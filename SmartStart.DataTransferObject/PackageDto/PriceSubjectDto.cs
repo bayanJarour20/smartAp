@@ -9,6 +9,6 @@ namespace SmartStart.DataTransferObject.PackageDto
     public class PriceSubjectDto
     {
         public double Price { get; set; }
-        public Guid SubjectId { get; set; }
+        public Guid SubjectFacultyId { get; set; }
     }
 }

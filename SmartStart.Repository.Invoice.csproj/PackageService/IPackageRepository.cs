@@ -17,7 +17,6 @@ namespace SmartStart.Repository.Invoice.PackageService
         Task<OperationResult<PackageDto>> Update(PackageSubjectDto dto);
         Task<OperationResult<bool>> Delete(Guid Id);
 
-
-        //Task<OperationResult<bool>> Init();
+        Task<OperationResult<bool>> Init();
     }
 }

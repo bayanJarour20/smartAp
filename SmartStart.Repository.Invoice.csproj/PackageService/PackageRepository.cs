@@ -38,60 +38,62 @@ namespace SmartStart.Repository.Invoice.PackageService
         public async Task<OperationResult<bool>> Delete(Guid Id)
         => await RepositoryHandler(_delete(Id));
 
-        //public async Task<OperationResult<bool>> Init()
-        // => await RepositoryHandler<bool>(async operation => {
+        public async Task<OperationResult<bool>> Init()
+         => await RepositoryHandler<bool>(async operation => {
 
-        //     string[] yearNames = { "السنة الأولى", "السنة الثانية", "السنة الثالثة", "السنة الرابعة", "السنة الخامسة", "السنة السادسة", "السنة السابعة", "السنة الثامنة" };
+             string[] yearNames = { "السنة الأولى", "السنة الثانية", "السنة الثالثة", "السنة الرابعة",
+                                    "السنة الخامسة", "السنة السادسة", "السنة السابعة", "السنة الثامنة" };
 
-        //     var subjects = await Context.Subjects
-        //                                 .Include(s => s.Packages)
-        //                                 .ThenInclude(p => p.Package)
-        //                                 .ToListAsync();
+             var subjectFaculties = await Context.SubjectFaculties
+                                                 .Include(s => s.Faculty)
+                                                 .Include(s => s.Subject)
+                                                 .ThenInclude(s => s.Exams)
+                                                 .ToListAsync();
 
-        //     var groupYear = subjects.GroupBy(x => (x.Year, x.FacultyId));
+             var groupYear = subjectFaculties.GroupBy(x => (x.Year, x.FacultyId));
 
+             foreach (var group in groupYear)
+             {
+                 int fixYear = group.Key.Year == 0 || group.Key.Year > yearNames.Length ? 1 : group.Key.Year - 1;
 
-        //     foreach (var group in groupYear)
-        //     {
-        //         int fixYear = group.Key.Year == 0 || group.Key.Year > yearNames.Length ? 1 : group.Key.Year - 1;
+                 string packageName = group.First().Faculty.Name + " " + yearNames[fixYear];
 
-        //         string packageName = group.First().Faculty.Name + " " + yearNames[fixYear];
+                 var exams = group.SelectMany(g => g.Subject.Exams);
 
-        //         var exams = group.SelectMany(g => g.Exams);
+                 var backpackage = await Context.Packages
+                                                .Include(p => p.PackageSubjectFaculties)
+                                                .FirstOrDefaultAsync(p => p.Name == packageName);
 
-        //         var backpackage = await Context.Packages.Include(p => p.PackageSubjects).FirstOrDefaultAsync(p => p.Name == packageName);
-
-        //         if (backpackage is null)
-        //         {
-        //             Package package = new()
-        //             {
-        //                 Name = packageName,
-        //                 Price = 4000,
-        //                 Type = PackageTypes.Normal,
-        //                 Description = $"تحوي على كافة الدورات المواد التابعة لـ{packageName}",
-        //                 PackageSubjects = exams.Select(e => new PackageSubject()
-        //                 {
-        //                     SubjectId = e.Id,
-        //                 }).ToList()
-        //             };
-        //             await Context.Packages.AddAsync(package);
-        //             await Context.SaveChangesAsync();
-        //         }
-        //         else
-        //         {
-        //             var except = ExtensionMethodsShared.IsolatedExcept(backpackage.PackageSubjects, exams, e => e.SubjectId, e => e.Id);
-        //             Context.PackageSubjects.RemoveRange(Context.PackageSubjects.Where(x => x.PackageId == backpackage.Id && except.remove.Contains(x.SubjectId)));
-        //             await Context.PackageSubjects.AddRangeAsync(except.Add.Select(x => new PackageSubject()
-        //             {
-
-        //                 PackageId = backpackage.Id,
-        //                 SubjectId = x,
-        //             }));
-        //             await Context.SaveChangesAsync();
-        //         }
-        //     }
-        //     return operation.SetSuccess(true);
-        // });
+                 if (backpackage is null)
+                 {
+                     Package package = new()
+                     {
+                         Name = packageName,
+                         Price = 4000,
+                         Type = PackageTypes.Normal,
+                         Description = $"تحوي على كافة الدورات المواد التابعة لـ{packageName}",
+                         PackageSubjectFaculties = exams.Select(e => new PackageSubjectFaculty()
+                         {
+                             SubjectFacultyId = e.Id,
+                         }).ToList()
+                     };
+                     await Context.Packages.AddAsync(package);
+                     await Context.SaveChangesAsync();
+                 }
+                 else
+                 {
+                     var except = ExtensionMethodsShared.IsolatedExcept(backpackage.PackageSubjectFaculties, exams, e => e.SubjectFacultyId, e => e.Id);
+                     Context.PackageSubjectFaculties.RemoveRange(Context.PackageSubjectFaculties.Where(x => x.PackageId == backpackage.Id && except.remove.Contains(x.SubjectFacultyId)));
+                     await Context.PackageSubjectFaculties.AddRangeAsync(except.Add.Select(x => new PackageSubjectFaculty()
+                     {
+                         PackageId = backpackage.Id,
+                         SubjectFacultyId = x,
+                     }));
+                     await Context.SaveChangesAsync();
+                 }
+             }
+             return operation.SetSuccess(true);
+         });
 
 
 
@@ -129,10 +131,10 @@ namespace SmartStart.Repository.Invoice.PackageService
                 EndDate = package.EndDate,
                 Type = package.Type,
                 IsHidden = package.IsHidden,
-                Subjects = package.PackageSubjects.Select(pe => new PriceSubjectDto
+                SubjectFaculties = package.PackageSubjectFaculties.Select(pe => new PriceSubjectDto
                 {
                     Price = pe.Price,
-                    SubjectId = pe.SubjectId,
+                    SubjectFacultyId = pe.SubjectFaculty.SubjectId,
                 }),
             }).FirstOrDefaultAsync();
 
@@ -143,17 +145,17 @@ namespace SmartStart.Repository.Invoice.PackageService
                 SemesterId = Guid.Empty,
             };
 
-            //var anySubject = one.Subjects.FirstOrDefault();
-            //if (anySubject is not null)
-            //{
-            //    filter = await _query<Subject>().Where(subject => subject.Id == anySubject.SubjectId).Select(subject =>
-            //        new
-            //        {
-            //            FacultyId = subject.Faculties.Select(),
-            //            Year = subject.Faculties.S,
-            //            SemesteId = subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester).Select(x => x.TagId).FirstOrDefault(),
-            //        }).FirstOrDefaultAsync();
-            //}
+            var anySubject = one.SubjectFaculties.FirstOrDefault();
+            if (anySubject is not null)
+            {
+                filter = await _query<SubjectFaculty>().Where(subject => subject.Id == anySubject.SubjectFacultyId).Select(subjectFac =>
+                    new
+                    {
+                        FacultyId = subjectFac.FacultyId,
+                        Year = subjectFac.Year,
+                        SemesteId = subjectFac.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester).Select(x => x.TagId).FirstOrDefault(),
+                    }).FirstOrDefaultAsync();
+            }
             one.Filter = filter;
 
             return operation.SetSuccess(one);
@@ -163,8 +165,8 @@ namespace SmartStart.Repository.Invoice.PackageService
         private Func<OperationResult<PackageDto>, Task<OperationResult<PackageDto>>> _add(PackageSubjectDto dto)
         => async operation =>
         {
-            if (dto.Subjects is null || !dto.Subjects.Any())
-                return operation.SetFailed($"It must contain a {nameof(dto.Subjects)}");
+            if (dto.SubjectFaculties is null || !dto.SubjectFaculties.Any())
+                return operation.SetFailed($"It must contain a {nameof(dto.SubjectFaculties)}");
 
             Package one = new()
             {
@@ -176,7 +178,7 @@ namespace SmartStart.Repository.Invoice.PackageService
                 StartDate = dto.StartDate,
                 Type = dto.Type,
                 IsHidden = dto.IsHidden,
-                PackageSubjects = dto.Subjects.Select(e => new PackageSubject() { Price = e.Price, SubjectId = e.SubjectId }).ToList(),
+                PackageSubjectFaculties = dto.SubjectFaculties.Select(e => new PackageSubjectFaculty() { Price = e.Price, SubjectFacultyId = e.SubjectFacultyId }).ToList(),
             };
 
             await Context.AddAsync(one);
@@ -202,10 +204,10 @@ namespace SmartStart.Repository.Invoice.PackageService
          {
              var one = await FindAsync(dto.Id);
 
-             if (dto.Subjects is null || !dto.Subjects.Any())
-                 return operation.SetFailed($"It must contain a {nameof(dto.Subjects)}");
+             if (dto.SubjectFaculties is null || !dto.SubjectFaculties.Any())
+                 return operation.SetFailed($"It must contain a {nameof(dto.SubjectFaculties)}");
 
-             Context.RemoveRange(await Context.PackageSubjects.Where(c => c.PackageId == one.Id).ToListAsync());
+             Context.RemoveRange(await Context.PackageSubjectFaculties.Where(c => c.PackageId == one.Id).ToListAsync());
 
              one.Name = dto.Name;
              one.Description = dto.Description;
@@ -214,7 +216,12 @@ namespace SmartStart.Repository.Invoice.PackageService
              one.StartDate = dto.StartDate;
              one.Type = dto.Type;
              one.IsHidden = dto.IsHidden;
-             one.PackageSubjects = dto.Subjects.Select(e => new PackageSubject() { Price = e.Price, SubjectId = e.SubjectId }).ToList();
+             one.PackageSubjectFaculties = dto.SubjectFaculties
+                                              .Select(e => new PackageSubjectFaculty() 
+                                              { 
+                                                  Price = e.Price, 
+                                                  SubjectFacultyId = e.SubjectFacultyId 
+                                              }).ToList();
 
              await Context.SaveChangesAsync();
 
@@ -238,12 +245,10 @@ namespace SmartStart.Repository.Invoice.PackageService
             if (one is null)
                 return (OperationResultTypes.NotExist, $"{id} not exist");
 
-            await Context.SoftDeleteTraversalAsync((Expression<Func<Package, bool>>)(p => p.Id == id), p => p.PackageSubjects);
+            await Context.SoftDeleteTraversalAsync((Expression<Func<Package, bool>>)(p => p.Id == id), p => p.PackageSubjectFaculties);
             await Context.SaveChangesDeletedAsync();
 
             return operation.SetSuccess(true, "Success delete");
         };
-
-
     }
 }

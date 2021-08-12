@@ -8,6 +8,6 @@ namespace SmartStart.DataTransferObject.PackageDto
 {
     public class PackageSubjectDto : PackageDto
     {
-        public IEnumerable<PriceSubjectDto> Subjects { get; set; }
+        public IEnumerable<PriceSubjectDto> SubjectFaculties { get; set; }
     }
 }
