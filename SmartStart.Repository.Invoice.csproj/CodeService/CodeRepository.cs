@@ -49,6 +49,9 @@ namespace SmartStart.Repository.Invoice.CodeService
         public async Task<OperationResult<bool>> Delete(Guid id)
             => await RepositoryHandler(_delete(id));
 
+        public async Task<OperationResult<bool>> RemoveCodes(List<Guid> codeIds)
+            => await RepositoryHandler(_removeCodes(codeIds));
+
 
         private Func<OperationResult<IEnumerable<CodeSubjectsPriceDto>>, Task<OperationResult<IEnumerable<CodeSubjectsPriceDto>>>> _getCodes(Guid userId)
             => async operation => {
@@ -416,6 +419,22 @@ namespace SmartStart.Repository.Invoice.CodeService
                 await Context.SaveChangesDeletedAsync();
 
                 return operation.SetSuccess(true, "Success delete");
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeCodes(List<Guid> codeIds)
+            => async operation => {
+                var codes = await TrackingQuery.Where(s => codeIds.Contains(s.Id)).ToListAsync();
+                if (codes == null)
+                {
+                    return operation.SetSuccess(false);
+                }
+                foreach (var faculty in codes)
+                {
+                    faculty.DateDeleted = DateTime.Now;
+                }
+                Context.UpdateRange(codes);
+                await Context.SaveChangesAsync();
+                return operation.SetSuccess(true);
             };
 
     }
