@@ -34,7 +34,10 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> Update(PackageSubjectDto dto) => await repository.Update(dto).ToJsonResultAsync();
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([Required] Guid id) => await repository.Delete(id).ToJsonResultAsync();
+        public async Task<IActionResult> RemovePackage([Required] Guid id) => await repository.RemovePackage(id).ToJsonResultAsync();
+
+        [HttpDelete]
+        public async Task<IActionResult> RemovePackages([Required] List<Guid> ids) => await repository.RemovePackages(ids).ToJsonResultAsync();
 
 
         [HttpPost]

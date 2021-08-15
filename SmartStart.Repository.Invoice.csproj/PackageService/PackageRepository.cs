@@ -35,8 +35,11 @@ namespace SmartStart.Repository.Invoice.PackageService
         public async Task<OperationResult<PackageDto>> Update(PackageSubjectDto dto)
         => await RepositoryHandler(_update(dto));
 
-        public async Task<OperationResult<bool>> Delete(Guid Id)
-        => await RepositoryHandler(_delete(Id));
+        public async Task<OperationResult<bool>> RemovePackage(Guid Id)
+        => await RepositoryHandler(_removePackage(Id));
+
+        public async Task<OperationResult<bool>> RemovePackages(List<Guid> Ids)
+        => await RepositoryHandler(_removePackages(Ids));
 
         public async Task<OperationResult<bool>> Init()
          => await RepositoryHandler<bool>(async operation => {
@@ -249,7 +252,7 @@ namespace SmartStart.Repository.Invoice.PackageService
              });
          };
 
-        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _delete(Guid id)
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removePackage(Guid id)
         => async operation =>
         {
             var one = await FindAsync(id);
@@ -258,6 +261,25 @@ namespace SmartStart.Repository.Invoice.PackageService
 
             await Context.SoftDeleteTraversalAsync((Expression<Func<Package, bool>>)(p => p.Id == id), p => p.PackageSubjectFaculties);
             await Context.SaveChangesDeletedAsync();
+
+            return operation.SetSuccess(true, "Success delete");
+        };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removePackages(List<Guid> ids)
+        => async operation =>
+        {
+
+            //var Packages = await Query.Where(p => ids.Contains(p.Id)).ToListAsync();
+
+            //foreach (var package in Packages)
+            //{
+            //    package.DateDeleted = DateTime.Now;
+            //}
+            await Query.Where(p => ids.Contains(p.Id))
+                       .ForEachAsync(p => p.DateDeleted = DateTime.Now);
+           
+            //await Context.SoftDeleteTraversalAsync((Expression<Func<Package, bool>>)(p => ids.Contains(p.Id)), p => p.PackageSubjectFaculties);
+            await Context.SaveChangesAsync();
 
             return operation.SetSuccess(true, "Success delete");
         };
