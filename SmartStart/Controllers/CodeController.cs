@@ -44,5 +44,9 @@ namespace SmartStart.Controllers
 
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public async Task<IActionResult> Delete([Required] Guid id) => await repository.Delete(id).IntoAsync(o => o).ToJsonResultAsync();
+
+        [HttpDelete]
+        public async Task<IActionResult> RemoveCodes(List<Guid> codeIds)
+            => await repository.RemoveCodes(codeIds).ToJsonResultAsync();
     }
 }

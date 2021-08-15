@@ -30,5 +30,6 @@ namespace SmartStart.Model.Shared
         public DocumentTypes Type { get; set; }
 
         public ICollection<QuestionDocument> QuestionDocuments { get; set; }
+        public ICollection<ExamDocument> ExamDocuments { get; set; }
     }
 }

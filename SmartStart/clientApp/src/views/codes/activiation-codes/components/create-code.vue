@@ -10,6 +10,7 @@
         >
             
             <template #body>
+              
                 <EKInputSelect
                     label="الحزمة"
                     placeholder="اختر الحزمة"

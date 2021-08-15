@@ -21,5 +21,6 @@ namespace SmartStart.Repository.Invoice.CodeService
         Task<OperationResult<CodeDetailsDto>> Generate(CodeGenerateDto dto);
         Task<OperationResult<CodeDetailsDto>> Update(CodeGenerateDto dto);
         Task<OperationResult<bool>> Delete(Guid id);
+        Task<OperationResult<bool>> RemoveCodes(List<Guid> codeIds);
     }
 }

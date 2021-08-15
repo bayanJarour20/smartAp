@@ -11,6 +11,7 @@
                 <b-card-text>
                     <b-row>
                         <b-col cols="12" md="4">
+                            {{packageDto}}
                             <EKInputText
                                 :rules="[
                                     {

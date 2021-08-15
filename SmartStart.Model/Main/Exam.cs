@@ -50,5 +50,6 @@ namespace SmartStart.Model.Main
         public ICollection<ExamTag> ExamTags { get; set; }
         public ICollection<ExamQuestion> ExamQuestions { get; set; }
         public ICollection<PackageSubjectFaculty> PackageSubjects { get; set; }
+        public ICollection<ExamDocument> ExamDocuments { get; set; }
     }
 }
