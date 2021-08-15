@@ -268,18 +268,10 @@ namespace SmartStart.Repository.Invoice.PackageService
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removePackages(List<Guid> ids)
         => async operation =>
         {
-
-            //var Packages = await Query.Where(p => ids.Contains(p.Id)).ToListAsync();
-
-            //foreach (var package in Packages)
-            //{
-            //    package.DateDeleted = DateTime.Now;
-            //}
-            await Query.Where(p => ids.Contains(p.Id))
+            await TrackingQuery.Where(p => ids.Contains(p.Id))
                        .ForEachAsync(p => p.DateDeleted = DateTime.Now);
            
-            //await Context.SoftDeleteTraversalAsync((Expression<Func<Package, bool>>)(p => ids.Contains(p.Id)), p => p.PackageSubjectFaculties);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesDeletedAsync();
 
             return operation.SetSuccess(true, "Success delete");
         };
