@@ -28,7 +28,7 @@ namespace SmartStart.Repository.Setting.NotificationService
             this.httpClient = httpClient;
         }
 
-        public async Task<OperationResult<IEnumerable<NotificationToMeDto>>> GetNotifications(Guid id)
+        public async Task<OperationResult<NotificationTupleDto>> GetNotifications(Guid id)
             => await RepositoryHandler(_getNotifications(id));
 
         public async Task<OperationResult<IEnumerable<NotificationUsersDto>>> GetAll()
@@ -59,24 +59,43 @@ namespace SmartStart.Repository.Setting.NotificationService
                return operation.SetSuccess(allNotification);
            };
 
-        private Func<OperationResult<IEnumerable<NotificationToMeDto>>, Task<OperationResult<IEnumerable<NotificationToMeDto>>>> _getNotifications(Guid id)
+        private Func<OperationResult<NotificationTupleDto>, Task<OperationResult<NotificationTupleDto>>> _getNotifications(Guid id)
             => async operation =>
             {
-                var notifications = await Query.Include(notification => notification.UserNotifications).Where(notification => notification.Type == NotificationTypes.User &&
-                                                                       (!notification.UserNotifications.Any() ||
-                                                                       notification.UserNotifications.Any(usernotification => usernotification.AppUserId == id)
-                                                                        ))
-                                               .Select(notification => new NotificationToMeDto()
-                                               {
-                                                   Id = notification.Id,
-                                                   Title = notification.Title,
-                                                   Body = notification.Body,
-                                                   Date = notification.Date,
-                                                   NotificationType = NotificationTypes.User,
-                                                   IsToMe = notification.UserNotifications.Any()
-                                               }).ToListAsync();
+                var notificationsAll = await Query.Include(notification => notification.UserNotifications)
+                                                  .Where(notification => notification.Type == NotificationTypes.User
+                                                                      && (!notification.UserNotifications.Any()
+                                                                      || notification.UserNotifications.Any(usernotification => usernotification.AppUserId == id)))
+                                                  .Select(notification => new NotificationToMeDto()
+                                                  {
+                                                      Id = notification.Id,
+                                                      Title = notification.Title,
+                                                      Body = notification.Body,
+                                                      Date = notification.Date,
+                                                      NotificationType = NotificationTypes.User,
+                                                      IsToMe = notification.UserNotifications.Any()
+                                                  }).ToListAsync();
 
-                return operation.SetSuccess(notifications);
+                var notificationsToday = await Query.Include(notification => notification.UserNotifications)
+                                                    .Where(notification => notification.Type == NotificationTypes.User
+                                                                        && notification.Date.Date == DateTime.Now.Date
+                                                                        && (!notification.UserNotifications.Any()
+                                                                        || notification.UserNotifications.Any(usernotification => usernotification.AppUserId == id)))
+                                                    .Select(notification => new NotificationToMeDto()
+                                                    {
+                                                        Id = notification.Id,
+                                                        Title = notification.Title,
+                                                        Body = notification.Body,
+                                                        Date = notification.Date,
+                                                        NotificationType = NotificationTypes.User,
+                                                        IsToMe = notification.UserNotifications.Any()
+                                                    }).ToListAsync();
+
+                return operation.SetSuccess(new NotificationTupleDto 
+                {
+                    NotificationAll = notificationsAll,
+                    NotificationToday = notificationsToday
+                });
             };
 
         private Func<OperationResult<NotificationUsersDto>, Task<OperationResult<NotificationUsersDto>>> _add(NotificationUsersDto notificationDto)
