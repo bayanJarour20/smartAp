@@ -204,39 +204,21 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                             }
                                                         }
                                                     },
+                                                    Section = new Tag()
+                                                    {
+                                                        Name = "القسم الافتراضي",
+                                                        Type = TagTypes.Section
+                                                    },
+                                                    Semester = new Tag()
+                                                    {
+                                                        Name = "الفصل الافتراضي",
+                                                        Type = TagTypes.Semester
+                                                    },
                                                     Subject = new Subject()
                                                     {
                                                         Name = "البرمجة 1",
                                                         Description = "وصف مادة البرمجة 1",
                                                         IsFree = false,
-                                                        Faculties = new List<SubjectFaculty>()
-                                                        {
-                                                            new SubjectFaculty()
-                                                            {
-                                                                Faculty = new Faculty()
-                                                                {
-                                                                    Name = "كلية الهندسة المعلوماتية",
-                                                                    University =new University()
-                                                                    {
-                                                                        Name ="جامعة حلب",
-                                                                        City= new City()
-                                                                        {
-                                                                            Name ="حلب"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                Section = new Tag()
-                                                                {
-                                                                    Name = "قسم البرمجيات",
-                                                                    Type = TagTypes.Section
-                                                                },
-                                                                Semester = new Tag()
-                                                                {
-                                                                    Name = "فصل أول",
-                                                                    Type = TagTypes.Semester
-                                                                }
-                                                            }
-                                                        },
                                                         SubjectTags = new List<SubjectTag>()
                                                         {
                                                             new SubjectTag()
@@ -258,145 +240,145 @@ namespace SmartStart.SqlServer.DataBase.Seed
                                                         },
                                                         Type = SubjectTypes.Academic,
                                                         Exams = new List<Exam>()
-                                                    {
-                                                        new Exam()
                                                         {
-                                                            Name = Guid.NewGuid() + "دورة",
-                                                            Year = 2019,
-                                                            Price = 500,
-                                                            ExamTags = new List<ExamTag>()
+                                                            new Exam()
                                                             {
-                                                                new ExamTag()
+                                                                Name = Guid.NewGuid() + "دورة",
+                                                                Year = 2019,
+                                                                Price = 500,
+                                                                ExamTags = new List<ExamTag>()
                                                                 {
-                                                                    Tag = new Tag()
+                                                                    new ExamTag()
                                                                     {
-                                                                        Name = "وسم",
-                                                                        Type = TagTypes.Tag,
-                                                                    }
-                                                                },
-                                                                new ExamTag()
-                                                                {
-                                                                    Tag = new Tag()
-                                                                    {
-                                                                        Name = "دكتور اسامه",
-                                                                        Type = TagTypes.Doctor,
-                                                                    },
-                                                                },
-                                                                new ExamTag()
-                                                                {
-                                                                    Tag = new Tag()
-                                                                    {
-                                                                        Name = "الفصل الاول",
-                                                                        Type = TagTypes.Semester,
-                                                                    }
-                                                                  },
-                                                            },
-                                                            Type = TabTypes.Microscope
-                                                        },
-                                                        new Exam()
-                                                        {
-                                                            Name = Guid.NewGuid() + "دورة",
-                                                            Year = 2018,
-                                                            Price = 600,
-                                                            ExamTags = new List<ExamTag>()
-                                                            {
-                                                                new ExamTag()
-                                                                {
-                                                                    Tag = new Tag()
-                                                                    {
-                                                                        Name = "وسم",
-                                                                        Type = TagTypes.Tag,
-                                                                    }
-                                                                },
-                                                                new ExamTag()
-                                                                {
-                                                                    Tag = new Tag()
-                                                                    {
-                                                                        Name = "دكتور اسامه",
-                                                                        Type = TagTypes.Doctor,
-                                                                    },
-                                                                },
-                                                                new ExamTag()
-                                                                {
-                                                                    Tag = new Tag()
-                                                                    {
-                                                                        Name = "الفصل الاول",
-                                                                        Type = TagTypes.Semester,
-                                                                    }
-                                                                  },
-                                                            },
-                                                            Type = TabTypes.Exam,
-                                                            ExamQuestions = new  List<ExamQuestion>()
-                                                            {
-                                                                new ExamQuestion()
-                                                                {
-                                                                    Question = new Question()
-                                                                    {
-                                                                        Title = "السؤال الاول",
-                                                                        Hint = "مساعدة",
-                                                                        IsCorrected = false,
-                                                                        AnswerType = AnswerTypes.MultiChoice,
-                                                                        Answers = new List<Answer>()
+                                                                        Tag = new Tag()
                                                                         {
-                                                                            new Answer()
-                                                                            {
-                                                                                Title = "اجابة 1",
-                                                                                IsCorrect = true,
-                                                                            },
-                                                                            new Answer()
-                                                                            {
-                                                                                Title = "اجابة 2",
-                                                                                IsCorrect = true,
-                                                                            },
-                                                                            new Answer()
-                                                                            {
-                                                                                Title = "اجابة 3",
-                                                                                IsCorrect = true,
-                                                                            },
-                                                                            new Answer()
-                                                                            {
-                                                                                Title = "اجابة 4",
-                                                                                IsCorrect = true,
-                                                                            },
+                                                                            Name = "وسم",
+                                                                            Type = TagTypes.Tag,
                                                                         }
                                                                     },
-                                                                },
-                                                                new ExamQuestion()
-                                                                {
-                                                                    Question = new Question()
+                                                                    new ExamTag()
                                                                     {
-                                                                        Title = "السؤال الثاني",
-                                                                        Hint = "مساعدة",
-                                                                        IsCorrected = false,
-                                                                        AnswerType = AnswerTypes.MultiChoice,
-                                                                        Answers = new List<Answer>()
+                                                                        Tag = new Tag()
                                                                         {
-                                                                            new Answer()
+                                                                            Name = "دكتور اسامه",
+                                                                            Type = TagTypes.Doctor,
+                                                                        },
+                                                                    },
+                                                                    new ExamTag()
+                                                                    {
+                                                                        Tag = new Tag()
+                                                                        {
+                                                                            Name = "الفصل الاول",
+                                                                            Type = TagTypes.Semester,
+                                                                        }
+                                                                      },
+                                                                },
+                                                                Type = TabTypes.Microscope
+                                                            },
+                                                            new Exam()
+                                                            {
+                                                                Name = Guid.NewGuid() + "دورة",
+                                                                Year = 2018,
+                                                                Price = 600,
+                                                                ExamTags = new List<ExamTag>()
+                                                                {
+                                                                    new ExamTag()
+                                                                    {
+                                                                        Tag = new Tag()
+                                                                        {
+                                                                            Name = "وسم",
+                                                                            Type = TagTypes.Tag,
+                                                                        }
+                                                                    },
+                                                                    new ExamTag()
+                                                                    {
+                                                                        Tag = new Tag()
+                                                                        {
+                                                                            Name = "دكتور اسامه",
+                                                                            Type = TagTypes.Doctor,
+                                                                        },
+                                                                    },
+                                                                    new ExamTag()
+                                                                    {
+                                                                        Tag = new Tag()
+                                                                        {
+                                                                            Name = "الفصل الاول",
+                                                                            Type = TagTypes.Semester,
+                                                                        }
+                                                                      },
+                                                                },
+                                                                Type = TabTypes.Exam,
+                                                                ExamQuestions = new  List<ExamQuestion>()
+                                                                {
+                                                                    new ExamQuestion()
+                                                                    {
+                                                                        Question = new Question()
+                                                                        {
+                                                                            Title = "السؤال الاول",
+                                                                            Hint = "مساعدة",
+                                                                            IsCorrected = false,
+                                                                            AnswerType = AnswerTypes.MultiChoice,
+                                                                            Answers = new List<Answer>()
                                                                             {
-                                                                                Title = "اجابة 1",
-                                                                                IsCorrect = true,
-                                                                            },
-                                                                            new Answer()
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 1",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 2",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 3",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 4",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                    },
+                                                                    new ExamQuestion()
+                                                                    {
+                                                                        Question = new Question()
+                                                                        {
+                                                                            Title = "السؤال الثاني",
+                                                                            Hint = "مساعدة",
+                                                                            IsCorrected = false,
+                                                                            AnswerType = AnswerTypes.MultiChoice,
+                                                                            Answers = new List<Answer>()
                                                                             {
-                                                                                Title = "اجابة 2",
-                                                                                IsCorrect = true,
-                                                                            },
-                                                                            new Answer()
-                                                                            {
-                                                                                Title = "اجابة 3",
-                                                                                IsCorrect = true,
-                                                                            },
-                                                                            new Answer()
-                                                                            {
-                                                                                Title = "اجابة 4",
-                                                                                IsCorrect = true,
-                                                                            },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 1",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 2",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 3",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                                new Answer()
+                                                                                {
+                                                                                    Title = "اجابة 4",
+                                                                                    IsCorrect = true,
+                                                                                },
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                     }
                                                 }
                                             }
