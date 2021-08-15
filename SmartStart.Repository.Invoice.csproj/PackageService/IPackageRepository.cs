@@ -15,7 +15,8 @@ namespace SmartStart.Repository.Invoice.PackageService
         Task<OperationResult<PackageSubjectFilterDto>> Details(Guid id);
         Task<OperationResult<PackageDto>> Add(PackageSubjectDto dto);
         Task<OperationResult<PackageDto>> Update(PackageSubjectDto dto);
-        Task<OperationResult<bool>> Delete(Guid Id);
+        Task<OperationResult<bool>> RemovePackage(Guid Id);
+        Task<OperationResult<bool>> RemovePackages(List<Guid> Ids);
 
         Task<OperationResult<bool>> Init();
     }

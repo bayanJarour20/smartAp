@@ -23,6 +23,7 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
         Task<OperationResult<PointOfSaleAccountDto>> Create(PointOfSaleAccountDto account);
         Task<OperationResult<PointOfSaleAccountDto>> Update(PointOfSaleAccountDto account);
         Task<OperationResult<bool>> Delete(Guid id);
+        Task<OperationResult<bool>> MultiDelete(List<Guid> ids);
         Task<OperationResult<bool>> Block(Guid id);
         Task<OperationResult<IEnumerable<PointOfSaleAccountDto>>> GetAll();
         Task<OperationResult<PointOfSaleAccountCodesDto>> Details(Guid id);

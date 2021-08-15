@@ -37,6 +37,8 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             Cache = cache;
         }
 
+
+        #region -   Mobile  - 
         public async Task<OperationResult<PointOfSaleDto>> Fetch(Guid id)
             => await RepositoryHandler(_fetch(id));
 
@@ -49,6 +51,12 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
         public async Task<OperationResult<NotificationCollectionDto>> GetNotifications()
         => await RepositoryHandler(_getNotifications);
 
+        public async Task<OperationResult<object>> GetPointOfSales()
+         => await RepositoryHandler(_getPointOfSales());
+        #endregion
+
+
+        #region -   Dashboard   -
         public async Task<OperationResult<PointOfSaleAccountDto>> Create(PointOfSaleAccountDto account)
         => await RepositoryHandler(_create(account));
 
@@ -58,6 +66,9 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
         public async Task<OperationResult<bool>> Delete(Guid id)
          => await RepositoryHandler(_delete(id));
 
+        public async Task<OperationResult<bool>> MultiDelete(List<Guid> ids)
+         => await RepositoryHandler(_multiDelete(ids));
+
         public async Task<OperationResult<bool>> Block(Guid id)
         => await RepositoryHandler(_block(id));
 
@@ -66,76 +77,63 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
 
         public async Task<OperationResult<PointOfSaleAccountCodesDto>> Details(Guid id)
          => await RepositoryHandler(_details(id));
-
-        public async Task<OperationResult<object>> GetPointOfSales()
-         => await RepositoryHandler(_getPointOfSales());
+        #endregion
 
 
 
-        private Func<OperationResult<object>, Task<OperationResult<object>>> _getPointOfSales()
-        => async operation => {
-
-            var list = await Query.Where(user => !user.DateDeleted.HasValue 
-                                               && user.Type == UserTypes.Seller 
-                                               && !user.DateDeleted.HasValue 
-                                               && user.DateActivated.HasValue)
-                                  .Select(user => new
-                                  {
-                                    Name = user.Name,
-                                    PhoneNumber = user.PhoneNumber,
-                                    Address = user.Address,
-                                    CityName = user.City.Name
-                                  }).ToListAsync();
-
-            return operation.SetSuccess(list);
-        };
 
         private Func<OperationResult<PointOfSaleDto>, Task<OperationResult<PointOfSaleDto>>> _fetch(Guid id)
         => async operation =>
         {
-            var result = await Query.Where(user => user.Id == id && !user.DateDeleted.HasValue && user.Type == UserTypes.Seller).
-            Select(user => new PointOfSaleDto
-            {
-                Name = user.Name,
-                UserName = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Address = user.Address,
-                MoneyLimit = user.MoneyLimit,
-                AllowDiscount = user.AllowDiscount,
-                CityId = user.CityId ?? default,
-                Rate = user.Rates.OrderByDescending(rate => rate.DateCreated).Select(rate => rate.DiscountRate * 100).FirstOrDefault(),
-                Codes = user.Codes.
-                        Select(code => new CodePackagesDto
-                        {
-                            Hash = code.Hash,
-                            Value = code.Value,
-                            MaxEndDate = code.MaxEndDate,
-                            DiscountRate = code.DiscountRate,
-                            DateCreated = code.DateCreated,
-                            DateActivated = code.DateActivated,
-                            IsInvoice = code.InvoiceId.HasValue,
-                            Packages = code.CodePackages.
-                               Select(codepackage => new PackageDto
-                               {
-                                   Id = codepackage.Package.Id,
-                                   Name = codepackage.Package.Name,
-                                   Description = codepackage.Package.Description,
-                                   Price = codepackage.Package.Price,
-                                   StartDate = codepackage.Package.StartDate,
-                                   EndDate = codepackage.Package.EndDate,
-                                   Type = codepackage.Package.Type,
-                               }),
-                        }).OrderByDescending(code => code.DateCreated).ToList(),
-                Invoices = user.Invoices.Select(invoice => new InvoiceDto
-                {
-                    SerialNumber = invoice.SerialNumber,
-                    Note = invoice.Note,
-                    Total = invoice.Total,
-                    Date = invoice.Date,
-                    Rate = invoice.Rate,
-                }),
-            }).FirstOrDefaultAsync();
+            var result = await Query.Where(user => user.Id == id 
+                                                && user.Type == UserTypes.Seller)
+                                    .Select(user => new PointOfSaleDto
+                                    {
+                                        Name = user.Name,
+                                        UserName = user.UserName,
+                                        Email = user.Email,
+                                        PhoneNumber = user.PhoneNumber,
+                                        Address = user.Address,
+                                        MoneyLimit = user.MoneyLimit,
+                                        AllowDiscount = user.AllowDiscount,
+                                        CityId = user.CityId ?? default,
+                                        Rate = user.Rates
+                                                   .OrderByDescending(rate => rate.DateCreated)
+                                                   .Select(rate => rate.DiscountRate * 100)
+                                                   .FirstOrDefault(),
+                                        Codes = user.Codes
+                                                    .Select(code => new CodePackagesDto
+                                                    {
+                                                        Hash = code.Hash,
+                                                        Value = code.Value,
+                                                        MaxEndDate = code.MaxEndDate,
+                                                        DiscountRate = code.DiscountRate,
+                                                        DateCreated = code.DateCreated,
+                                                        DateActivated = code.DateActivated,
+                                                        IsInvoice = code.InvoiceId.HasValue,
+                                                        Packages = code.CodePackages
+                                                                       .Select(codepackage => new PackageDto
+                                                                       {
+                                                                           Id = codepackage.Package.Id,
+                                                                           Name = codepackage.Package.Name,
+                                                                           Description = codepackage.Package.Description,
+                                                                           Price = codepackage.Package.Price,
+                                                                           StartDate = codepackage.Package.StartDate,
+                                                                           EndDate = codepackage.Package.EndDate,
+                                                                           Type = codepackage.Package.Type,
+                                                                       }),
+                                                    }).OrderByDescending(code => code.DateCreated)
+                                                    .ToList(),
+                                        Invoices = user.Invoices
+                                                       .Select(invoice => new InvoiceDto
+                                                       {
+                                                           SerialNumber = invoice.SerialNumber,
+                                                           Note = invoice.Note,
+                                                           Total = invoice.Total,
+                                                           Date = invoice.Date,
+                                                           Rate = invoice.Rate,
+                                                       }),
+                                    }).FirstOrDefaultAsync();
 
             foreach (var code in result.Codes)
             {
@@ -151,8 +149,23 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                 };
             }
 
-
             return operation.SetSuccess(result);
+        };
+
+        private Func<OperationResult<object>, Task<OperationResult<object>>> _getPointOfSales()
+        => async operation => {
+
+            var list = await Query.Where(user =>  user.Type == UserTypes.Seller 
+                                               && user.DateActivated.HasValue)
+                                  .Select(user => new
+                                  {
+                                      Name = user.Name,
+                                      PhoneNumber = user.PhoneNumber,
+                                      Address = user.Address,
+                                      CityName = user.City.Name
+                                  }).ToListAsync();
+
+            return operation.SetSuccess(list);
         };
 
         private Func<OperationResult<IEnumerable<PackageDto>>, Task<OperationResult<IEnumerable<PackageDto>>>> _pacakges(Guid userId)
@@ -187,7 +200,7 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             if (generateCode.PackageIds is null || !generateCode.PackageIds.Any())
                 return operation.SetFailed("it must contain a package");
 
-            var userMoney = await Query.Where(user => user.Id == id && !user.DateDeleted.HasValue)
+            var userMoney = await Query.Where(user => user.Id == id)
                 .Select(user => new
                 {
                     user.Id,
@@ -205,9 +218,13 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
             generateCode.PackageIds = generateCode.PackageIds.Distinct();
 
             DateTime dateNow = DateTime.Now.ToLocalTime();
-            packages = await _query<Package>().Where(package => generateCode.PackageIds
-                                              .Contains(package.Id) && !package.IsHidden && package.StartDate <= dateNow && package.EndDate >= dateNow)
+
+            packages = await _query<Package>().Where(package => generateCode.PackageIds.Contains(package.Id) 
+                                                            && !package.IsHidden 
+                                                            && package.StartDate <= dateNow 
+                                                            && package.EndDate >= dateNow)
                                               .ToListAsync();
+
             if (packages.Count != generateCode.PackageIds.Count())
                 return (OperationResultTypes.NotExist, "once or more packages is not available anymore");
 
@@ -412,6 +429,23 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                return operation.SetSuccess(true);
            };
 
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDelete(List<Guid> ids)
+           => async operation =>
+           {
+               var POSs = TrackingQuery.Where(p => ids.Contains(p.Id));
+
+               await POSs.ForEachAsync(p => p.DateDeleted = DateTime.Now);
+
+               foreach (var pos in POSs)
+               {
+                   await PushUserInBlacklist(pos);
+               }
+
+               await Context.SaveChangesDeletedAsync();
+
+               return operation.SetSuccess(true);
+           };
+
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _block(Guid id)
         => async operation =>
         {
@@ -458,49 +492,56 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
         private Func<OperationResult<PointOfSaleAccountCodesDto>, Task<OperationResult<PointOfSaleAccountCodesDto>>> _details(Guid id)
         => async operation => {
 
-            var one = await Query.Include(w => w.Codes).ThenInclude(w => w.CodePackages).Where(user => user.Id == id && !user.DateDeleted.HasValue && user.Type == UserTypes.Seller).
-              Select(user => new PointOfSaleAccountCodesDto()
-              {
-                  Id = user.Id,
-                  UserName = user.UserName,
-                  Email = user.Email,
-                  Name = user.Name,
-                  PhoneNumber = user.PhoneNumber,
-                  Birthday = user.Birthday,
-                  Address = user.Address,
-                  Gender = user.Gender,
-                  MoneyLimit = user.MoneyLimit,
-                  SubscriptionDate = user.SubscriptionDate,
-                  DateBlocked = user.DateBlocked,
-                  AllowDiscount = user.AllowDiscount,
-                  CityId = user.CityId ?? default,
-                  DateActivated = user.DateActivated,
-                  facList = user.Faculties.Select(w => w.FacultyId),
-                  Rate = user.Rates.OrderByDescending(r => r.DateCreated).Select(x => x.DiscountRate * 100).FirstOrDefault(),
-                  // CodeSoldCount = user.Codes.Count(code => code.DateActivated.HasValue),
-                  CodeDetailsSimpleDto = user.Codes.Select(code => new CodeDetailsSimpleDto()
-                  {
-                      Id = code.Id,
-                      Hash = code.Hash,
-                      Value = code.Value,
-                      CreateDate = code.DateCreated,
-                      DateActivated = code.DateActivated,
-                      DiscountRate = code.DiscountRate,
-                      MaxEndDate = code.MaxEndDate,
-                      StudentName = code.User.Name,
-                      Package = code.CodePackages.Select(package => new PackageDto()
-                      {
-                          Id = package.Package.Id,
-                          Name = package.Package.Name,
-                          Description = package.Package.Description,
-                          Price = package.Package.Price,
-                          EndDate = package.Package.EndDate,
-                          StartDate = package.Package.StartDate,
-                          Type = package.Package.Type
+            var one = await Query.Include(w => w.Codes)
+                                 .ThenInclude(w => w.CodePackages)
+                                 .Where(user => user.Id == id 
+                                             && user.Type == UserTypes.Seller)
+                                 .Select(user => new PointOfSaleAccountCodesDto()
+                                 {
+                                     Id = user.Id,
+                                     UserName = user.UserName,
+                                     Email = user.Email,
+                                     Name = user.Name,
+                                     PhoneNumber = user.PhoneNumber,
+                                     Birthday = user.Birthday,
+                                     Address = user.Address,
+                                     Gender = user.Gender,
+                                     MoneyLimit = user.MoneyLimit,
+                                     SubscriptionDate = user.SubscriptionDate,
+                                     DateBlocked = user.DateBlocked,
+                                     AllowDiscount = user.AllowDiscount,
+                                     CityId = user.CityId ?? default,
+                                     DateActivated = user.DateActivated,
+                                     facList = user.Faculties.Select(w => w.FacultyId),
+                                     Rate = user.Rates
+                                                .OrderByDescending(r => r.DateCreated)
+                                                .Select(x => x.DiscountRate * 100)
+                                                .FirstOrDefault(),
+                                     CodeDetailsSimpleDto = user.Codes
+                                                                .Select(code => new CodeDetailsSimpleDto()
+                                                                {
+                                                                    Id = code.Id,
+                                                                    Hash = code.Hash,
+                                                                    Value = code.Value,
+                                                                    CreateDate = code.DateCreated,
+                                                                    DateActivated = code.DateActivated,
+                                                                    DiscountRate = code.DiscountRate,
+                                                                    MaxEndDate = code.MaxEndDate,
+                                                                    StudentName = code.User.Name,
+                                                                    Package = code.CodePackages
+                                                                                  .Select(package => new PackageDto()
+                                                                                  {
+                                                                                      Id = package.Package.Id,
+                                                                                      Name = package.Package.Name,
+                                                                                      Description = package.Package.Description,
+                                                                                      Price = package.Package.Price,
+                                                                                      EndDate = package.Package.EndDate,
+                                                                                      StartDate = package.Package.StartDate,
+                                                                                      Type = package.Package.Type
 
-                      }).FirstOrDefault()
-                  }),
-              }).FirstOrDefaultAsync();
+                                                                                  }).FirstOrDefault()
+                                                                }),
+                                 }).FirstOrDefaultAsync();
 
             if (one is null)
                 return OperationResultTypes.NotExist;
