@@ -27,7 +27,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
 
             await InsureCreateSuperAdminAsync(userManager, roleManager, newRole);
             await InsureCreateSellerAsync(userManager, roleManager, newRole);
-            //await InsureCreateUserAsync(userManager, roleManager, newRole);
+            await InsureCreateUserAsync(userManager, roleManager, newRole);
             await InsureCreateGuidSellerAsync(userManager);
         }
 

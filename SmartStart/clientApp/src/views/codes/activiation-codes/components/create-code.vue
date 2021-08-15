@@ -10,7 +10,7 @@
         >
             
             <template #body>
-                {{codeDto}}
+              
                 <EKInputSelect
                     label="الحزمة"
                     placeholder="اختر الحزمة"
