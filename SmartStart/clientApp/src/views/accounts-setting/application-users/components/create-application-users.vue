@@ -83,13 +83,7 @@
                     placeholder="ادخل رقم العنوان"
                     name="address"
                 />
-                <EKInputSelect
-                placeholder="اختر كلية محددة "
-                :options="faculties"
-                name="selectFactilies"
-                :clearable="true"
-                v-model="userDto.facultyId"
-                    />
+               
             </ValidationObserver>
         </template>
     </EKDialog>
@@ -101,13 +95,12 @@ import EKInputPicker from "@Ekcore/components/EK-forms/EK-input-picker";
 import { ValidationObserver } from "vee-validate";
 import EKInputTextarea from "@Ekcore/components/EK-forms/EK-input-textarea";
 
-import EKInputSelect from "@Ekcore/components/EK-forms/EK-input-select";
 
 import { mapActions, mapState } from "vuex";
 
 export default {
     components: {
-        EKInputSelect,
+       
         EKDialog,
         EKInputText,
         EKInputPicker,
