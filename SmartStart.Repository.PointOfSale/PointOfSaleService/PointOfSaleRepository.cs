@@ -66,6 +66,9 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
         public async Task<OperationResult<bool>> Delete(Guid id)
          => await RepositoryHandler(_delete(id));
 
+        public async Task<OperationResult<bool>> MultiDelete(List<Guid> ids)
+         => await RepositoryHandler(_multiDelete(ids));
+
         public async Task<OperationResult<bool>> Block(Guid id)
         => await RepositoryHandler(_block(id));
 
@@ -422,6 +425,23 @@ namespace SmartStart.Repository.PointOfSale.PointOfSaleService
                    return operation.SetFailed(String.Join(",", identityResult.Errors.Select(error => error.Description)));
 
                await PushUserInBlacklist(User);
+
+               return operation.SetSuccess(true);
+           };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDelete(List<Guid> ids)
+           => async operation =>
+           {
+               var POSs = TrackingQuery.Where(p => ids.Contains(p.Id));
+
+               await POSs.ForEachAsync(p => p.DateDeleted = DateTime.Now);
+
+               foreach (var pos in POSs)
+               {
+                   await PushUserInBlacklist(pos);
+               }
+
+               await Context.SaveChangesDeletedAsync();
 
                return operation.SetSuccess(true);
            };
