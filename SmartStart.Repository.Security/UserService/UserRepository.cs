@@ -243,14 +243,26 @@ namespace SmartStart.Repository.Security.UserService
                                                  //.ThenInclude(x => x.Faculties)
                                                  .Where(user => user.Type == UserTypes.User);
 
-                var UserFaculties = AllQyery.Select(user => new UserFacultyList
+
+                var UserFacl = await Query.SelectMany(user => user.Codes).SelectMany(e => e.CodePackages)
+                                                           .Select(e => e.Package).SelectMany(e => e.PackageSubjectFaculties)
+                                                           .Select(e => e.SubjectFaculty).Select(e => new FacultySelectDto
+                                                           {
+                                                               Id = e.Faculty.Id,
+                                                               Name = e.Faculty.Name
+
+                                                           })
+                                                           .ToListAsync();
+
+                var UserFaculties = Query.Select(user => new UserFacultyList
                 {
                     Id = user.Id,
                     Faculties = user.SubjectFacultyAppUsers.Select(e => new FacultySelectDto
                     {
                         Id = e.SubjectFaculty.FacultyId,
                         Name = e.SubjectFaculty.Faculty.Name
-                    }).ToList()
+                    })
+                    .ToList()
                 })
                 .ToList();
 
@@ -258,7 +270,13 @@ namespace SmartStart.Repository.Security.UserService
                 Dictionary<Guid, List<FacultySelectDto>> dic = new Dictionary<Guid, List<FacultySelectDto>>();
 
 
-               
+                for (int i = 0; i < UserFacl.Count(); i++)
+                {
+
+                    dic[UserFaculties[i].Id] = UserFaculties[i].Faculties.Distinct().ToList();
+                }
+
+
                 for (int i = 0; i < UserFaculties.Count(); i++)
                 {
 
@@ -286,8 +304,8 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                               Faculties = dic[user.Id],
-                               
+                               Faculties = UserFacl
+
                            })
                            .ToListAsync();
 
