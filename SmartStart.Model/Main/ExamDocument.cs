@@ -1,4 +1,6 @@
 ﻿using Elkood.Web.Helper.Validations.Attribute.DataBaseAnnotations;
+using Elkood.Web.Helper.Validations.Constants;
+using Elkood.Web.Helper.Validations.Enum;
 using Elkood.Web.Infrastructure.ModelEntity.Base;
 using SmartStart.Model.Shared;
 using System;
@@ -21,5 +23,7 @@ namespace SmartStart.Model.Main
         public Guid DocumentId { get; set; }
         public Document Document { get; set; }
 
+        [ColumnDataType(DataBaseTypes.NVARCHAR, TypeConstants.LongString)]
+        public string Note { get; set; }
     }
 }

@@ -55,6 +55,7 @@ namespace SmartStart.SqlServer.DataBase
         #region -   Main   -
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<ExamDocument> ExamDocuments { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<ExamTag> ExamTags { get; set; }
         public DbSet<FacultyPOSUser> FacultyPOSUsers { get; set; }
