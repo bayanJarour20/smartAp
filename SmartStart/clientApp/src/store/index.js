@@ -18,6 +18,7 @@ import invoices from "./invoices"
 
 
 import subjects from './content-management/subjects'
+import cources from './content-management/cources'
 import natification from "./content-management/notifications"
 
 import accounts from './accounts'
@@ -45,6 +46,7 @@ export default new Vuex.Store({
     filter,
     globalStore,
     subjects,
+    cources,
     natification
   },
   strict: process.env.DEV,
