@@ -149,8 +149,8 @@ export default {
         usersList(state, getter, glState){
             return glState.accounts.usersList.filter(pack => {
                 
-                    return getSearchResultOnRow(state, pack) 
-                    //  (pack.faculties.findIndex(fa => fa.id == state.filterDto.facultyId) != -1 ||!state.filterDto.facultyId)
+                    return getSearchResultOnRow(state, pack) &&
+                      (pack.faculties.findIndex(fa => fa.id == state.filterDto.facultyId) != -1 ||!state.filterDto.facultyId)
                
               
                  
