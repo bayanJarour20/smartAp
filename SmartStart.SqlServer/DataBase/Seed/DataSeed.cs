@@ -57,7 +57,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
             var autoPackages = context.Packages.Include(package => package.PackageSubjectFaculties)
                                                .ThenInclude(subjectPackage => subjectPackage.SubjectFaculty)
                                                .ThenInclude(subjectFaculty => subjectFaculty.Subject)
-                                               .ThenInclude(subject => subject.Faculties)
+                                               .ThenInclude(subject => subject.SubjectFaculties)
                                                .Where(x => x.Type == PackageTypes.Auto)
                                                .ToList();
 
