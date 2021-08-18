@@ -20,8 +20,9 @@ namespace SmartStart.Model.Shared
             ExamTags = new HashSet<ExamTag>();
             QuestionTags = new HashSet<QuestionTag>();
             SubjectTags = new HashSet<SubjectTag>();
-            SubjectFacultysSemester = new HashSet<SubjectFaculty>();
-            SubjectFacultysSection = new HashSet<SubjectFaculty>();
+            SubjectFacultySemesters = new HashSet<SubjectFaculty>();
+            SubjectFacultySections = new HashSet<SubjectFaculty>();
+            SubjectFacultyDoctors = new HashSet<SubjectFaculty>();
         }
 
         [ColumnDataType(DataBaseTypes.NVARCHAR, TypeConstants.NounString)]
@@ -36,10 +37,13 @@ namespace SmartStart.Model.Shared
         public ICollection<SubjectTag> SubjectTags { get; set; }
 
         [InverseProperty(nameof(SubjectFaculty.Semester))]
-        public ICollection<SubjectFaculty> SubjectFacultysSemester { get; set; }
+        public ICollection<SubjectFaculty> SubjectFacultySemesters { get; set; }
 
         [InverseProperty(nameof(SubjectFaculty.Section))]
-        public ICollection<SubjectFaculty> SubjectFacultysSection { get; set; }
+        public ICollection<SubjectFaculty> SubjectFacultySections { get; set; }
+
+        [InverseProperty(nameof(SubjectFaculty.Doctor))]
+        public ICollection<SubjectFaculty> SubjectFacultyDoctors { get; set; }
 
     }
 }
