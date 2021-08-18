@@ -203,10 +203,11 @@
                                         { type: 'max_value:100', message: 'لا يجب أن تتجاوز القيمة العدد 100' }
                                     ]"
                                     label="نسبة نقطة البيع"
-                                    placeholder="ادخل نسبة نقطة البيع"
+                                     placeholder="ادخل نسبة نقطة البيع"
                                     v-model="posDto.rate"
                                     type="number"
                                     name="packageDiscountRate"
+                                    
                                 />
                             </b-col>
                             <b-col cols="12">
@@ -267,6 +268,8 @@
         <EKTable
             :items="posDto.codeDetailsSimpleDto"
             :columns="columns"
+            selectedLabel="id"
+            @delete-selected="CodesOfpointSales"
         >
             <template slot="items.userName" slot-scope="{ value }">
                 {{value ? value : '---' }}
@@ -363,13 +366,17 @@ export default {
   
     },
     methods: {moment,
-        ...mapActions(["fetchFaculitiesList","posDetails", "updatePOS", "blockPOS", "deletePOS", "fetchCity"]),
+        ...mapActions(["fetchFaculitiesList","posDetails", "updatePOS", "blockPOS", "deletePOS", "fetchCity","CodeListDto","CodePointListDto"]),
         onSubmit() {
             this.$refs.observer.validate().then(success => {
                 if (success) {
                     this.updatePOS(this.posDto);
                 }
             });
+        },
+        CodesOfpointSales(list){
+            console.log(list)
+            this.CodePointListDto(list)
         }
     }
 };

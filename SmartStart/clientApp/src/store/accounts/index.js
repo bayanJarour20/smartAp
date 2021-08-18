@@ -183,6 +183,20 @@ export default {
             }
             state.userDto.codes = tempList; 
          
+        },
+        Code_Point_List_Dto(state,payload){
+            let MapOfIds = new Map(); 
+                var idx; 
+                var tempList = []; 
+                for(idx = 0 ; idx < payload.length ; idx++) {
+                    MapOfIds.set(payload[idx] , 1);
+                }
+                for(idx = 0 ; idx < state.posDto.codeDetailsSimpleDto.length ; idx++) {
+                    if(MapOfIds.has(state.posDto.codeDetailsSimpleDto[idx].id) === false) {
+                        tempList.push(state.posDto.codeDetailsSimpleDto[idx]); 
+                    }
+                }
+                state.posDto.codeDetailsSimpleDto = tempList; 
         }
         
      
@@ -292,6 +306,14 @@ export default {
             api.get("PointOfSale/Details/" + id, ({ data }) => {
                 commit("POS_Details", data);
             });
+        },
+        PosDetailsDto({commit},ids){
+            api.delete("PointOfSale/MultiDelete",({ data }) => {
+                if(data) {
+                    commit("Pos_Details_Dto", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف نقاط البيع المحددة', success: 'تم حذف نقاط البيع المحددة بنجاح', error: "فشل حذف نقاط البيع المحددة " },
+            ids)
         },
 
         // account
@@ -466,6 +488,14 @@ export default {
                     commit("User_List_Dto", ids);
                 }
             },{confirm: 'هل تريد فعلا حذف الإشتركات المحددة', success: 'تم حذف الإشتركات المحددة بنجاح', error: "فشل حذف الإشتركات المحددة " },
+            ids)
+        },
+        CodePointListDto({commit},ids){
+            api.delete("Code/RemoveCodes",({ data }) => {
+                if(data) {
+                    commit("Code_Point_List_Dto", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف الأكواد المحددة', success: 'تم حذف الأكواد المحددة بنجاح', error: "فشل حذف الأكواد المحددة " },
             ids)
         }
 
