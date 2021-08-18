@@ -116,32 +116,7 @@ export default [
             ]
         })
     },
-    {
-        path: "/subjects/:id",
-        name: "subjects details",
-        components: {
-            default: () =>
-                import("@/views/content-management/subjects/pages/details.vue")
-        },
-        props: {
-            default: true
-        },
-        meta: () => ({
-            pageTitle: "المواد",
-            roles: [All],
-            breadcrumb: [
-                {
-                    text: "المواد",
-                    active: false,
-                    to: "/subjects"
-                },
-                {
-                    text: "تفاصيل",
-                    active: true
-                }
-            ]
-        })
-    },
+   
     // ---courses
     {
         path: "/courses",

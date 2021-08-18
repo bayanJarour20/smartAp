@@ -16,6 +16,16 @@ export default {
         }
     },
 
+    getters: {
+        facultiesMap(state) {
+            var map = new Map();
+           
+            state.faculties.forEach(element => {
+                map.set(element.id , element.name)
+            });
+            return map;
+        }
+    },
     mutations: {
         Get_Faculties_Details(state, payload) {
             state.faculties = payload;
