@@ -4,10 +4,11 @@
             <b-button to="/codes" :variant="+type ? 'outline-primary' : 'primary'">رموز التفعيل</b-button>
             <b-button to="/packages" :variant="+type ? 'primary' : 'outline-primary'">الحزم المتوفرة</b-button>
         </b-button-group>
+      
         <EKTable
             :columns="columns[+type]"
             :items="+type ? packagesList : codesList"
-            selectedLabel="name"
+            selectedLabel="id"
             @details="openDetailsActiviationCodes"
             @delete-selected="fireDeleteEvent"
             :row-style-class="rowStyleClassFn"
@@ -35,6 +36,7 @@
             <template slot="items.isHidden" slot-scope="{ value }">
                  <b-badge pill :variant="value ? 'warning' : 'success'">{{value ? 'مخفي' : 'مفعل'}}</b-badge>
             </template>
+            
         </EKTable>
     </div>
 </template>
@@ -142,9 +144,13 @@ export default {
             this.$router.push("/packages/set/" + props.row.id);
         },
         fireDeleteEvent(list) {
-            console.log(list);
+
+            if(!this.type){
+            this.CodeListDto(list)
+
+            }           
         },
-        ...mapActions(["getAllCodes", "getAllPackages"])
+        ...mapActions(["getAllCodes", "getAllPackages","CodeListDto"])
     },
     watch: {
         type(type) {

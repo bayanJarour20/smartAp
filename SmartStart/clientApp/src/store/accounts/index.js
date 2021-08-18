@@ -168,6 +168,35 @@ export default {
                     }
                 }
                 state.usersList = tempList; 
+        },
+        User_List_Dto(state,payload){
+            let MapOfIds = new Map(); 
+            var idx; 
+            var tempList = []; 
+            for(idx = 0 ; idx < payload.length ; idx++) {
+                 MapOfIds.set(payload[idx] , 1);
+            }
+            for(idx = 0 ; idx < state.userDto.codes.length ; idx++) {
+                if(MapOfIds.has(state.userDto.codes[idx].id) === false) {
+                    tempList.push(state.userDto.codes[idx]); 
+                }
+            }
+            state.userDto.codes = tempList; 
+         
+        },
+        Code_Point_List_Dto(state,payload){
+            let MapOfIds = new Map(); 
+                var idx; 
+                var tempList = []; 
+                for(idx = 0 ; idx < payload.length ; idx++) {
+                    MapOfIds.set(payload[idx] , 1);
+                }
+                for(idx = 0 ; idx < state.posDto.codeDetailsSimpleDto.length ; idx++) {
+                    if(MapOfIds.has(state.posDto.codeDetailsSimpleDto[idx].id) === false) {
+                        tempList.push(state.posDto.codeDetailsSimpleDto[idx]); 
+                    }
+                }
+                state.posDto.codeDetailsSimpleDto = tempList; 
         }
         
      
@@ -218,19 +247,32 @@ export default {
                 },
                 ({ data }) => {
                     commit("Create_User", data);
+                },{
+                    success:"تم إضافة نقطة البيع بنجاح",
+                    error:"فشل إضافة نقطة البيع"
                 }
             );
         },
         blockPOS({ commit }, id) {
             api.put("PointOfSale/Block/" + id, {}, () => {
                 commit("Block_Pos");
-            });
+            },
+            {
+                success:"تمت العملية بنجاح",
+                error:"فشلت العملية"
+            }
+            );
         },
         deletePOS(ctx, id) {
             api.delete("PointOfSale/Delete?id=" + id, ({ data }) => {
                 if (data) {
                     router.push("/users/1");
                 }
+            },
+            {
+                confirm:"هل أنت متأكد من حذف نقاط البيع",
+                success:"تم تعديل نقاط البيع بنجاح",
+                error:"فشل تعديل نقاط البيع"
             });
         },
         updatePOS(ctx, payload) {
@@ -253,12 +295,25 @@ export default {
                 dateActivated: new Date(payload.dateActivated),
                 rate: (payload.rate / 100),
                 facList : payload.facList
+            },
+            () => {},
+            {
+                success:"تم تعديل نقاط البيع بنجاح",
+                error:"فشل تعديل نقاط البيع"
             });
         },
         posDetails({ commit }, id) {
             api.get("PointOfSale/Details/" + id, ({ data }) => {
                 commit("POS_Details", data);
             });
+        },
+        PosDetailsDto({commit},ids){
+            api.delete("PointOfSale/MultiDelete",({ data }) => {
+                if(data) {
+                    commit("Pos_Details_Dto", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف نقاط البيع المحددة', success: 'تم حذف نقاط البيع المحددة بنجاح', error: "فشل حذف نقاط البيع المحددة " },
+            ids)
         },
 
         // account
@@ -282,6 +337,9 @@ export default {
                 },
                 ({ data }) => {
                     commit("Create_User", data);
+                },{
+                    success:"تم إضافة المستخدم بنجاح",
+                    error:"فشل إضافة المستخدم "
                 }
             );
         },
@@ -293,6 +351,11 @@ export default {
         blockAccount({ commit }, id) {
             api.put("Account/Block/" + id, {}, () => {
                 commit("Block_Account");
+            }
+            ,
+            {
+                success:"تمت العملية بنجاح",
+                error:"فشلت العملية"
             });
         },
         deleteAccount(ctx, id) {
@@ -300,6 +363,11 @@ export default {
                 if (data) {
                     router.push("/users/2");
                 }
+            },
+            {
+                confirm:"هل أنت متأكد من حذف المستخدم",
+                success:"تم تعديل المستخدم بنجاح",
+                error:"فشل تعديل  المستخدم"
             });
         },
         updateAccount(ctx, payload) {
@@ -318,6 +386,13 @@ export default {
                 gender: payload.gender,
                 facultyId: payload.facultyId,
                 role: payload.role,
+            }
+            , () => {}
+            ,
+            {
+                
+                success: "تم تعديل المستخدم بنجاح",
+                error: "فشل تعديل المستخدم"
             });
         },
 
@@ -405,6 +480,22 @@ export default {
                     commit("Delete_Users_List", ids);
                 }
             },{confirm: 'هل تريد فعلا حذف المستخدمين المحددين', success: 'تم حذف المستخدمين المحددين بنجاح', error: "فشل حذف المستخدمين المحددين " },
+            ids)
+        },
+        UserListDto({commit},ids){
+            api.delete("Code/RemoveCodes",({ data }) => {
+                if(data) {
+                    commit("User_List_Dto", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف الإشتركات المحددة', success: 'تم حذف الإشتركات المحددة بنجاح', error: "فشل حذف الإشتركات المحددة " },
+            ids)
+        },
+        CodePointListDto({commit},ids){
+            api.delete("Code/RemoveCodes",({ data }) => {
+                if(data) {
+                    commit("Code_Point_List_Dto", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف الأكواد المحددة', success: 'تم حذف الأكواد المحددة بنجاح', error: "فشل حذف الأكواد المحددة " },
             ids)
         }
 

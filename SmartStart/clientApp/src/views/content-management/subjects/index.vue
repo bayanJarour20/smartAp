@@ -56,9 +56,11 @@
                 {{value ? value : '---' }}
             </template>
         </EKTable>
+        <createSubject ref="editSubjectDialog" title="تعديل كلية" isEdit />
     </div>
 </template>
 <script>
+import createSubject from "./components/create-subject";
 import EKTable from "@Ekcore/components/EK-table";
 import { mapActions, mapGetters, mapState } from "vuex";
 import EKInputSelect from "@Ekcore/components/EK-forms/EK-input-select";
@@ -66,7 +68,8 @@ import EKInputSelect from "@Ekcore/components/EK-forms/EK-input-select";
 export default {
     components: {
         EKTable,
-        EKInputSelect
+        EKInputSelect,
+        createSubject
     },
     data: () => ({
         columns: [
@@ -129,8 +132,9 @@ export default {
     },
     methods: {
         ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails"]),
-        openSubjectDEtails(props) {
-            this.$router.push("/subjects/" + props.row.id);
+        openSubjectDEtails() {
+            //  this.$store.commit('Set_Facultie_Dto', props.row)
+            this.$refs.editSubjectDialog.openDialog();
         },
         fireDeleteEvent(list) {
             console.log(list);
