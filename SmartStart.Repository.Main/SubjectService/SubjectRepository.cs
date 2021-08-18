@@ -309,7 +309,8 @@ namespace SmartStart.Repository.Main.SubjectService
                         SemesterId = faculty.SemesterId,
                         DoctorId =faculty.DoctorId,
                         Year = faculty.Year,
-                        SubjectId = subjectId
+                        SubjectId = subjectId,
+                        
                     });
                 }
                 await Context.SubjectFaculties.AddRangeAsync(temp);
