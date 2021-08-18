@@ -11,7 +11,7 @@ namespace SmartStart.DataTransferObject.SubjectDto
 {
     public class SubjectDetailsDto : SubjectBaseDto
     {
-        public List<Guid> Doctors { get; set; }
+        //public List<Guid> Doctors { get; set; }
         public SubjectTypes Type { get; set; }
         public string Description { get; set; }
         public string ImagePath { get; set; }
