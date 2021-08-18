@@ -7,10 +7,10 @@
             @ok="submit"
             endClose
             @search="search"
+            @open="$store.commit('Reset_code_Dto')"
         >
             
             <template #body>
-              
                 <EKInputSelect
                     label="الحزمة"
                     placeholder="اختر الحزمة"
@@ -98,6 +98,7 @@ export default {
                 query   
             })
         },
+       
 
     }
 };

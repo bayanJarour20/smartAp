@@ -285,6 +285,9 @@
                <template slot="items.createDate" slot-scope="{ value }">
                  {{ moment(new Date(value)).format("YYYY/MM/DD HH:mm:ss") }}
             </template>
+             <template slot="items.package" slot-scope="{ value }">
+                 {{value.name}}
+            </template>
         </EKTable>
     </div>
 </template>
@@ -355,7 +358,7 @@ export default {
             },
             {
                 label: "الحزمة",
-                field: "packageName"
+                field: "package"
             }
         ]
     }),

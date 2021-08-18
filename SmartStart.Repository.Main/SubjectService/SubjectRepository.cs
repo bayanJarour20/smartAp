@@ -63,7 +63,8 @@ namespace SmartStart.Repository.Main.SubjectService
                                              SectionId = f.SectionId, 
                                              SemesterId = f.SemesterId,
                                              DoctorId = f.DoctorId,
-                                             Year = f.Year
+                                             Year = f.Year,
+                                             Price = f.Price
                                          }).ToList()
                                          
                                      }).ToListAsync();
@@ -89,7 +90,7 @@ namespace SmartStart.Repository.Main.SubjectService
                         };
                         await Context.Subjects.AddAsync(subject);
                         subjectDto.Id = subject.Id;
-                        await addSubjectDoctors(subjectDto.Doctors, subject.Id);
+                        //await addSubjectDoctors(subjectDto.Doctors, subject.Id);
                         await addSubjectFaculties(subjectDto.subjectFaculties, subject.Id);
                         await Context.SaveChangesAsync();
                         return operation.SetSuccess(new SubjectAllDto
@@ -105,7 +106,6 @@ namespace SmartStart.Repository.Main.SubjectService
                             Name = subject.Name,
                             Type = subject.Type,
                             Description = subject.Description,
-                            Doctors = subjectDto.Doctors,
                             subjectFaculties = subjectDto.subjectFaculties
                         });
                     }
@@ -146,7 +146,7 @@ namespace SmartStart.Repository.Main.SubjectService
                 
                 Context.SubjectTags.RemoveRange(subjectDoctors);
 
-                await addSubjectDoctors(subjectDto.Doctors, subject.Id);
+                //await addSubjectDoctors(subjectDto.Doctors, subject.Id);
 
                 var subjectFaculties = subject.SubjectFaculties.ToList();
                 
@@ -165,7 +165,7 @@ namespace SmartStart.Repository.Main.SubjectService
                     MicroscopeCount = subject.Exams.Count(e => e.Type == TabTypes.Microscope),
                     DateCreate = subject.DateCreated,
                     Description = subject.Description,
-                    Doctors = subjectDto.Doctors,
+                    //Doctors = subjectDto.Doctors,
                     IsFree = subject.IsFree,
                     ImagePath = subject.ImagePath,
                     Name = subject.Name,
@@ -186,8 +186,8 @@ namespace SmartStart.Repository.Main.SubjectService
                                          ImagePath = s.ImagePath,
                                          IsFree = s.IsFree,
                                          Type = s.Type,
-                                         Doctors = s.SubjectTags.Where(t => t.Tag.Type == TagTypes.Doctor)
-                                                                .Select(t => t.TagId).ToList(),
+                                         //Doctors = s.SubjectTags.Where(t => t.Tag.Type == TagTypes.Doctor)
+                                         //                       .Select(t => t.TagId).ToList(),
                                          BankCount = s.Exams.Count(e => e.Type == TabTypes.Bank),
                                          ExamCount = s.Exams.Count(e => e.Type == TabTypes.Exam),
                                          InterviewCount = s.Exams.Count(e => e.Type == TabTypes.Interview),
@@ -199,7 +199,8 @@ namespace SmartStart.Repository.Main.SubjectService
                                              SectionId = f.SectionId,
                                              SemesterId = f.SemesterId,
                                              DoctorId = f.DoctorId,
-                                             Year = f.Year
+                                             Year = f.Year,
+                                             Price = f.Price
                                          }).ToList()
                                      }).SingleOrDefaultAsync();
                 return operation.SetSuccess(res);
@@ -309,7 +310,8 @@ namespace SmartStart.Repository.Main.SubjectService
                         SemesterId = faculty.SemesterId,
                         DoctorId =faculty.DoctorId,
                         Year = faculty.Year,
-                        SubjectId = subjectId
+                        SubjectId = subjectId,
+                        Price = faculty.Price
                     });
                 }
                 await Context.SubjectFaculties.AddRangeAsync(temp);
