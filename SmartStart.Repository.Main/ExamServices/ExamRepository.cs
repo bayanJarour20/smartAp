@@ -27,21 +27,31 @@ namespace SmartStart.Repository.Main.ExamServices
 
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
             => await RepositoryHandler(_getAllExam());
-
         public async Task<OperationResult<bool>> DeleteExam(Guid id)
             => await RepositoryHandler(_deleteExam(id));
-
         public async Task<OperationResult<bool>> MultiDeleteExam(IEnumerable<Guid> ids)
-            => await RepositoryHandler(_multiDelete(ids));
-
+            => await RepositoryHandler(_multiDeleteExam(ids));
         public async Task<OperationResult<ExamDetailsDto>> AddExam(ExamDto exam)
             => await RepositoryHandler(_addExam(exam));
-
         public async Task<OperationResult<ExamDetailsDto>> UpdateExam(ExamDto dto)
             => await RepositoryHandler(_updateExam(dto));
-
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllExamQuestion(Guid id)
             => await RepositoryHandler(_getAllExamQuestion(id));
+
+
+        public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllBank()
+            => await RepositoryHandler(_getAllBank());
+        public async Task<OperationResult<bool>> DeleteBank(Guid id)
+            => await RepositoryHandler(_deleteBank(id));
+        public async Task<OperationResult<bool>> MultiDeleteBank(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_multiDeleteBank(ids));
+        public async Task<OperationResult<ExamDetailsDto>> AddBank(ExamDto dto)
+            => await RepositoryHandler(_addBank(dto));
+        public async Task<OperationResult<ExamDetailsDto>> UpdateBank(ExamDto dto)
+            => await RepositoryHandler(_updateBank(dto));
+        public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllBankQuestion(Guid id)
+            => await RepositoryHandler(_getAllBankQuestion(id));
+
 
         #region - Exam -
 
@@ -60,7 +70,7 @@ namespace SmartStart.Repository.Main.ExamServices
                 return operation.SetSuccess(true, " Success Delete. ");
             };
 
-        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDelete(IEnumerable<Guid> ids)
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteExam(IEnumerable<Guid> ids)
             => async operation =>
             {
                 if (!(await TryMultiDelete(ids, TabTypes.Exam)))
@@ -87,6 +97,54 @@ namespace SmartStart.Repository.Main.ExamServices
 
         #endregion
 
+        #region - Bank -
+
+        private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllBank()
+            => async operatoin =>
+            {
+                var Banks = await GetAllAsync(exam => exam.Type == TabTypes.Bank);
+                return operatoin.SetSuccess(Banks);
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteBank(Guid id)
+            => async operation =>
+            {
+                if (!(await TryDelete(id, TabTypes.Bank)))
+                {
+                    return (OperationResultTypes.NotExist, $"{id}: not exist. ");
+                }
+                return operation.SetSuccess(true, "Sussecc Delete.");
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteBank(IEnumerable<Guid> ids)
+            => async operation =>
+            {
+                if (!(await TryMultiDelete(ids, TabTypes.Bank)))
+                {
+                    return (OperationResultTypes.NotExist, $"{ids}: not exist. ");
+                }
+                return operation.SetSuccess(true, "Sussecc Delete.");
+            };
+
+        private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addBank(ExamDto dto)
+            => async operation =>
+            {
+                var bank = await AddAsync(dto, TabTypes.Bank);
+                return operation.SetSuccess(bank);
+            };
+
+
+        private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateBank(ExamDto dto)
+            => async operation => await UpdateAsync(operation, dto, TabTypes.Bank);
+
+        private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllBankQuestion(Guid id)
+            => async operation =>
+            {
+                var bankQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Bank);
+                return operation.SetSuccess(bankQuestions);
+            };
+
+        #endregion
 
         #region - Tab -
 
@@ -105,8 +163,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   Price = exam.Price,
                                   IsFree = exam.IsFree,
                                   QuestionsCount = exam.ExamQuestions.Count(),
-                                  SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester).Select(s => s.Id).FirstOrDefault(),
-                                  SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section).Select(s => s.Id).FirstOrDefault(),
+                                  SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester).Select(s => s.Id).ToList(),
+                                  SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section).Select(s => s.Id).ToList(),
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                               }).ToListAsync();
         }
@@ -172,7 +230,7 @@ namespace SmartStart.Repository.Main.ExamServices
                 }).ToList();
             }
 
-            await SmartStart.SqlServer.DataBase.Seed.DataSeed.FixPackages(Context);
+            //await SmartStart.SqlServer.DataBase.Seed.DataSeed.FixPackages(Context);
             await Context.AddAsync(exam);
             await Context.SaveChangesAsync();
             dto.Id = exam.Id;
@@ -190,9 +248,9 @@ namespace SmartStart.Repository.Main.ExamServices
                                   SubjectName = exam.Subject.Name,
                                   SubjectId = exam.SubjectId,
                                   SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester)
-                                                                       .Select(s => s.TagId).FirstOrDefault(),
+                                                                       .Select(s => s.TagId).ToList(),
                                   SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section)
-                                                                      .Select(s => s.Id).FirstOrDefault(),
+                                                                      .Select(s => s.Id).ToList(),
                                   QuestionsCount = exam.ExamQuestions.Count(),
                               }).FirstOrDefaultAsync();
 
@@ -227,9 +285,9 @@ namespace SmartStart.Repository.Main.ExamServices
                                 SubjectName = exam.Subject.Name,
                                 SubjectId = exam.SubjectId,
                                 SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester)
-                                                                     .Select(s => s.TagId).FirstOrDefault(),
+                                                                     .Select(s => s.TagId).ToList(),
                                 SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section)
-                                                                    .Select(s => s.Id).FirstOrDefault(),
+                                                                    .Select(s => s.Id).ToList(),
                                 QuestionsCount = exam.ExamQuestions.Count(e => e.DateDeleted == null),
                             }).FirstOrDefaultAsync());
         }
@@ -249,9 +307,9 @@ namespace SmartStart.Repository.Main.ExamServices
                                   IsFree = exam.IsFree,
                                   QuestionsCount = exam.ExamQuestions.Count(),
                                   SemesterId = exam.Subject.SubjectTags.Where(st => st.Tag.Type == TagTypes.Semester)
-                                                                       .Select(st => st.Id).FirstOrDefault(),
+                                                                       .Select(st => st.Id).ToList(),
                                   SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section)
-                                                                      .Select(s => s.Id).FirstOrDefault(),
+                                                                      .Select(s => s.Id).ToList(),
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                                   Questions = exam.ExamQuestions.Select(question => new QuestionImagesTagsAnswersDto
                                   {

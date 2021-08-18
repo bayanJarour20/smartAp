@@ -51,5 +51,39 @@ namespace SmartStart.Controllers
             => await repository.GetAllExamQuestion(id).ToJsonResultAsync();
 
         #endregion
+
+        #region - Bank -
+
+        [Route("api/Bank/GetAll")]
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> GetAllBank()
+            => await repository.GetAllBank().ToJsonResultAsync();
+
+        [Route("api/Bank/Delete/{id}")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> DeleteBank([Required] Guid id)
+            => await repository.DeleteBank(id).ToJsonResultAsync();
+
+        [Route("api/Bank/MultiDelete/{ids}")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> MultiDeleteBank([Required] IEnumerable<Guid> ids)
+           => await repository.MultiDeleteBank(ids).IntoAsync(o => o).ToJsonResultAsync();
+
+        [Route("api/Bank/Add")]
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> AddBank(ExamDto dto)
+            => await repository.AddBank(dto).ToJsonResultAsync();
+
+        [Route("api/Bank/Update")]
+        [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> UpdateBank(ExamDto dto)
+            => await repository.UpdateBank(dto).ToJsonResultAsync();
+
+        [Route("api/Bank/{id}/Question/GetAll")]
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> GetAllBankQuestion([Required] Guid id)
+            => await repository.GetAllBankQuestion(id).ToJsonResultAsync();
+
+        #endregion
     }
 }
