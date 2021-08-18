@@ -14,6 +14,9 @@ namespace SmartStart.Repository.Main.ExamServices
         Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam();
         Task<OperationResult<bool>> DeleteExam(Guid id);
         Task<OperationResult<bool>> MultiDeleteExam(IEnumerable<Guid> ids);
+        Task<OperationResult<ExamDetailsDto>> AddExam(ExamDto dto);
+        Task<OperationResult<ExamDetailsDto>> UpdateExam(ExamDto dto);
+        Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllExamQuestion(Guid id);
 
     }
 }
