@@ -4,7 +4,7 @@ export default {
         codesList: [],
         codeDto: {
             discountRate: 0,
-            packageIds: ''
+            packageIds: null
         }
     },
     mutations: {
@@ -28,6 +28,13 @@ export default {
             }
             state.codesList = tempList; 
          
+        },
+        Reset_code_Dto(state){
+           
+            Object.assign(state.codeDto, {
+                discountRate: 0,
+                packageIds: null
+            })
         }
     },
     actions: {
@@ -39,6 +46,9 @@ export default {
         GenerateCode({commit}, payload) {
             api.post('Code/Generate', payload, ({data}) => {
                 commit('Generate_Code', data)
+            },{
+                success:"تم إضافة الكود بنجاح",
+                error:"فشل إضافة الكود"
             })
         },
         CodeListDto({commit},ids){

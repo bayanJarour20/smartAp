@@ -168,7 +168,7 @@
                         }}
                     </td>
                 </template>
-                <template slot="item-td.price" scope="{tr, parent, trIndex}">
+                <template slot="item-td.price" scope="{parent, trIndex}">
                     <td>
                         <EKInputText
                             @change="calcPackagePrice()"
