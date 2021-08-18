@@ -10,8 +10,8 @@ using SmartStart.SqlServer.DataBase;
 namespace SmartStart.SqlServer.Migrations
 {
     [DbContext(typeof(SmartStartDbContext))]
-    [Migration("20210817132341_aa")]
-    partial class aa
+    [Migration("20210818144104_add-price-SubjectFaculty")]
+    partial class addpriceSubjectFaculty
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -383,9 +383,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ExamId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("PackageId")
                         .HasColumnType("uniqueidentifier");
 
@@ -401,8 +398,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DateCreated");
-
-                    b.HasIndex("ExamId");
 
                     b.HasIndex("PackageId");
 
@@ -1048,13 +1043,19 @@ namespace SmartStart.SqlServer.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("FacultyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SectionId")
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<Guid?>("SectionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SemesterId")
+                    b.Property<Guid?>("SemesterId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SubjectId")
@@ -1069,6 +1070,8 @@ namespace SmartStart.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DateCreated");
+
+                    b.HasIndex("DoctorId");
 
                     b.HasIndex("FacultyId");
 
@@ -1697,10 +1700,6 @@ namespace SmartStart.SqlServer.Migrations
 
             modelBuilder.Entity("SmartStart.Model.Business.PackageSubjectFaculty", b =>
                 {
-                    b.HasOne("SmartStart.Model.Main.Exam", null)
-                        .WithMany("PackageSubjects")
-                        .HasForeignKey("ExamId");
-
                     b.HasOne("SmartStart.Model.Business.Package", "Package")
                         .WithMany("PackageSubjectFaculties")
                         .HasForeignKey("PackageId")
@@ -1895,6 +1894,10 @@ namespace SmartStart.SqlServer.Migrations
 
             modelBuilder.Entity("SmartStart.Model.Main.SubjectFaculty", b =>
                 {
+                    b.HasOne("SmartStart.Model.Shared.Tag", "Doctor")
+                        .WithMany("SubjectFacultyDoctors")
+                        .HasForeignKey("DoctorId");
+
                     b.HasOne("SmartStart.Model.General.Faculty", "Faculty")
                         .WithMany("Subjects")
                         .HasForeignKey("FacultyId")
@@ -1902,22 +1905,20 @@ namespace SmartStart.SqlServer.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartStart.Model.Shared.Tag", "Section")
-                        .WithMany("SubjectFacultysSection")
-                        .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany("SubjectFacultySections")
+                        .HasForeignKey("SectionId");
 
                     b.HasOne("SmartStart.Model.Shared.Tag", "Semester")
-                        .WithMany("SubjectFacultysSemester")
-                        .HasForeignKey("SemesterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany("SubjectFacultySemesters")
+                        .HasForeignKey("SemesterId");
 
                     b.HasOne("SmartStart.Model.Main.Subject", "Subject")
-                        .WithMany("Faculties")
+                        .WithMany("SubjectFaculties")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("Faculty");
 
@@ -2059,8 +2060,6 @@ namespace SmartStart.SqlServer.Migrations
                     b.Navigation("ExamQuestions");
 
                     b.Navigation("ExamTags");
-
-                    b.Navigation("PackageSubjects");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.Question", b =>
@@ -2078,7 +2077,7 @@ namespace SmartStart.SqlServer.Migrations
                 {
                     b.Navigation("Exams");
 
-                    b.Navigation("Faculties");
+                    b.Navigation("SubjectFaculties");
 
                     b.Navigation("SubjectTags");
                 });
@@ -2127,9 +2126,11 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.Navigation("QuestionTags");
 
-                    b.Navigation("SubjectFacultysSection");
+                    b.Navigation("SubjectFacultyDoctors");
 
-                    b.Navigation("SubjectFacultysSemester");
+                    b.Navigation("SubjectFacultySections");
+
+                    b.Navigation("SubjectFacultySemesters");
 
                     b.Navigation("SubjectTags");
                 });

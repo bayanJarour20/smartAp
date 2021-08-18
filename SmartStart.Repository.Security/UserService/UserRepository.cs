@@ -241,7 +241,8 @@ namespace SmartStart.Repository.Security.UserService
                                                  .ThenInclude(x => x.SubjectFaculty)
                                                  .ThenInclude(x => x.Faculty)
                                                  //.ThenInclude(x => x.Faculties)
-                                                 .Where(user => user.Type == UserTypes.User);
+                                                 .Where(user => user.Type == UserTypes.User)
+                                                 .Where(user => user.DateDeleted == null);
 
 
                 var UserFacl = await Query.SelectMany(user => user.Codes).SelectMany(e => e.CodePackages)

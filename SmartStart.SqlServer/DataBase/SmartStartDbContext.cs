@@ -26,15 +26,6 @@ namespace SmartStart.SqlServer.DataBase
             builder.Entity<Code>()
                .HasIndex(b => b.Hash)
                .IsUnique();
-
-            builder.Entity<SubjectFaculty>()
-              .HasOne(i => i.Semester)
-              .WithMany(x => x.SubjectFacultysSemester)
-              .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<SubjectFaculty>()
-              .HasOne(i => i.Section)
-              .WithMany(x => x.SubjectFacultysSection)
-              .OnDelete(DeleteBehavior.Restrict);
         }
 
         #region -   Business   -
