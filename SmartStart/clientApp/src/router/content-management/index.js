@@ -1,5 +1,5 @@
 import { All } from "@/router";
-// import store from "@/store";
+ import store from "@/store";
 export default [
     // --- faculties
     {
@@ -102,31 +102,31 @@ export default [
             ]
         }),
     },
-    {
-        path: "/subjects/:id",
-        name: "subjects details",
-        components: {
-            default: () => import("@/views/content-management/subjects/pages/details.vue")
-        },
-        props: {
-            default: true
-        },
-        meta: () => ({
-            pageTitle: "المواد",
-            roles: [All],
-            breadcrumb: [
-                {
-                    text: "المواد",
-                    active: false,
-                    to:"/subjects"
-                },
-                {
-                    text: "تفاصيل",
-                    active: true,
-                },
-            ]
-        }),
-    },
+    // {
+    //     path: "/subjects/:id",
+    //     name: "subjects details",
+    //     components: {
+    //         default: () => import("@/views/content-management/subjects/pages/details.vue")
+    //     },
+    //     props: {
+    //         default: true
+    //     },
+    //     meta: () => ({
+    //         pageTitle: "المواد",
+    //         roles: [All],
+    //         breadcrumb: [
+    //             {
+    //                 text: "المواد",
+    //                 active: false,
+    //                 to:"/subjects"
+    //             },
+    //             {
+    //                 text: "تفاصيل",
+    //                 active: true,
+    //             },
+    //         ]
+    //     }),
+    // },
     // ---notifications
     {
         path: "/notifications",
@@ -143,6 +143,99 @@ export default [
                     text: "الإشعارات",
                     active: true,
                 },
+            ]
+        }),
+    },
+      // ---courses
+    {
+        path: "/courses",
+        name: "courses",
+        components: {
+            default: () => import("@/views/content-management/courses"),
+            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
+        },
+        meta: () => ({
+            pageTitle: "الدورات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الدورات",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/courses/:id",
+        name: "courses details",
+        components: {
+            default: () => import("@/views/content-management/courses/pages/details.vue"),
+            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
+        },
+        props: {
+            default: true,
+            'bread-actions': true
+        },
+        meta: () => ({
+            pageTitle: "الدورات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الدورات",
+                    active: false,
+                    to:"/courses"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
+    },
+     // --- questions
+     {
+        path: "/questions",
+        name: "questions",
+        components: {
+            default: () => import("@/views/content-management/questions"),
+            'bread-actions' : () => import("@/views/content-management/questions/components/create-question.vue"),
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة",
+                    active: true
+                }
+            ]
+        }),
+    },
+    {
+        path: "/questions/:ansType/set/:id/:examId/:subjectId",
+        name: "questions details",
+        components: {
+            default: () => import("@/views/content-management/questions/pages/details.vue"),
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة",
+                    active: false,
+                    to: '/questions'
+                },
+                {
+                    text: store.state.questions.questonsDto.id == '' ? "إضافة سؤال" : "تفاصيل السؤال",
+                    active: true
+                }
             ]
         }),
     },

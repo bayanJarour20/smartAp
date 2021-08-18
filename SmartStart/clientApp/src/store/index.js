@@ -14,6 +14,8 @@ import packages from "./activiation-codes/packages.js"
 import faculties from "./content-management/faculties"
 import advertising from './content-management/advertising'
 import invoices from "./invoices"
+import cources from './content-management/cources'
+import questions from './content-management/questions'
 
 
 
@@ -30,6 +32,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     app,
+    cources,
     appConfig,
     verticalMenu,
     codes,
@@ -37,6 +40,7 @@ export default new Vuex.Store({
     accounts,
     invoices,
     home,
+    questions,
 
     advertising,
 

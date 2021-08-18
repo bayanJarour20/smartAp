@@ -38,8 +38,8 @@ export default {
                     getSearchResultOnRow(state, cource) &&
                     (cource.semesterId == state.filterDto.semesterId ||
                         !state.filterDto.semesterId) &&
-                    (cource.subject.facultyId == state.filterDto.facultyId ||
-                        !state.filterDto.facultyId) &&
+                    // (cource.subject.facultyId == state.filterDto.facultyId ||
+                    //     !state.filterDto.facultyId) &&
                     (cource.year == state.filterDto.examYear ||
                         !state.filterDto.examYear) &&
                     (cource.subjectId == state.filterDto.subjectId ||
