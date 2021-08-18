@@ -56,21 +56,18 @@ namespace SmartStart.SqlServer.DataBase.Seed
         {
             var autoPackages = context.Packages.Include(package => package.PackageSubjectFaculties)
                                                .ThenInclude(subjectPackage => subjectPackage.SubjectFaculty)
-                                               .ThenInclude(subjectFaculty => subjectFaculty.Subject)
-                                               .ThenInclude(subject => subject.Faculties)
+                                               .ThenInclude(subjectFaculty => subjectFaculty.Faculty)
                                                .Where(x => x.Type == PackageTypes.Auto)
                                                .ToList();
 
             foreach (var autoPackage in autoPackages)
             {
-                //فحص إذا كان يوجد مواد جديدة بالسنة التي اختارها الطالب وغير موجودة ضمن الحزمة
                 if(autoPackage.Name.Contains("شاملة"))
                 {
-                    //فحص السنة التي اختارها الطالب 
                     var year = autoPackage.PackageSubjectFaculties.GroupBy(p => p.SubjectFaculty.Year).OrderByDescending(p => p.Count());
                     if(year.Any())
                     {
-                        int ActualCount = context.SubjectFaculties.Count(w => w.FacultyId == year.FirstOrDefault().FirstOrDefault().SubjectFaculty.FacultyId && w.Year == year.FirstOrDefault().Key);
+                        int ActualCount = context.SubjectFaculties.Count(s => s.FacultyId == year.FirstOrDefault().FirstOrDefault().SubjectFaculty.FacultyId && s.Year == year.FirstOrDefault().Key);
                         int CountInPackage = year.FirstOrDefault().Count();
 
                         if (ActualCount > CountInPackage)
@@ -79,7 +76,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
 
                             var subjectFacultiesToAdd = context.SubjectFaculties.Where(s =>
                                 s.FacultyId == year.FirstOrDefault().FirstOrDefault().SubjectFaculty.FacultyId && s.Year == year.FirstOrDefault().Key && !InSubjectFaculty.Contains(s.Id)).ToList();
-                            List<PackageSubjectFaculty> packageSubjects = new List<PackageSubjectFaculty>();
+                            var packageSubjects = new List<PackageSubjectFaculty>();
 
                             foreach (var subjectFaculty in subjectFacultiesToAdd)
                             {
@@ -94,20 +91,18 @@ namespace SmartStart.SqlServer.DataBase.Seed
                         }
                     }
 
-                    //تجميع الدورات حسب المواد لفحص عدد الدورات الحقيقي وعدد الدورات الحالية في الحزمة
-                    foreach (var autoPackagePackageSubject in autoPackage.PackageSubjectFaculties.GroupBy(w => w.SubjectFaculty.SubjectId))
+                    foreach (var autoPackageSubject in autoPackage.PackageSubjectFaculties.GroupBy(w => w.SubjectFaculty.SubjectId))
                     {
-                        int ActualCount = context.SubjectFaculties.Count(w => w.SubjectId == autoPackagePackageSubject.Key);
-                        int CountInSubject = autoPackage.PackageSubjectFaculties.Count(w => w.SubjectFaculty.SubjectId == autoPackagePackageSubject.Key);
+                        int ActualCount = context.SubjectFaculties.Count(w => w.SubjectId == autoPackageSubject.Key);
+                        int CountInSubject = autoPackage.PackageSubjectFaculties.Count(w => w.SubjectFaculty.SubjectId == autoPackageSubject.Key);
 
-                        //مقارنة بين العدد الفعلي والموجود
                         if (ActualCount > CountInSubject)
                         {
-                            var InSubject = autoPackage.PackageSubjectFaculties.Where(w => w.SubjectFaculty.SubjectId == autoPackagePackageSubject.Key)
+                            var InSubject = autoPackage.PackageSubjectFaculties.Where(w => w.SubjectFaculty.SubjectId == autoPackageSubject.Key)
                                                                                .Select(w => w.SubjectFaculty.Id).ToList();
 
                             var subjectsToAdd = context.SubjectFaculties.Where(w =>
-                                !InSubject.Contains(w.Id) && w.SubjectId == autoPackagePackageSubject.Key).ToList();
+                                !InSubject.Contains(w.Id) && w.SubjectId == autoPackageSubject.Key).ToList();
                             List<PackageSubjectFaculty> packageSubjects = new List<PackageSubjectFaculty>();
 
                             foreach (var subject in packageSubjects)

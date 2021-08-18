@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartStart.DataTransferObject.ExamDto;
 using SmartStart.DataTransferObject.QuestionDto;
 using SmartStart.Model.Main;
+using SmartStart.Model.Shared;
 using SmartStart.SharedKernel.Enums;
 using SmartStart.SqlServer.DataBase;
 using System;
@@ -42,7 +43,8 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllExamQuestion(Guid id)
             => await RepositoryHandler(_getAllExamQuestion(id));
 
-        
+        #region - Exam -
+
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllExam()
             => async operation =>
             {
@@ -75,8 +77,6 @@ namespace SmartStart.Repository.Main.ExamServices
 
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateExam(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Exam);
-                
-            
 
         private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllExamQuestion(Guid id)
             => async operation =>
@@ -85,7 +85,10 @@ namespace SmartStart.Repository.Main.ExamServices
                 return operation.SetSuccess(examQuestions);
             };
 
-        #region Tab
+        #endregion
+
+
+        #region - Tab -
 
         private async Task<IEnumerable<ExamDetailsDto>> GetAllAsync(Expression<Func<Exam, bool>> predicate)
         {
@@ -113,7 +116,15 @@ namespace SmartStart.Repository.Main.ExamServices
             var one = await TrackingQuery.Where(exam => exam.Id == examId).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).FirstOrDefaultAsync();
             if (one is null)
                 return false;
-            //var docIds = Context.ExamDocument
+            var docs = Context.ExamDocuments.Where(exam => exam.Id == examId).ToList();
+            foreach (var doc in docs)
+            {
+                var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
+                if(exams.Count() == 1)
+                {
+                    Context.Remove(doc);
+                }
+            }
             Context.SoftDelete(one);
             await Context.SaveChangesAsync();
             return true;
@@ -121,10 +132,22 @@ namespace SmartStart.Repository.Main.ExamServices
 
         private async Task<bool> TryMultiDelete(IEnumerable<Guid> examIds, TabTypes examType)
         {
-            var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).ToListAsync();
+            var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).ToListAsync();
             if (list is null)
                 return false;
-            list.ForEach(e => Context.SoftDelete(e));
+            foreach (var exam in list)
+            {
+                var docs = Context.ExamDocuments.Where(ed => ed.ExamId == exam.Id).ToList();
+                foreach (var doc in docs)
+                {
+                    var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
+                    if (exams.Count() == 1)
+                    {
+                        Context.Remove(doc);
+                    }
+                }
+                Context.SoftDelete(exam);
+            }
             await Context.SaveChangesAsync();
             return true;
         }
@@ -266,7 +289,6 @@ namespace SmartStart.Repository.Main.ExamServices
                               }).ToListAsync();
         }
 
-        
         #endregion
 
     }
