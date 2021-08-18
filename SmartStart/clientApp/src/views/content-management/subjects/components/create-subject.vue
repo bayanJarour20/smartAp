@@ -2,36 +2,82 @@
 <ValidationObserver ref="observer">
     <b-form>
         <EKDialog
-           :title="title"
+            title="إضافة مادة"
+            placeholder="ابحث عن مادة محددة"
+            btnText="مادة جديد"
             @ok="onSubmit"
             @open="$store.commit('Reset_Subject_Dto')"
             endClose
-            :placeholder="!isEdit ? 'ابحث عن مادة محددة' : ''"
-            :btnText="!isEdit ? 'مادة جديد' : ''"
             @search="search"
-            ref="subjectDialog"
         >
             <template #body>
-                <EKInputText
-                    v-model="subjectDto.name"
-                    :rules="[{ type: 'required', message: 'اسم المادة إجباري' }]"
+                 <EKInputSelect
                     label="اسم المادة"
-                    placeholder="ادخل اسم المادة"
-                    name="name"
+                    placeholder="اختر اسم المادة"
+                    :rules="[
+                        {
+                            type: 'required',
+                            message: 'اسم المادة إجبارية'
+                        }
+                    ]"
+                  
+                    name="select"
+                    :clearable="true"
                 />
                 <EKInputTextarea
                     v-model="subjectDto.description"
                     label="شرح المادة"
                     placeholder="ادخل شرح المادة"
                     name="description"
-                /> 
+                />
                 <EKInputSelect
-                    v-model="subjectDto.doctors"
+                    v-model="subjectDto.facultyId"
+                    label="تابعة لكلية"
+                    placeholder="اختر تابعة لكلية"
+                    :rules="[
+                        {
+                            type: 'required',
+                            message: 'الكلية إجبارية'
+                        }
+                    ]"
+                    :options="faculties"
+                    name="select"
+                    :clearable="true"
+                />
+                <EKInputText
+                    v-model="subjectDto.year"
+                    :rules="[{ type: 'required', message: 'سنة المادة إجباري' }, { type: 'min_value:0', message: 'الحقل يجب ان يحوي قيمة موجبة' }]"
+                    label="سنة المادة"
+                    placeholder="ادخل سنة المادة"
+                    type="number"
+                    name="year"
+                />
+                <EKInputSelect
+                    v-model="subjectDto.semesterId"
+                    label="الفصل"
+                    placeholder="اختر الفصل"
+                    :rules="[{ type: 'required', message: 'الفصل إجباري' }]"
+                    :options="semester"
+                    name="semesterId"
+                    :clearable="true"
+                />
+                <EKInputSelect
+                    v-model="subjectDto.tagIds"
                     label="مدرسو المادة"
                     placeholder="اختر مدرسو المادة"
-                    :options="doctors"
+                      :options="doctors"
                     name="tagIds"
                     multiple
+                    :clearable="true"
+                />
+                <EKInputSelect
+                    label="تصنيف المادة"
+                    placeholder="اختر تصنيف المادة"
+                    :rules="[{ type: 'required', message: 'تصنيف المادة إجباري' }]"
+                    :options="tagsList"
+                    v-model="tags"
+                    multiple
+                    name="tags"
                     :clearable="true"
                 />
                 <b-form-group label="نوع المادة">
@@ -40,18 +86,12 @@
                         <b-form-radio v-model="subjectDto.type" value="1">عملي</b-form-radio>
                     </div>
                 </b-form-group>
-                <b-form-group label="سعر المادة">
-                    <div class="d-flex justify-content-between">
-                        <b-form-radio v-model="subjectDto.isFree" value="true">مجانية</b-form-radio>
-                        <b-form-radio v-model="subjectDto.isFree" value="false">ليست مجانية</b-form-radio>
-                    </div>
-                </b-form-group>
                 <EKInputImage
                     label="صورة المادة"
                     title="upload image"
-                    v-model="subjectDto.imagePath"
-                    
-                ></EKInputImage>        
+                    :value="subjectDto.imagePath"
+                    @input="subjectDto.file = $event"
+                ></EKInputImage>
             </template>
         </EKDialog>
     </b-form>
@@ -76,13 +116,6 @@ export default {
         EKInputSelect,
         EKInputTextarea
     },
-       props: {
-        title: {
-            type: String,
-            default: () => "إضافة مادة"
-        },
-        isEdit: Boolean
-    },
     data: () => ({
         tags: []
     }),
@@ -103,17 +136,24 @@ export default {
                 if (success) {
                     var subjectFormData = new FormData();
                     subjectFormData.append('name', this.subjectDto.name)
+                    subjectFormData.append('year', this.subjectDto.year)
+                    subjectFormData.append('file', this.subjectDto.file)
                     subjectFormData.append('type', this.subjectDto.type)
+                    subjectFormData.append('facultyId', this.subjectDto.facultyId)
+                    subjectFormData.append('semesterId', this.subjectDto.semesterId)
                     subjectFormData.append('description', this.subjectDto.description)
-                    subjectFormData.append('isFree', this.subjectDto.isFree)
-                   
-                        
-                        subjectFormData.append('imagePath', this.subjectDto.imagePath)
                     
-                     this.subjectDto.doctors.forEach((doctorId, index) => {
-                        subjectFormData.append('doctors[' + index + ']', doctorId);
+                    if(this.subjectDto.imagePath) {
+                        subjectFormData.append('imagePath', this.subjectDto.imagePath)
+                    }
+                    this.subjectDto.tagIds.forEach((doctorId, index) => {
+                        subjectFormData.append('tagIds[' + index + ']', doctorId);
                     })
-                                       
+                    
+                    this.tags.forEach((doctorId, index) => {
+                        subjectFormData.append('tagIds[' + (this.subjectDto.tagIds.length + index) + ']', doctorId);
+                    })
+                    
                     this.uploadSubject({
                         id: this.subjectDto.id,
                         formData: subjectFormData
@@ -126,10 +166,7 @@ export default {
                 keys: ['name'],
                 query
             })
-        },
-         openDialog() {
-            this.$refs.subjectDialog.open();
-        },
+        }
     }
 };
 </script>

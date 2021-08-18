@@ -98,12 +98,8 @@ export default [
         path: "/subjects",
         name: "subjects",
         components: {
-            default: () =>
-                import("@/views/content-management/subjects/index.vue"),
-            "bread-actions": () =>
-                import(
-                    "@/views/content-management/subjects/components/create-subject.vue"
-                )
+            default: () => import("@/views/content-management/subjects"),
+            'bread-actions' : () => import("@/views/content-management/subjects/components/create-subject.vue"),
         },
         meta: () => ({
             pageTitle: "المواد",
@@ -111,10 +107,35 @@ export default [
             breadcrumb: [
                 {
                     text: "المواد",
-                    active: true
-                }
+                    active: true,
+                },
             ]
-        })
+        }),
+    },
+    {
+        path: "/subjects/:id",
+        name: "subjects details",
+        components: {
+            default: () => import("@/views/content-management/subjects/pages/details.vue")
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "المواد",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "المواد",
+                    active: false,
+                    to:"/subjects"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
     },
    
     // ---courses
