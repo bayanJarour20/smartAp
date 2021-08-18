@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartStart.SqlServer.Migrations
 {
-    public partial class newInit : Migration
+    public partial class pro : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -440,6 +440,38 @@ namespace SmartStart.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ExamDocuments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(1024)", nullable: true),
+                    DateDeleted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamDocuments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamDocuments_Documents_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "Documents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ExamDocuments_Exams_ExamId",
+                        column: x => x.ExamId,
+                        principalTable: "Exams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ExamQuestions",
                 columns: table => new
                 {
@@ -498,45 +530,6 @@ namespace SmartStart.SqlServer.Migrations
                         name: "FK_ExamTags_Tags_TagId",
                         column: x => x.TagId,
                         principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PackageSubjects",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    PackageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SubjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DateDeleted = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PackageSubjects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PackageSubjects_Exams_ExamId",
-                        column: x => x.ExamId,
-                        principalTable: "Exams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PackageSubjects_Packages_PackageId",
-                        column: x => x.PackageId,
-                        principalTable: "Packages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PackageSubjects_Subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -606,8 +599,9 @@ namespace SmartStart.SqlServer.Migrations
                     SubjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FacultyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Year = table.Column<short>(type: "smallint", nullable: false),
-                    SemesterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SemesterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DateDeleted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -630,6 +624,12 @@ namespace SmartStart.SqlServer.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectFaculties_Tags_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SubjectFaculties_Tags_SectionId",
                         column: x => x.SectionId,
@@ -875,6 +875,38 @@ namespace SmartStart.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PackageSubjectFaculties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    PackageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubjectFacultyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateDeleted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PackageSubjectFaculties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PackageSubjectFaculties_Packages_PackageId",
+                        column: x => x.PackageId,
+                        principalTable: "Packages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PackageSubjectFaculties_SubjectFaculties_SubjectFacultyId",
+                        column: x => x.SubjectFacultyId,
+                        principalTable: "SubjectFaculties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubjectFacultyAppUsers",
                 columns: table => new
                 {
@@ -916,6 +948,7 @@ namespace SmartStart.SqlServer.Migrations
                     DateActivated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DiscountRate = table.Column<double>(type: "float", nullable: false),
                     MaxEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Type = table.Column<byte>(type: "tinyint", nullable: false),
                     SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     InvoiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1102,6 +1135,21 @@ namespace SmartStart.SqlServer.Migrations
                 column: "DateCreated");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExamDocuments_DateCreated",
+                table: "ExamDocuments",
+                column: "DateCreated");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamDocuments_DocumentId",
+                table: "ExamDocuments",
+                column: "DocumentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamDocuments_ExamId",
+                table: "ExamDocuments",
+                column: "ExamId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExamQuestions_DateCreated",
                 table: "ExamQuestions",
                 column: "DateCreated");
@@ -1197,24 +1245,19 @@ namespace SmartStart.SqlServer.Migrations
                 column: "DateCreated");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PackageSubjects_DateCreated",
-                table: "PackageSubjects",
+                name: "IX_PackageSubjectFaculties_DateCreated",
+                table: "PackageSubjectFaculties",
                 column: "DateCreated");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PackageSubjects_ExamId",
-                table: "PackageSubjects",
-                column: "ExamId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PackageSubjects_PackageId",
-                table: "PackageSubjects",
+                name: "IX_PackageSubjectFaculties_PackageId",
+                table: "PackageSubjectFaculties",
                 column: "PackageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PackageSubjects_SubjectId",
-                table: "PackageSubjects",
-                column: "SubjectId");
+                name: "IX_PackageSubjectFaculties_SubjectFacultyId",
+                table: "PackageSubjectFaculties",
+                column: "SubjectFacultyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionDocuments_DateCreated",
@@ -1270,6 +1313,11 @@ namespace SmartStart.SqlServer.Migrations
                 name: "IX_SubjectFaculties_DateCreated",
                 table: "SubjectFaculties",
                 column: "DateCreated");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubjectFaculties_DoctorId",
+                table: "SubjectFaculties",
+                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubjectFaculties_FacultyId",
@@ -1384,6 +1432,9 @@ namespace SmartStart.SqlServer.Migrations
                 name: "CodePackages");
 
             migrationBuilder.DropTable(
+                name: "ExamDocuments");
+
+            migrationBuilder.DropTable(
                 name: "ExamQuestions");
 
             migrationBuilder.DropTable(
@@ -1396,7 +1447,7 @@ namespace SmartStart.SqlServer.Migrations
                 name: "Feedbacks");
 
             migrationBuilder.DropTable(
-                name: "PackageSubjects");
+                name: "PackageSubjectFaculties");
 
             migrationBuilder.DropTable(
                 name: "QuestionDocuments");
