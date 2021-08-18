@@ -29,7 +29,7 @@ namespace SmartStart.DataTransferObject.AccountDto
         public int SubscriptionCount { get; set; }
         public SmartStartRoles? Role { get; set; }
 
-        public List<Guid> FacultiesIds { get; set; }
+        //public List<Guid> FacultiesIds { get; set; }
 
 
         public List<FacultySelectDto> Faculties { get; set; }

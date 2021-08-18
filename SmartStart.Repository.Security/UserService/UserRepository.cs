@@ -284,9 +284,6 @@ namespace SmartStart.Repository.Security.UserService
                 }
 
 
-
-
-
                 var list = await AllQyery.OrderByDescending(w => w.DateCreated)
                            .Select(user => new AppUserDto
                            {
