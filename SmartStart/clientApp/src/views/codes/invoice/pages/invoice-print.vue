@@ -8,7 +8,7 @@
                             <div>
                                 <div class="d-flex mb-2 align-items-center">
                                     <h3 class="text-primary pr-2 pl-2">
-                                        <strong>Tarafoua</strong>
+                                        <strong>Smart Start</strong>
                                     </h3>
                                     <img
                                         src="/favicon.png"

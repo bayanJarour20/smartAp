@@ -701,6 +701,9 @@ namespace SmartStart.SqlServer.Migrations
                     b.Property<Guid>("ExamId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(1024)");
+
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -712,7 +715,7 @@ namespace SmartStart.SqlServer.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("ExamDocument");
+                    b.ToTable("ExamDocuments");
                 });
 
             modelBuilder.Entity("SmartStart.Model.Main.ExamQuestion", b =>

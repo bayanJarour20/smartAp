@@ -104,6 +104,7 @@ export default {
         },
         packageDetails(ctx, payload) {
             api.get("Package/Details?id=" + payload, ({ data }) => {
+                console.log(data)
                 store.dispatch('fetchTabsFacultyBy', {
                     year: data.filter.year,
                     semester: data.filter.semesteId,

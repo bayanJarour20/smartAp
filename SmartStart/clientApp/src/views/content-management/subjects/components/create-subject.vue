@@ -2,13 +2,14 @@
 <ValidationObserver ref="observer">
     <b-form>
         <EKDialog
-            title="إضافة مادة"
-            placeholder="ابحث عن مادة محددة"
-            btnText="مادة جديد"
+           :title="title"
             @ok="onSubmit"
             @open="$store.commit('Reset_Subject_Dto')"
             endClose
+            :placeholder="!isEdit ? 'ابحث عن مادة محددة' : ''"
+            :btnText="!isEdit ? 'مادة جديد' : ''"
             @search="search"
+            ref="subjectDialog"
         >
             <template #body>
                 <EKInputText
@@ -75,6 +76,13 @@ export default {
         EKInputSelect,
         EKInputTextarea
     },
+       props: {
+        title: {
+            type: String,
+            default: () => "إضافة مادة"
+        },
+        isEdit: Boolean
+    },
     data: () => ({
         tags: []
     }),
@@ -118,7 +126,10 @@ export default {
                 keys: ['name'],
                 query
             })
-        }
+        },
+         openDialog() {
+            this.$refs.subjectDialog.open();
+        },
     }
 };
 </script>

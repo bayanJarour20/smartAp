@@ -51,6 +51,9 @@ namespace SmartStart.Controllers
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public async Task<IActionResult> Delete([Required] Guid id) => await repository.Delete(id).IntoAsync(o => o).ToJsonResultAsync();
 
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin)]
+        public async Task<IActionResult> MultiDelete([Required] List<Guid> ids) => await repository.MultiDelete(ids).IntoAsync(o => o).ToJsonResultAsync();
+
         [HttpPut("{id}"), ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public async Task<IActionResult> Block(Guid id) => await repository.Block(id).IntoAsync(o => o).ToJsonResultAsync();
 

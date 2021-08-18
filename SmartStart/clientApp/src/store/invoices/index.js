@@ -51,6 +51,9 @@ export default {
                 } else {
                     router.push("/invoice/" + data.posId)
                 }
+            },{
+                success:"تم إضافة الفاتورة بنجاح",
+                error:"فشل إضافة الفاتورة"
             })
         },
         fillInvoice({ commit }, posId) {
@@ -72,6 +75,11 @@ export default {
                 if (data.isSuccess) {
                     router.push("/invoice" + id);
                 }
+            }
+            ,{
+                confirm:"هل تريد فعلا حذف  الحساب",
+                success:"تم حذف الحساب بنجاح",
+                error:"فشل حذف الحساب الحساب"
             });
         }
     }

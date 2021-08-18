@@ -7,7 +7,10 @@ export default [
         name: "faculties",
         components: {
             default: () => import("@/views/content-management/faculties"),
-            'bread-actions' : () => import("@/views/content-management/faculties/components/create-facultie.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/faculties/components/create-facultie.vue"
+                )
         },
         meta: () => ({
             pageTitle: "الكليات",
@@ -15,17 +18,20 @@ export default [
             breadcrumb: [
                 {
                     text: "الكليات",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
     {
         path: "/advertising",
         name: "advertising",
         components: {
             default: () => import("@/views/content-management/advertising"),
-            'bread-actions' : () => import("@/views/content-management/advertising/components/button-create-advertising.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/advertising/components/button-create-advertising.vue"
+                )
         },
         meta: () => ({
             pageTitle: "الإعلانات",
@@ -33,18 +39,21 @@ export default [
             breadcrumb: [
                 {
                     text: "الإعلانات",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
-    // ---contact
+    // --- contact
     {
         path: "/contact",
         name: "contact",
         components: {
             default: () => import("@/views/content-management/contact"),
-            'bread-actions' : () => import("@/views/content-management/contact/components/create-contact.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/contact/components/create-contact.vue"
+                )
         },
         meta: () => ({
             pageTitle: "راسلنا",
@@ -52,16 +61,17 @@ export default [
             breadcrumb: [
                 {
                     text: "الرسائل المستلمة",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
     {
         path: "/contact/:id",
         name: "contact details",
         components: {
-            default: () => import("@/views/content-management/contact/pages/details.vue")
+            default: () =>
+                import("@/views/content-management/contact/pages/details.vue")
         },
         props: {
             default: true
@@ -72,24 +82,28 @@ export default [
             breadcrumb: [
                 {
                     text: "الرسائل المستلمة",
-                
+
                     active: false,
-                    to:"/contact"
+                    to: "/contact"
                 },
                 {
                     text: "تفاصيل",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
-     // --- subjects
-     {
+    // --- subjects
+    {
         path: "/subjects",
         name: "subjects",
         components: {
-            default: () => import("@/views/content-management/subjects/index.vue"),
-             'bread-actions' : () => import("@/views/content-management/subjects/components/create-subject.vue"),
+            default: () =>
+                import("@/views/content-management/subjects/index.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/subjects/components/create-subject.vue"
+                )
         },
         meta: () => ({
             pageTitle: "المواد",
@@ -97,16 +111,17 @@ export default [
             breadcrumb: [
                 {
                     text: "المواد",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
     {
         path: "/subjects/:id",
         name: "subjects details",
         components: {
-            default: () => import("@/views/content-management/subjects/pages/details.vue")
+            default: () =>
+                import("@/views/content-management/subjects/pages/details.vue")
         },
         props: {
             default: true
@@ -118,7 +133,53 @@ export default [
                 {
                     text: "المواد",
                     active: false,
-                    to:"/subjects"
+                    to: "/subjects"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true
+                }
+            ]
+        })
+    },
+    // ---courses
+    {
+        path: "/courses",
+        name: "courses",
+        components: {
+            default: () => import("@/views/content-management/courses"),
+            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
+        },
+        meta: () => ({
+            pageTitle: "الدورات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الدورات",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/courses/:id",
+        name: "courses details",
+        components: {
+            default: () => import("@/views/content-management/courses/pages/details.vue"),
+            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
+        },
+        props: {
+            default: true,
+            'bread-actions': true
+        },
+        meta: () => ({
+            pageTitle: "الدورات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الدورات",
+                    active: false,
+                    to:"/courses"
                 },
                 {
                     text: "تفاصيل",
@@ -127,13 +188,16 @@ export default [
             ]
         }),
     },
-    // ---notifications
+    // --- notifications
     {
         path: "/notifications",
         name: "notifications",
         components: {
             default: () => import("@/views/content-management/notifications"),
-            'bread-actions' : () => import("@/views/content-management/notifications/components/create-notifications.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/notifications/components/create-notifications.vue"
+                )
         },
         meta: () => ({
             pageTitle: "الإشعارات",
@@ -141,10 +205,9 @@ export default [
             breadcrumb: [
                 {
                     text: "الإشعارات",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
-    },
-  
-]
+        })
+    }
+];

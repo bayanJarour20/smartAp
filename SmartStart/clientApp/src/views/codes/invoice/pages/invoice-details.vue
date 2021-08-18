@@ -7,7 +7,7 @@
                         <div>
                             <div class="d-flex mb-2 align-items-center">
                                 <h3 class="text-primary pr-2">
-                                    <strong>Tarafoua</strong>
+                                    <strong>Smart Start</strong>
                                 </h3>
                                 <vuexy-logo width="32" height="32" />
                             </div>
