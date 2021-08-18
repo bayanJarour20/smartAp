@@ -43,6 +43,9 @@ namespace SmartStart.Model.Main
         public Guid? DoctorId { get; set; }
         public Tag Doctor { get; set; }
 
+        [ColumnDataType(DataBaseTypes.FLOAT)]
+        public double Price { get; set; }
+
         public ICollection<SubjectFacultyAppUser>  SubjectFacultyAppUsers { get; set; }
         public ICollection<PackageSubjectFaculty>  PackageSubjectFaculties { get; set; }
     }
