@@ -24,7 +24,6 @@ namespace SmartStart.Repository.Main.ExamServices
         {
         }
 
-
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
             => await RepositoryHandler(_getAllExam());
         public async Task<OperationResult<bool>> DeleteExam(Guid id)
