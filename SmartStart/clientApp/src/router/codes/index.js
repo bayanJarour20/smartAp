@@ -1,6 +1,7 @@
 import { All } from "@/router";
 import store from "@/store";
 export default [
+    // --- codes
     {
         path: "/codes",
         name: "codes",
@@ -25,6 +26,7 @@ export default [
             ]
         })
     },
+    // --- packages
     {
         path: "/packages",
         name: "packages",
@@ -75,6 +77,8 @@ export default [
             ]
         })
     },
+
+    // --- invoice
     {
         path: "/invoice",
         name: "invoice",

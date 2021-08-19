@@ -15,8 +15,10 @@ namespace SmartStart.DataTransferObject.SubjectDto
     public class SubjectFacultyDto
     {
         public Guid FacultyId { get; set; }
-        public Guid SemesterId { get; set; }
-        public Guid SectionId { get; set; }
+        public Guid? SemesterId { get; set; }
+        public Guid? SectionId { get; set; }
+        public Guid? DoctorId { get; set; }
         public int Year { get; set; }
+        public double Price { get; set; }
     }
 }

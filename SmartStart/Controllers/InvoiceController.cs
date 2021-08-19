@@ -21,19 +21,23 @@ namespace SmartStart.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetUsersDetails(Guid? posId) => await repository.GetUsersDetails(posId).ToJsonResultAsync();
+        
         [HttpGet]
         public async Task<IActionResult> GetInvoicesByPosId(Guid posId) => await repository.GetInvoicesByPosId(posId).ToJsonResultAsync();
+        
         [HttpGet]
         public async Task<IActionResult> FillInvoice(Guid posId) => await repository.FillInvoice(posId).ToJsonResultAsync();
+        
         [HttpPost]
         public async Task<IActionResult> CreateInvoice(CreateInvoiceDto InvoiceDto) => await repository.CreateInvoice(InvoiceDto).ToJsonResultAsync();
+        
         [HttpGet]
         public async Task<IActionResult> GetInvoiceById(Guid invoiceId) => await repository.GetInvoiceById(invoiceId).ToJsonResultAsync();
+        
         [HttpDelete]
         public async Task<IActionResult> DeleteInvoice(Guid invoiceId) => await repository.DeleteInvoice(invoiceId).ToJsonResultAsync();
 
         [HttpDelete]
         public async Task<IActionResult> DeleteInvoiceRange(IEnumerable<Guid> invoiceIds) => await repository.DeleteInvoiceRange(invoiceIds).ToJsonResultAsync();
-
     }
 }

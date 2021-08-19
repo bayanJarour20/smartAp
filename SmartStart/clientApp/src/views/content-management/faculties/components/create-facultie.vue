@@ -59,8 +59,7 @@
                                 : null
                         "
                     >
-                    </EKInputImage>
-                    
+                    </EKInputImage>                   
                 </template>
             </EKDialog>
         </b-form>

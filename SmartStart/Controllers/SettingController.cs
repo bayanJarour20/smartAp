@@ -2,6 +2,10 @@
 using Elkood.Web.MVC;
 using Microsoft.AspNetCore.Mvc;
 using SmartStart.DataTransferObject.SettingDto;
+using SmartStart.Repository.Invoice.CodeService;
+using SmartStart.Repository.PointOfSale.PointOfSaleService;
+using SmartStart.Repository.Setting.AdvertisementService;
+using SmartStart.Repository.Setting.NotificationService;
 using SmartStart.Repository.Setting.SettingService;
 using SmartStart.Security;
 using SmartStart.SharedKernel.Security;
@@ -17,9 +21,20 @@ namespace SmartStart.Controllers
     public class SettingController : ElControllerBase<Guid>
     {
         private readonly ISettingRepository settingRepository;
-
-        public SettingController(ISettingRepository settingRepository)
+        private readonly ICodeRepository codeRepository;
+        private readonly INotificationRepository notificationRepository;
+        private readonly IPointOfSaleRepository pointOfSaleRepository;
+        private readonly IAdvertisementRepository advertisementRepository;
+        public SettingController(ICodeRepository codeRepository, 
+                                 INotificationRepository notificationRepository, 
+                                 IPointOfSaleRepository pointOfSaleRepository, 
+                                 IAdvertisementRepository advertisementRepository, 
+                                 ISettingRepository settingRepository)
         {
+            this.codeRepository = codeRepository;
+            this.notificationRepository = notificationRepository;
+            this.pointOfSaleRepository = pointOfSaleRepository;
+            this.advertisementRepository = advertisementRepository;
             this.settingRepository = settingRepository;
         }
 
@@ -55,8 +70,15 @@ namespace SmartStart.Controllers
         [Route("api/[controller]/[action]")]
         [ElAuthorizeDistributed(SmartStartRoles.User)]
         [HttpGet]
-        public async Task<IActionResult> GetAll() => await settingRepository.FetchAsync().ToJsonResultAsync();
-
+        public async Task<IActionResult> Fetch() => (await codeRepository.GetCodes(Key.Value)).Collect(await notificationRepository.GetNotifications(Key.Value), 
+                                                                                                       await pointOfSaleRepository.GetPointOfSales(), 
+                                                                                                       await advertisementRepository.GetAdvertisement())
+                                                                         .Into((codes, notifications, pointOfSales, advertisement) => new {
+                                                                             codes = codes.Result,
+                                                                             notifications = notifications.Result,
+                                                                             pointOfSales = pointOfSales.Result,
+                                                                             advertisement = advertisement.Result
+                                                                         }).ToJsonResult();
         [Route("api/[controller]/[action]")]
         [ElAuthorizeDistributed(SmartStartRoles.User)]
         [HttpGet]

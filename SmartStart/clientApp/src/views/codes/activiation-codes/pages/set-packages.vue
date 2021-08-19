@@ -11,7 +11,6 @@
                 <b-card-text>
                     <b-row>
                         <b-col cols="12" md="4">
-                            {{packageDto}}
                             <EKInputText
                                 :rules="[
                                     {
@@ -169,7 +168,7 @@
                         }}
                     </td>
                 </template>
-                <template slot="item-td.price" scope="{tr, parent, trIndex}">
+                <template slot="item-td.price" scope="{parent, trIndex}">
                     <td>
                         <EKInputText
                             @change="calcPackagePrice()"
