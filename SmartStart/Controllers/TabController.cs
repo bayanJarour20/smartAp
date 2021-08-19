@@ -85,5 +85,39 @@ namespace SmartStart.Controllers
             => await repository.GetAllBankQuestion(id).ToJsonResultAsync();
 
         #endregion
+
+        #region - Interview -
+
+        [Route("api/Interview/GetAll")]
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> GetAllInterview()
+            => await repository.GetAllInterview().ToJsonResultAsync();
+
+        [Route("api/Interview/Delete/{id}")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> DeleteInterview([Required] Guid id)
+            => await repository.DeleteInterview(id).ToJsonResultAsync();
+
+        [Route("api/Interview/MultiDelete/{ids}")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> MultiDelete([Required] IEnumerable<Guid> ids)
+            => await repository.MultiDeleteInterview(ids).ToJsonResultAsync();
+
+        [Route("api/Interview/Add")]
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> AddInterview(ExamDto dto)
+            => await repository.AddInterview(dto).ToJsonResultAsync();
+
+        [Route("api/Interview/Update")]
+        [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> UpdateInterview(ExamDto dto)
+            => await repository.UpdateInterview(dto).ToJsonResultAsync();
+
+        [Route("api/Interview/{id}/Question/GetAll")]
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> GetAllInterviewQuestion([Required] Guid id)
+            => await repository.GetAllInterviewQuestion(id).ToJsonResultAsync();
+
+        #endregion
     }
 }

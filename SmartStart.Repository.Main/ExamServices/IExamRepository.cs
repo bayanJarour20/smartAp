@@ -26,6 +26,12 @@ namespace SmartStart.Repository.Main.ExamServices
         Task<OperationResult<ExamDetailsDto>> UpdateBank(ExamDto dto);
         Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllBankQuestion(Guid id);
 
+        Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllInterview();
+        Task<OperationResult<bool>> DeleteInterview(Guid id);
+        Task<OperationResult<bool>> MultiDeleteInterview(IEnumerable<Guid> ids);
+        Task<OperationResult<ExamDetailsDto>> AddInterview(ExamDto dto);
+        Task<OperationResult<ExamDetailsDto>> UpdateInterview(ExamDto dto);
+        Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id);
 
     }
 }

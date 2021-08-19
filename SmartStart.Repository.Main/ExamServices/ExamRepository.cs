@@ -53,6 +53,20 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_getAllBankQuestion(id));
 
 
+        public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllInterview()
+            => await RepositoryHandler(_getAllInterview());
+        public async Task<OperationResult<bool>> DeleteInterview(Guid id)
+            => await RepositoryHandler(_deleteInterview(id));
+        public async Task<OperationResult<bool>> MultiDeleteInterview(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_multiDeleteInterview(ids));
+        public async Task<OperationResult<ExamDetailsDto>> AddInterview(ExamDto dto)
+            => await RepositoryHandler(_addInterview(dto));
+        public async Task<OperationResult<ExamDetailsDto>> UpdateInterview(ExamDto dto)
+            => await RepositoryHandler(_updateInterview(dto));
+        public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id)
+            => await RepositoryHandler(_getAllInterviewQuestion(id));
+
+       
         #region - Exam -
 
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllExam()
@@ -142,6 +156,54 @@ namespace SmartStart.Repository.Main.ExamServices
             {
                 var bankQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Bank);
                 return operation.SetSuccess(bankQuestions);
+            };
+
+        #endregion
+
+        #region - Interview -
+
+        private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllInterview()
+            => async operation =>
+            {
+                var Interviews = await GetAllAsync(exam => exam.Type == TabTypes.Interview);
+                return operation.SetSuccess(Interviews);
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteInterview(Guid id)
+            => async operation =>
+            {
+                if (!(await TryDelete(id, TabTypes.Interview)))
+                {
+                    return (OperationResultTypes.NotExist, "${id} : not exist.");
+                }
+                return operation.SetSuccess(true, "Success Delete.");
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteInterview(IEnumerable<Guid> ids)
+            => async operation =>
+            {
+                if (!(await TryMultiDelete(ids, TabTypes.Interview)))
+                {
+                    return (OperationResultTypes.NotExist, "${ids} : not exist.");
+                }
+                return operation.SetSuccess(true, "Success Delete.");
+            };
+
+        private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addInterview(ExamDto dto)
+            => async operation =>
+            {
+                var interview = await AddAsync(dto, TabTypes.Interview);
+                return operation.SetSuccess(interview);
+            };
+
+        private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateInterview(ExamDto dto)
+            => async operation => await UpdateAsync(operation, dto, TabTypes.Interview);
+
+        private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllInterviewQuestion(Guid id)
+            => async operation =>
+            {
+                var interviewQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Interview);
+                return operation.SetSuccess(interviewQuestions);
             };
 
         #endregion
@@ -269,6 +331,14 @@ namespace SmartStart.Repository.Main.ExamServices
             exam.SubjectId = dto.SubjectId;
             exam.Year = dto.Year;
 
+            var currentTags = await Context.ExamTags.Where(et => et.ExamId == dto.Id).ToListAsync();
+            var newTags = dto.TagIds.Except(currentTags.Select(et => et.Id));
+            var oldTags = currentTags.Select(et => et.Id).Except(dto.TagIds).ToList();
+            //await Context.ExamTags.RemoveRange(oldTags);
+            Context.ExamTags.RemoveRange(currentTags.Where(t => oldTags.Contains(t.Id)).ToList());
+
+            await Context.ExamTags.AddRangeAsync(newTags.Select(et => new ExamTag() { ExamId = dto.Id, TagId = et }));
+
             await Context.SaveChangesAsync();
 
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
@@ -346,6 +416,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   }),
                               }).ToListAsync();
         }
+
+        
 
         #endregion
 
