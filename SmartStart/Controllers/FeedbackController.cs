@@ -29,9 +29,9 @@ namespace SmartStart.Controllers
         public override Task<IActionResult> Fetch() => base.Fetch();
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> GetById(Guid id) => base.GetById(id);
-        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin)]
+        [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Modify(FeedbackDto dto) => base.Modify(dto);
-        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin)]
+        [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Update(FeedbackDto dto) => base.Update(dto);
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Delete(Guid id) => base.Delete(id);
