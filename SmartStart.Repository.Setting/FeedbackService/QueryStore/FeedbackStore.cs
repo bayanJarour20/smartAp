@@ -20,7 +20,7 @@ namespace SmartStart.Repository.Setting.FeedbackService.QueryStore
             {
                 Id = feedback.Id,
                 AppUserId = feedback.AppUserId,
-                AppHserName = feedback.AppUser.Name,
+                AppUserName = feedback.AppUser.Name,
                 Title = feedback.Title,
                 Body = feedback.Body,
                 Reply = feedback.Reply,
