@@ -213,6 +213,7 @@ namespace SmartStart.Repository.Main.ExamServices
         private async Task<IEnumerable<ExamDetailsDto>> GetAllAsync(Expression<Func<Exam, bool>> predicate)
         {
             return await Query.Where(exam => exam.Type == TabTypes.Exam)
+                              .Include(exam => exam.Subject)
                               .Select(exam => new ExamDetailsDto
                               {
                                   Id = exam.Id,
@@ -225,8 +226,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   Price = exam.Price,
                                   IsFree = exam.IsFree,
                                   QuestionsCount = exam.ExamQuestions.Count(),
-                                  SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester).Select(s => s.Id).ToList(),
-                                  SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section).Select(s => s.Id).ToList(),
+                                  SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
+                                  SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                               }).ToListAsync();
         }
@@ -292,10 +293,10 @@ namespace SmartStart.Repository.Main.ExamServices
                 }).ToList();
             }
 
-            //await SmartStart.SqlServer.DataBase.Seed.DataSeed.FixPackages(Context);
             await Context.AddAsync(exam);
             await Context.SaveChangesAsync();
             dto.Id = exam.Id;
+
             return await Query.Where(exam => exam.Id == dto.Id)
                               .Select(exam => new ExamDetailsDto
                               {
@@ -309,10 +310,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   TagIds = exam.ExamTags.Select(et => et.TagId),
                                   SubjectName = exam.Subject.Name,
                                   SubjectId = exam.SubjectId,
-                                  SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester)
-                                                                       .Select(s => s.TagId).ToList(),
-                                  SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section)
-                                                                      .Select(s => s.Id).ToList(),
+                                  SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
+                                  SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
                                   QuestionsCount = exam.ExamQuestions.Count(),
                               }).FirstOrDefaultAsync();
 
@@ -334,7 +333,7 @@ namespace SmartStart.Repository.Main.ExamServices
             var currentTags = await Context.ExamTags.Where(et => et.ExamId == dto.Id).ToListAsync();
             var newTags = dto.TagIds.Except(currentTags.Select(et => et.Id));
             var oldTags = currentTags.Select(et => et.Id).Except(dto.TagIds).ToList();
-            //await Context.ExamTags.RemoveRange(oldTags);
+
             Context.ExamTags.RemoveRange(currentTags.Where(t => oldTags.Contains(t.Id)).ToList());
 
             await Context.ExamTags.AddRangeAsync(newTags.Select(et => new ExamTag() { ExamId = dto.Id, TagId = et }));
@@ -354,10 +353,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                 TagIds = exam.ExamTags.Select(et => et.TagId),
                                 SubjectName = exam.Subject.Name,
                                 SubjectId = exam.SubjectId,
-                                SemesterId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester)
-                                                                     .Select(s => s.TagId).ToList(),
-                                SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section)
-                                                                    .Select(s => s.Id).ToList(),
+                                SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
+                                SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
                                 QuestionsCount = exam.ExamQuestions.Count(e => e.DateDeleted == null),
                             }).FirstOrDefaultAsync());
         }
@@ -376,10 +373,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   Price = exam.Price,
                                   IsFree = exam.IsFree,
                                   QuestionsCount = exam.ExamQuestions.Count(),
-                                  SemesterId = exam.Subject.SubjectTags.Where(st => st.Tag.Type == TagTypes.Semester)
-                                                                       .Select(st => st.Id).ToList(),
-                                  SectionId = exam.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Section)
-                                                                      .Select(s => s.Id).ToList(),
+                                  SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
+                                  SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                                   Questions = exam.ExamQuestions.Select(question => new QuestionImagesTagsAnswersDto
                                   {
@@ -416,8 +411,6 @@ namespace SmartStart.Repository.Main.ExamServices
                                   }),
                               }).ToListAsync();
         }
-
-        
 
         #endregion
 
