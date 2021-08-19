@@ -17,12 +17,10 @@ namespace SmartStart.Controllers
 
     public class CityController : ElControllerBase<Guid, ICityRepositroy>
     {
-
         public CityController(ICityRepositroy repository) : base(repository) { }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCites() => await repository.GetCities().ToJsonResultAsync();
-
 
         [HttpPost]
         public async Task<IActionResult> Add(CityDto cityDto) => await repository.Add(cityDto).ToJsonResultAsync();
@@ -35,6 +33,5 @@ namespace SmartStart.Controllers
 
         [HttpDelete]
         public async Task<IActionResult> DeleteRange([Required] IEnumerable<Guid> ids) => await repository.DeleteRange(ids).IntoAsync(n => n).ToJsonResultAsync();
-
     }
 }

@@ -22,14 +22,19 @@ namespace SmartStart.Controllers
 
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Fetch() => base.Fetch();
+        
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> GetById(Guid id) => base.GetById(id);
+        
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Add(AdvertisementDto dto) => base.Add(dto);
+        
         [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Update(AdvertisementDto dto) => base.Update(dto);
+        
         [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Modify(AdvertisementDto dto) => base.Modify(dto);
+        
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin)]
         public override Task<IActionResult> Delete(Guid id) => base.Delete(id);
 
@@ -42,6 +47,5 @@ namespace SmartStart.Controllers
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> GetAdvertisement()
             => await repository.GetAdvertisement().ToJsonResultAsync();
-
     }
 }
