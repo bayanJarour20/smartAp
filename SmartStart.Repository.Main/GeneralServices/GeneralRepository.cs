@@ -62,10 +62,24 @@ namespace SmartStart.Repository.Main.GeneralServices
         private Func<OperationResult<object>, Task<OperationResult<object>>> _setSelected(SelectedDto selectedDto, Guid UserId)
           => async operation =>
           {
-              var SubjectFaculties = (await _query<SubjectFaculty>().Where(s => s.FacultyId == selectedDto.FacultyId
-                                                                                          && s.SectionId == selectedDto.SectionId
-                                                                                          && s.Year == selectedDto.Year
-                                                                                          && s.SemesterId == selectedDto.SemesterId).ToListAsync());
+              var SubjectFaculties = (await _query<SubjectFaculty>().Include(s => s.Section)
+                                                                    .Include(s => s.Semester)
+                                                                    .Include(s => s.Faculty)
+                                                                    .Include(s => s.Subject)
+                                                                    .ThenInclude(t => t.SubjectTags)
+                                                                    .ThenInclude(t => t.Tag)
+                                                                    .Include(s => s.Subject)
+                                                                    .ThenInclude(t => t.Exams)
+                                                                    .ThenInclude(t => t.ExamDocuments)
+                                                                    .ThenInclude(t => t.Document)
+                                                                    .Include(s => s.Subject)
+                                                                    .ThenInclude(t => t.Exams)
+                                                                    .ThenInclude(t => t.ExamTags)
+                                                                    .ThenInclude(t => t.Tag)
+                                                                    .Where(s => s.FacultyId == selectedDto.FacultyId
+                                                                                            && s.SectionId == selectedDto.SectionId
+                                                                                            && s.Year == selectedDto.Year
+                                                                                            && s.SemesterId == selectedDto.SemesterId).ToListAsync());
               var res = new List<object>(); 
               foreach (var subjectFaculty in SubjectFaculties)
               {
