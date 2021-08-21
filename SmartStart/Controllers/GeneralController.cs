@@ -25,5 +25,7 @@ namespace SmartStart.Controllers
 
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> SetSelected(SelectedDto selectedDto) => await repository.SetSelected(selectedDto, Key.Value).ToJsonResultAsync();
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
+        public async Task<IActionResult> GetSelected() => await repository.GetSelected(Key.Value).ToJsonResultAsync();
     }
 }
