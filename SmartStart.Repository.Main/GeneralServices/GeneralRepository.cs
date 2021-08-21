@@ -121,41 +121,69 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                                                            .Select(t => new
                                                                                                                            {
                                                                                                                                TagId = t.TagId,
-                                                                                                                               TagName = t.Tag.Name
+                                                                                                                               TagName = t.Tag.Name,
+                                                                                                                               Type = t.Tag.Type
                                                                                                                            }).ToList(),
                                                                                                     Type = p.Subject.Type,
                                                                                                     IsActive = p.PackageSubjectFaculties.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
                                                                                                     Exams = p.Subject.Exams.Where(e => e.Type == TabTypes.Exam)
+                                                                                                                           .GroupBy(e => e.Type)
                                                                                                                            .Select(e => new
                                                                                                                            {
-                                                                                                                               Id = e.Id,
-                                                                                                                               Name = e.Name,
-                                                                                                                               Price = e.Price,
-                                                                                                                               Year = e.Year,
-                                                                                                                               ExamTags = e.ExamTags.Select(t => new
+                                                                                                                               Type = e.Key,
+                                                                                                                               Exams = e.Select(ee => new 
                                                                                                                                {
-                                                                                                                                   TagId = t.TagId,
-                                                                                                                                   TagName = t.Tag.Name
-                                                                                                                               }).ToList(),
-                                                                                                                               ExamDocuments = e.ExamDocuments.Select(t => new
-                                                                                                                               {
-                                                                                                                                   Name = t.Document.Name,
-                                                                                                                                   Path = t.Document.Path,
-                                                                                                                                   Type = t.Document.Type
-                                                                                                                               }),
-                                                                                                                               ExamQuestions = e.ExamQuestions.Select(q => new 
-                                                                                                                               {
-                                                                                                                                   Order = q.Order,
-                                                                                                                                   Title = q.Question.Title,
-                                                                                                                                   Hint = q.Question.Hint,
-                                                                                                                                   QuestionTags = q.Question.QuestionTags.Select(t => new
+                                                                                                                                   Id = ee.Id,
+                                                                                                                                   Name = ee.Name,
+                                                                                                                                   Price = ee.Price,
+                                                                                                                                   Year = ee.Year,
+                                                                                                                                   ExamTags = ee.ExamTags.Select(t => new
                                                                                                                                    {
                                                                                                                                        TagId = t.TagId,
-                                                                                                                                       TagName = t.Tag.Name
+                                                                                                                                       TagName = t.Tag.Name,
+                                                                                                                                       Type = t.Tag.Type
                                                                                                                                    }).ToList(),
+                                                                                                                                   ExamDocuments = ee.ExamDocuments.Select(t => new
+                                                                                                                                   {
+                                                                                                                                       Name = t.Document.Name,
+                                                                                                                                       Path = t.Document.Path,
+                                                                                                                                       Type = t.Document.Type
+                                                                                                                                   }),
+                                                                                                                                   ExamQuestions = ee.ExamQuestions.Select(q => new
+                                                                                                                                   {
+                                                                                                                                       Order = q.Order,
+                                                                                                                                       Title = q.Question.Title,
+                                                                                                                                       Hint = q.Question.Hint,
+                                                                                                                                       IsCorrected = q.Question.IsCorrected,
+                                                                                                                                       QuestionType = q.Question.QuestionType,
+                                                                                                                                       AnswerType = q.Question.AnswerType,
+                                                                                                                                       QuestionTags = q.Question.QuestionTags.Select(t => new
+                                                                                                                                       {
+                                                                                                                                           TagId = t.TagId,
+                                                                                                                                           TagName = t.Tag.Name,
+                                                                                                                                           Type = t.Tag.Type
+                                                                                                                                       }).ToList(),
+                                                                                                                                       QuestionDocuments = q.Question.QuestionDocuments.Select(d => new 
+                                                                                                                                       {
+                                                                                                                                           DocumentId = d.DocumentId,
+                                                                                                                                           Note = d.Note,
+                                                                                                                                           Name = d.Document.Name,
+                                                                                                                                           Path = d.Document.Path,
+                                                                                                                                           Type = d.Document.Type
+                                                                                                                                       }),
+                                                                                                                                       Answers = q.Question.Answers.Select(a => new
+                                                                                                                                       {
+                                                                                                                                           Id = a.Id,
+                                                                                                                                           Title = a.Title,
+                                                                                                                                           Option = a.Option,
+                                                                                                                                           IsCorrect = a.IsCorrect,
+                                                                                                                                           CorrectionDate = a.CorrectionDate
+                                                                                                                                       })
+                                                                                                                                   })
                                                                                                                                })
-                                                                                                                           })
-                                                                                                })
+                                                                                                                           }).ToList(),
+
+                                                                                                }).ToList()
                                                                                             }).ToList()
                                                                                         }).ToList()
                                                                     }).ToList()
