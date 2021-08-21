@@ -2,6 +2,7 @@
 using Elkood.Web.Service.BoundedContext;
 using Elkood.Web.Service.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using SmartStart.DataTransferObject.GeneralDto;
 using SmartStart.Model.Main;
 using SmartStart.SqlServer.DataBase;
 using System;
@@ -19,6 +20,8 @@ namespace SmartStart.Repository.Main.GeneralServices
 
         public async Task<OperationResult<object>> GetRemaining(Guid UserId)
             => await RepositoryHandler(_getRemaining(UserId));
+        public async Task<OperationResult<bool>> SetSelected(SelectedDto selectedDto, Guid UserId)
+            => await RepositoryHandler(_setSelected(selectedDto, UserId));
 
         private Func<OperationResult<object>, Task<OperationResult<object>>> _getRemaining(Guid UserId)
             => async operation =>
@@ -26,7 +29,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                 object res = _query<SubjectFaculty>().Include(s => s.Section)
                                                      .Include(s => s.Semester)
                                                      .Include(s => s.Faculty)
-                                                     .Where(s => !s.SubjectFacultyAppUsers.Where(ss => ss.AppUserId == UserId 
+                                                     .Where(s => !s.SubjectFacultyAppUsers.Where(ss => ss.AppUserId == UserId
                                                                                                     && ss.DefaultSelected).Any())
                                                      .ToList()
                                                      .GroupBy(s => new { s.FacultyId, s.Faculty.Name })
@@ -51,7 +54,23 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                               }).ToList()
                                                                           }).ToList()
                                                      }).ToList();
-                return operation.SetSuccess(res); 
+                return operation.SetSuccess(res);
             };
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _setSelected(SelectedDto selectedDto, Guid UserId)
+          => async operation =>
+          {
+              var SubjectFacultyId = (await _query<SubjectFaculty>().SingleOrDefaultAsync(s => s.FacultyId == selectedDto.FacultyId
+                                                                                                 && s.SectionId == selectedDto.SectionId
+                                                                                                 && s.Year == selectedDto.Year
+                                                                                                 && s.SemesterId == selectedDto.SemesterId)).Id;
+              await Context.SubjectFacultyAppUsers.AddAsync(new SubjectFacultyAppUser
+              {
+                  AppUserId = UserId,
+                  SubjectFacultyId = SubjectFacultyId,
+                  DefaultSelected = true
+              });
+              await Context.SaveChangesAsync(); 
+              return operation.SetSuccess(true);
+          };
     }
 }

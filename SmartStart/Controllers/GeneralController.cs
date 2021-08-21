@@ -2,6 +2,7 @@
 using Elkood.Web.MVC;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartStart.DataTransferObject.GeneralDto;
 using SmartStart.Repository.Main.GeneralServices;
 using SmartStart.Security;
 using SmartStart.SharedKernel.Security;
@@ -21,5 +22,8 @@ namespace SmartStart.Controllers
 
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> Remaining() => await repository.GetRemaining(Key.Value).ToJsonResultAsync();
+
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
+        public async Task<IActionResult> SetSelected(SelectedDto selectedDto) => await repository.SetSelected(selectedDto, Key.Value).ToJsonResultAsync();
     }
 }
