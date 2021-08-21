@@ -128,12 +128,13 @@ export default {
         this.fetchSubject();
     },
     methods: {
-        ...mapActions(["getCourcesList","getFacultiesDetails", "fetchTotalTag", "fetchSubject"]),
+        ...mapActions(["getCourcesList","getFacultiesDetails", "fetchTotalTag", "fetchSubject","deleteCourceList"]),
         openCourcesDetails(props) {
             this.$router.push("/courses/" + props.row.id);
         },
         fireDeleteEvent(list) {
-            console.log(list);
+            console.log(list)
+            this.deleteCourceList(list)
         },
           rowStyleClassFn(row) {
             return row.isFree ? 'bg-success' : '';
