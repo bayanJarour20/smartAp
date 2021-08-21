@@ -21,7 +21,7 @@ namespace SmartStart.Repository.Main.GeneralServices
 
         public async Task<OperationResult<object>> GetRemaining(Guid UserId)
             => await RepositoryHandler(_getRemaining(UserId));
-        public async Task<OperationResult<bool>> SetSelected(SelectedDto selectedDto, Guid UserId)
+        public async Task<OperationResult<object>> SetSelected(SelectedDto selectedDto, Guid UserId)
             => await RepositoryHandler(_setSelected(selectedDto, UserId));
         public async Task<OperationResult<object>> GetSelected(Guid UserId)
             => await RepositoryHandler(_getSelected(UserId));
@@ -59,22 +59,102 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                      }).ToList();
                 return operation.SetSuccess(res);
             };
-        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _setSelected(SelectedDto selectedDto, Guid UserId)
+        private Func<OperationResult<object>, Task<OperationResult<object>>> _setSelected(SelectedDto selectedDto, Guid UserId)
           => async operation =>
           {
-              var SubjectFacultyId = (await _query<SubjectFaculty>().SingleOrDefaultAsync(s => s.FacultyId == selectedDto.FacultyId
-                                                                                                 && s.SectionId == selectedDto.SectionId
-                                                                                                 && s.Year == selectedDto.Year
-                                                                                                 && s.SemesterId == selectedDto.SemesterId)).Id;
-              await Context.SubjectFacultyAppUsers.AddAsync(new SubjectFacultyAppUser
+              var SubjectFaculties = (await _query<SubjectFaculty>().Where(s => s.FacultyId == selectedDto.FacultyId
+                                                                                          && s.SectionId == selectedDto.SectionId
+                                                                                          && s.Year == selectedDto.Year
+                                                                                          && s.SemesterId == selectedDto.SemesterId).ToListAsync());
+              var res = new List<object>(); 
+              foreach (var subjectFaculty in SubjectFaculties)
               {
-                  AppUserId = UserId,
-                  SubjectFacultyId = SubjectFacultyId,
-                  DefaultSelected = true
-              });
+                  await Context.SubjectFacultyAppUsers.AddAsync(new SubjectFacultyAppUser
+                  {
+                      AppUserId = UserId,
+                      SubjectFacultyId = subjectFaculty.Id,
+                      DefaultSelected = true
+                  });
+                  res.Add(fillDto(subjectFaculty, UserId));
+              }
               await Context.SaveChangesAsync();
-              return operation.SetSuccess(true);
+              return operation.SetSuccess(res);
           };
+        private object fillDto(SubjectFaculty p, Guid UserId)
+        {
+            return new 
+            {
+                Name = p.Subject.Name,
+                Description = p.Subject.Description,
+                ImagePath = p.Subject.ImagePath,
+                SubjectTags = p.Subject.SubjectTags
+                                                .Select(t => new
+                                                {
+                                                    TagId = t.TagId,
+                                                    TagName = t.Tag.Name,
+                                                    Type = t.Tag.Type
+                                                }).ToList(),
+                Type = p.Subject.Type,
+                IsActive = p.PackageSubjectFaculties.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
+                Exams = p.Subject.Exams.Where(e => e.Type == TabTypes.Exam)
+                                       .GroupBy(e => e.Type)
+                                       .Select(e => new
+                                       {
+                                           Type = e.Key,
+                                           Exams = e.Select(ee => new
+                                           {
+                                               Id = ee.Id,
+                                               Name = ee.Name,
+                                               Price = ee.Price,
+                                               Year = ee.Year,
+                                               ExamTags = ee.ExamTags.Select(t => new
+                                               {
+                                                   TagId = t.TagId,
+                                                   TagName = t.Tag.Name,
+                                                   Type = t.Tag.Type
+                                               }).ToList(),
+                                               ExamDocuments = ee.ExamDocuments.Select(t => new
+                                               {
+                                                   Name = t.Document.Name,
+                                                   Path = t.Document.Path,
+                                                   Type = t.Document.Type
+                                               }),
+                                               ExamQuestions = ee.ExamQuestions.Select(q => new
+                                               {
+                                                   Order = q.Order,
+                                                   Title = q.Question.Title,
+                                                   Hint = q.Question.Hint,
+                                                   IsCorrected = q.Question.IsCorrected,
+                                                   QuestionType = q.Question.QuestionType,
+                                                   AnswerType = q.Question.AnswerType,
+                                                   QuestionTags = q.Question.QuestionTags.Select(t => new
+                                                   {
+                                                       TagId = t.TagId,
+                                                       TagName = t.Tag.Name,
+                                                       Type = t.Tag.Type
+                                                   }).ToList(),
+                                                   QuestionDocuments = q.Question.QuestionDocuments.Select(d => new
+                                                   {
+                                                       DocumentId = d.DocumentId,
+                                                       Note = d.Note,
+                                                       Name = d.Document.Name,
+                                                       Path = d.Document.Path,
+                                                       Type = d.Document.Type
+                                                   }),
+                                                   Answers = q.Question.Answers.Select(a => new
+                                                   {
+                                                       Id = a.Id,
+                                                       Title = a.Title,
+                                                       Option = a.Option,
+                                                       IsCorrect = a.IsCorrect,
+                                                       CorrectionDate = a.CorrectionDate
+                                                   })
+                                               })
+                                           })
+                                       }).ToList()
+
+            };
+        }
         private Func<OperationResult<object>, Task<OperationResult<object>>> _getSelected(Guid UserId)
             => async operation =>
             {
@@ -112,78 +192,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             {
                                                                                                 SemesterId = s4.SemesterId,
                                                                                                 SemesterName = s4.Semester.Name,
-                                                                                                Subjects = s.Select(p => new
-                                                                                                {
-                                                                                                    Name = p.Subject.Name,
-                                                                                                    Description = p.Subject.Description,
-                                                                                                    ImagePath = p.Subject.ImagePath,
-                                                                                                    SubjectTags = p.Subject.SubjectTags
-                                                                                                                           .Select(t => new
-                                                                                                                           {
-                                                                                                                               TagId = t.TagId,
-                                                                                                                               TagName = t.Tag.Name,
-                                                                                                                               Type = t.Tag.Type
-                                                                                                                           }).ToList(),
-                                                                                                    Type = p.Subject.Type,
-                                                                                                    IsActive = p.PackageSubjectFaculties.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
-                                                                                                    Exams = p.Subject.Exams.Where(e => e.Type == TabTypes.Exam)
-                                                                                                                           .GroupBy(e => e.Type)
-                                                                                                                           .Select(e => new
-                                                                                                                           {
-                                                                                                                               Type = e.Key,
-                                                                                                                               Exams = e.Select(ee => new 
-                                                                                                                               {
-                                                                                                                                   Id = ee.Id,
-                                                                                                                                   Name = ee.Name,
-                                                                                                                                   Price = ee.Price,
-                                                                                                                                   Year = ee.Year,
-                                                                                                                                   ExamTags = ee.ExamTags.Select(t => new
-                                                                                                                                   {
-                                                                                                                                       TagId = t.TagId,
-                                                                                                                                       TagName = t.Tag.Name,
-                                                                                                                                       Type = t.Tag.Type
-                                                                                                                                   }).ToList(),
-                                                                                                                                   ExamDocuments = ee.ExamDocuments.Select(t => new
-                                                                                                                                   {
-                                                                                                                                       Name = t.Document.Name,
-                                                                                                                                       Path = t.Document.Path,
-                                                                                                                                       Type = t.Document.Type
-                                                                                                                                   }),
-                                                                                                                                   ExamQuestions = ee.ExamQuestions.Select(q => new
-                                                                                                                                   {
-                                                                                                                                       Order = q.Order,
-                                                                                                                                       Title = q.Question.Title,
-                                                                                                                                       Hint = q.Question.Hint,
-                                                                                                                                       IsCorrected = q.Question.IsCorrected,
-                                                                                                                                       QuestionType = q.Question.QuestionType,
-                                                                                                                                       AnswerType = q.Question.AnswerType,
-                                                                                                                                       QuestionTags = q.Question.QuestionTags.Select(t => new
-                                                                                                                                       {
-                                                                                                                                           TagId = t.TagId,
-                                                                                                                                           TagName = t.Tag.Name,
-                                                                                                                                           Type = t.Tag.Type
-                                                                                                                                       }).ToList(),
-                                                                                                                                       QuestionDocuments = q.Question.QuestionDocuments.Select(d => new 
-                                                                                                                                       {
-                                                                                                                                           DocumentId = d.DocumentId,
-                                                                                                                                           Note = d.Note,
-                                                                                                                                           Name = d.Document.Name,
-                                                                                                                                           Path = d.Document.Path,
-                                                                                                                                           Type = d.Document.Type
-                                                                                                                                       }),
-                                                                                                                                       Answers = q.Question.Answers.Select(a => new
-                                                                                                                                       {
-                                                                                                                                           Id = a.Id,
-                                                                                                                                           Title = a.Title,
-                                                                                                                                           Option = a.Option,
-                                                                                                                                           IsCorrect = a.IsCorrect,
-                                                                                                                                           CorrectionDate = a.CorrectionDate
-                                                                                                                                       })
-                                                                                                                                   })
-                                                                                                                               })
-                                                                                                                           }).ToList(),
-
-                                                                                                }).ToList()
+                                                                                                Subjects = s.Select(p => fillDto(p, UserId)).ToList()
                                                                                             }).ToList()
                                                                                         }).ToList()
                                                                     }).ToList()
