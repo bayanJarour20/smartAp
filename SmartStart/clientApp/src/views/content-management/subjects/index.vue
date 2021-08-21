@@ -48,9 +48,9 @@
         <EKTable
             :items="subjectsList"
             :columns="columns"
-            selectedLabel="name"
+            selectedLabel="id"
             @details="openSubjectDEtails"
-            @delete-selected="fireDeleteEvent"
+            @delete-selected="subjectList"
         >
            <template slot="items.sectionName" slot-scope="{ value }">
                 {{value ? value : '---' }}
@@ -128,12 +128,12 @@ export default {
         this.fetchSubject();
     },
     methods: {
-        ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails"]),
+        ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails","subjListDto"]),
         openSubjectDEtails(props) {
             this.$router.push("/subjects/" + props.row.id);
         },
-        fireDeleteEvent(list) {
-            console.log(list);
+        subjectList(list) {
+            this.subjListDto(list)
         }
     },
     beforeDestroy() {

@@ -71,6 +71,20 @@ export default {
             state.courcesQuestionList.isFree = payload.isFree;
             state.courcesQuestionList.subjectId = payload.subjectId;
             state.courcesQuestionList.semesterId = payload.semesterId;
+        },
+        delete_Cource_List(state,payload){
+            let MapOfIds = new Map(); 
+            var idx; 
+            var tempList = []; 
+            for(idx = 0 ; idx < payload.length ; idx++) {
+                 MapOfIds.set(payload[idx] , 1);
+            }
+            for(idx = 0 ; idx < state.courcesList.length ; idx++) {
+                if(MapOfIds.has(state.courcesList[idx].id) === false) {
+                    tempList.push(state.courcesList[idx]); 
+                }
+            }
+            state.courcesList = tempList; 
         }
     },
     actions: {
@@ -95,11 +109,23 @@ export default {
             });
         },
         deleteCourse(ctx, id) {
-            api.delete("Exam/Delete/" + id, ({ data }) => {
+            api.delete("Exam/Delete?id=" + id, ({ data }) => {
                 if (data.isSuccess) {
                     router.push("/courses");
                 }
+            },{
+                confirm:"هل تريد فعلا حذف الدورة",
+                success:"تم حذف الدورة بنجاح",
+                error:"فشل حذف الدورة"
             });
+        },
+        deleteCourceList({commit},ids){
+            api.delete("Exam/MultiDelete",({ data }) => {
+                if(data) {
+                    commit("delete_Cource_List", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف الدورات المحددة', success: 'تم حذف الدورات المحددة بنجاح', error: "فشل حذف الدورات المحددة " },
+            ids)
         }
     }
 };

@@ -23,8 +23,8 @@
                                 />
                                 <EKInputSelect
                                     v-model="subjectDto.facultyId"
-                                    label="تابعة لكلية"
-                                    placeholder="اختر تابعة لكلية"
+                                    label="الكلية"
+                                    placeholder="اختر الكلية"
                                     :rules="[
                                         {
                                             type: 'required',
@@ -49,7 +49,7 @@
                                     name="semesterId"
                                     :clearable="true"
                                 />
-                                    <EKInputSelect
+                                <EKInputSelect
                                     v-model="subjectDto.sectionId"
                                     label="القسم"
                                     placeholder="قسم عام"
@@ -68,7 +68,7 @@
                                     name="doctorsId"
                                     :clearable="true"
                                 />
-                                <EKInputSelect
+                                <!-- <EKInputSelect
                                     label="تصنيف المادة"
                                     placeholder="اختر تصنيف المادة"
                                      :options="tagsList"
@@ -76,25 +76,39 @@
                                     multiple
                                     name="tags"
                                     :clearable="true"
-                                />
-                                <EKInputText
+                                /> -->
+                                <!-- <EKInputText
                                     v-model="subjectDto.year"
                                     :rules="[{ type: 'required', message: 'سنة المادة إجبارية' }, { type: 'min_value:0', message: 'الحقل يجب ان يحوي قيمة موجبة' }]"
                                     label="سنة المادة"
                                     placeholder="ادخل سنة المادة"
                                     type="number"
                                     name="year"
-                                />
+                                /> -->
+                                <b-button variant="primary" class="w-100 my-1"><unicon                
+                                    name="plus"
+                                    width="18"
+                                    height="18"
+                                    fill="#fff"
+                                /> </b-button>
+                                <div class="div-subject">
+                                    كلية العلوم -قسم الأحياء-الفصل الأول
+                                    <unicon
+                                
+                                    name="times"
+                                    width="18"
+                                    height="18"
+                                    fill="#7367f0"
+                                /> 
+                                </div>                           
+                            </b-col>
+                            <b-col cols="12" md="6">
                                  <EKInputTextarea
                                     v-model="subjectDto.description"
                                     label="شرح المادة"
                                     placeholder="ادخل شرح المادة"
                                     name="description"
                                 />
-                                
-                            </b-col>
-                            <b-col cols="12" md="6">
-                           
                                 <EKInputImage
                                     label="صورة المادة"
                                     required
@@ -120,7 +134,22 @@
                                         >
                                     </div>
                                 </b-form-group>
-                                    <EKInputText
+                                <div class="d-flex justify-content-between">
+                                    <div><span>عدد الدورات </span>
+                                    <div class='div-number'>3</div>
+                                    </div>
+                                    <div> <span>عدد البنوك </span>
+                                    <div class='div-number'>3</div></div>
+                                    <div> <span>عدد المجاهر</span>
+                                    <div class='div-number'>3</div></div>
+                                    <div>
+                                        <span>
+                                        عدد المقابلات
+                                        </span>
+                                        <div class="div-number">3</div>
+                                    </div>
+                                </div>
+                                 <!-- <EKInputText
                                     v-model="subjectDto.examCount"
                                     type="number"
                                     label="عدد الدورات"
@@ -147,7 +176,7 @@
                                     label="عدد المجاهر"
                                     readonly
                                     name="microscopeCount"
-                                />
+                                /> -->
                             </b-col>
                         </b-row>
                     </b-card-text>
@@ -179,7 +208,7 @@
                             <b-button
                                 style="max-width:100px"
                                 variant="outline-primary"
-                                     @click="deleteSubject(subjectDto.id)"
+                                     @click="deleteSubject(id)"
                                 >حذف</b-button
                             >
                         </b-col>
@@ -284,3 +313,21 @@ export default {
     }
 };
 </script>
+<style>
+.div-subject{
+    border: 1px solid #7367f0 ;
+    border-radius: 25px;
+    padding: 11px;
+    text-align: center;
+    margin: 17px 0px;
+    color:#7367f0;
+}
+.div-number{
+    text-align: center;
+    background-color: #7367f0;
+    color: #fff;
+    border-radius: 20px;
+    padding: 4px;
+    margin-top: 10px;
+}
+</style>

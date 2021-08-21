@@ -28,6 +28,9 @@ namespace SmartStart.Repository.Security.UserService
         public UserManager<AppUser> UserManager { get; }
         private readonly IDistributedCache Cache;
 
+
+        PasswordValidator<AppUser> PasswordValidator = new PasswordValidator<AppUser>();
+
         public UserRepository(SmartStartDbContext context, UserManager<AppUser> userManager, IDistributedCache cache) : base(context)
         {
             UserManager = userManager;
@@ -95,7 +98,8 @@ namespace SmartStart.Repository.Security.UserService
                        Type = package.Package.Type,
                    }).FirstOrDefault()
                }),
-           }).FirstOrDefaultAsync();
+           })
+           .FirstOrDefaultAsync();
 
             if (one is null)
                 return OperationResultTypes.NotExist;
@@ -122,6 +126,14 @@ namespace SmartStart.Repository.Security.UserService
               User.DateActivated = account.DateActivated;
               User.SubscriptionDate = account.SubscriptionDate;
               User.Type = UserTypes.User;
+
+
+              var setPasswordValidation = await PasswordValidator.ValidateAsync(UserManager, User, account.Password);
+              if (!setPasswordValidation.Succeeded)
+              {
+                  var PasswordError = String.Join(",", setPasswordValidation.Errors.Select(x => x.Description));
+                  return operation.SetFailed(PasswordError);
+              }
 
               if (!account.Password.IsNullOrEmpty())
                   User.PasswordHash = UserManager.PasswordHasher.HashPassword(User, account.Password);
