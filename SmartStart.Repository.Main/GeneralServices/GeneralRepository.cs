@@ -34,16 +34,16 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                      {
                                                          FacultyId = s.Key.FacultyId,
                                                          FacultyName = s.Key.Name,
-                                                         RemainingList = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
+                                                         Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
                                                                           .Select(s2 => new
                                                                           {
                                                                               SectionId = s2.Key.SectionId,
                                                                               SectionName = s2.Key.Name,
-                                                                              RemainingList = s2.GroupBy(s3 => s3.Year)
+                                                                              Years = s2.GroupBy(s3 => s3.Year)
                                                                                               .Select(s3 => new
                                                                                               {
                                                                                                   Year = s3.Key,
-                                                                                                  RemainingList = s3.Select(s4 => new
+                                                                                                  Semesters = s3.Select(s4 => new
                                                                                                   {
                                                                                                       SemesterId = s4.SemesterId,
                                                                                                       SemesterName = s4.Semester.Name
