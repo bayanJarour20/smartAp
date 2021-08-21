@@ -20,12 +20,16 @@ namespace SmartStart.Controllers
     {
         public GeneralController(IGeneralRepository repository) : base(repository) { }
 
-        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> Remaining() => await repository.GetRemaining(Key.Value).ToJsonResultAsync();
-
+       
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> SetSelected(SelectedDto selectedDto) => await repository.SetSelected(selectedDto, Key.Value).ToJsonResultAsync();
-        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
+        
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> GetSelected() => await repository.GetSelected(Key.Value).ToJsonResultAsync();
+        
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
+        public async Task<IActionResult> ActivateCode(string Code) => await repository.ActivateCode(Code, Key.Value).ToJsonResultAsync();
     }
 }
