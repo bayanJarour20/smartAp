@@ -11,29 +11,28 @@
             @search="search"
         >
             <template #body>
-                 <EKInputSelect
+                <div class="d-flex justify-content-center">
+                <span>مجانية</span>
+                <b-form-checkbox switch v-model="subjectDto.isFree"></b-form-checkbox>
+                <span>مدفوعة</span>
+                </div>          
+                 <EKInputText
                     label="اسم المادة"
-                    placeholder="اختر اسم المادة"
+                    placeholder="ادخل اسم المادة"
                     :rules="[
                         {
                             type: 'required',
                             message: 'اسم المادة إجبارية'
                         }
                     ]"
-                  
-                    name="select"
-                    :clearable="true"
-                />
-                <EKInputTextarea
-                    v-model="subjectDto.description"
-                    label="شرح المادة"
-                    placeholder="ادخل شرح المادة"
-                    name="description"
+                  v-model="subjectDto.name"
+                    name="name"
+                    
                 />
                 <EKInputSelect
                     v-model="subjectDto.facultyId"
-                    label="تابعة لكلية"
-                    placeholder="اختر تابعة لكلية"
+                    label="الكلية"
+                    placeholder="اختر الكلية"
                     :rules="[
                         {
                             type: 'required',
@@ -52,6 +51,7 @@
                     type="number"
                     name="year"
                 />
+                
                 <EKInputSelect
                     v-model="subjectDto.semesterId"
                     label="الفصل"
@@ -71,9 +71,9 @@
                     :clearable="true"
                 />
                 <EKInputSelect
-                    label="تصنيف المادة"
-                    placeholder="اختر تصنيف المادة"
-                    :rules="[{ type: 'required', message: 'تصنيف المادة إجباري' }]"
+                    label="القسم"
+                    placeholder="اختر القسم"
+                    :rules="[{ type: 'required', message: 'القسم إجباري' }]"
                     :options="tagsList"
                     v-model="tags"
                     multiple
@@ -86,12 +86,34 @@
                         <b-form-radio v-model="subjectDto.type" value="1">عملي</b-form-radio>
                     </div>
                 </b-form-group>
+                <b-button variant="primary" class="w-100 my-1"><unicon                
+                    name="plus"
+                    width="18"
+                    height="18"
+                    fill="#fff"
+                /> </b-button>
+                <div class="div-subject">
+                    كلية العلوم -قسم الأحياء-الفصل الأول
+                    <unicon
+                 
+                    name="times"
+                    width="18"
+                    height="18"
+                    fill="#7367f0"
+                /> 
+                </div>
                 <EKInputImage
                     label="صورة المادة"
                     title="upload image"
                     :value="subjectDto.imagePath"
                     @input="subjectDto.file = $event"
                 ></EKInputImage>
+                <EKInputTextarea
+                    v-model="subjectDto.description"
+                    label=" شرح الصورة"
+                    placeholder="ادخل شرح الصورة"
+                    name="address"
+                />
             </template>
         </EKDialog>
     </b-form>
@@ -101,20 +123,21 @@
 
 import { ValidationObserver } from "vee-validate";
 import EKDialog from "@Ekcore/components/EK-dialog";
-import EKInputText from "@Ekcore/components/EK-forms/EK-input-text";
-import EKInputTextarea from "@Ekcore/components/EK-forms/EK-input-textarea";
 import EKInputSelect from "@Ekcore/components/EK-forms/EK-input-select";
 import EKInputImage from "@Ekcore/components/EK-forms/EK-input-image";
 import { mapActions, mapState, mapGetters } from 'vuex';
+import EKInputTextarea from "@Ekcore/components/EK-forms/EK-input-textarea";
+import EKInputText from "@Ekcore/components/EK-forms/EK-input-text";
 
 export default {
     components: {
         ValidationObserver,
         EKDialog,
-        EKInputText,
         EKInputImage,
         EKInputSelect,
-        EKInputTextarea
+        EKInputTextarea,
+        EKInputText
+        
     },
     data: () => ({
         tags: []
@@ -136,13 +159,12 @@ export default {
                 if (success) {
                     var subjectFormData = new FormData();
                     subjectFormData.append('name', this.subjectDto.name)
-                    subjectFormData.append('year', this.subjectDto.year)
                     subjectFormData.append('file', this.subjectDto.file)
                     subjectFormData.append('type', this.subjectDto.type)
                     subjectFormData.append('facultyId', this.subjectDto.facultyId)
                     subjectFormData.append('semesterId', this.subjectDto.semesterId)
                     subjectFormData.append('description', this.subjectDto.description)
-                    
+                    subjectFormData.append('isFree', this.subjectDto.isFree)
                     if(this.subjectDto.imagePath) {
                         subjectFormData.append('imagePath', this.subjectDto.imagePath)
                     }
@@ -170,3 +192,13 @@ export default {
     }
 };
 </script>
+<style>
+.div-subject{
+    border: 1px solid #7367f0 ;
+    border-radius: 25px;
+    padding: 11px;
+    text-align: center;
+    margin: 17px 0px;
+    color:#7367f0;
+}
+</style>
