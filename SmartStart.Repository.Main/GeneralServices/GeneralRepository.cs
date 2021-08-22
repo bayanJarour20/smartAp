@@ -24,6 +24,8 @@ namespace SmartStart.Repository.Main.GeneralServices
             => await RepositoryHandler(_getRemaining(UserId));
         public async Task<OperationResult<object>> SetSelected(SelectedDto selectedDto, Guid UserId)
             => await RepositoryHandler(_setSelected(selectedDto, UserId));
+        public async Task<OperationResult<bool>> RemoveSelected(SelectedDto selectedDto, Guid UserId)
+            => await RepositoryHandler(_removeSelected(selectedDto, UserId));
         public async Task<OperationResult<object>> GetSelected(Guid UserId)
             => await RepositoryHandler(_getSelected(UserId));
         public async Task<OperationResult<object>> ActivateCode(string Code, Guid UserId)
@@ -82,7 +84,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             && s.SectionId == selectedDto.SectionId
                                                                                             && s.Year == selectedDto.Year
                                                                                             && s.SemesterId == selectedDto.SemesterId).ToListAsync());
-              var res = new List<object>(); 
+              var res = new List<object>();
               foreach (var subjectFaculty in SubjectFaculties)
               {
                   await Context.SubjectFacultyAppUsers.AddAsync(new SubjectFacultyAppUser
@@ -95,6 +97,21 @@ namespace SmartStart.Repository.Main.GeneralServices
               }
               await Context.SaveChangesAsync();
               return operation.SetSuccess(res);
+          };
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSelected(SelectedDto selectedDto, Guid UserId)
+          => async operation =>
+          {
+
+              var SubjectFacultyAppUsers = (await _query<SubjectFacultyAppUser>().Where(s => s.SubjectFaculty.FacultyId == selectedDto.FacultyId
+                                                                                    && s.SubjectFaculty.SectionId == selectedDto.SectionId
+                                                                                    && s.SubjectFaculty.Year == selectedDto.Year
+                                                                                    && s.SubjectFaculty.SemesterId == selectedDto.SemesterId
+                                                                                    && s.AppUserId == UserId).ToListAsync());
+              Context.SubjectFacultyAppUsers.RemoveRange(SubjectFacultyAppUsers);
+              
+              await Context.SaveChangesAsync();
+              
+              return operation.SetSuccess(true);
           };
         private Func<OperationResult<object>, Task<OperationResult<object>>> _getSelected(Guid UserId)
             => async operation =>

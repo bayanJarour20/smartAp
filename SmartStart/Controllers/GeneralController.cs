@@ -22,10 +22,13 @@ namespace SmartStart.Controllers
 
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> Remaining() => await repository.GetRemaining(Key.Value).ToJsonResultAsync();
-       
+
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> SetSelected(SelectedDto selectedDto) => await repository.SetSelected(selectedDto, Key.Value).ToJsonResultAsync();
-        
+
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.User)]
+        public async Task<IActionResult> RemoveSelected(SelectedDto selectedDto) => await repository.RemoveSelected(selectedDto, Key.Value).ToJsonResultAsync();
+
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> GetSelected() => await repository.GetSelected(Key.Value).ToJsonResultAsync();
         
