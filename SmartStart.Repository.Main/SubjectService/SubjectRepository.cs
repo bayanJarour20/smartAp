@@ -165,11 +165,11 @@ namespace SmartStart.Repository.Main.SubjectService
                     MicroscopeCount = subject.Exams.Count(e => e.Type == TabTypes.Microscope),
                     DateCreate = subject.DateCreated,
                     Description = subject.Description,
-                    //Doctors = subjectDto.Doctors,
                     IsFree = subject.IsFree,
                     ImagePath = subject.ImagePath,
                     Name = subject.Name,
-                    Type = subject.Type
+                    Type = subject.Type,
+                    subjectFaculties = subjectDto.subjectFaculties
                 });
             };
         private Func<OperationResult<SubjectAllDto>, Task<OperationResult<SubjectAllDto>>> _subjectDetails(Guid subjectId)
