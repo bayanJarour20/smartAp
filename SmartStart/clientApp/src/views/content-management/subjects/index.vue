@@ -26,7 +26,7 @@
                         <EKInputSelect
                             label="السنة"
                             placeholder="اختر السنة "
-                            :options="[{id: 0, name: 'الكل'}, ...year]"
+                            :options="[{id: 0, name: 'الكل'}, ...subjectYear]"
                             name="select"
                             :clearable="true"
                             v-model="filterSubjectDto.year"
@@ -52,9 +52,7 @@
             @details="openSubjectDEtails"
             @delete-selected="subjectList"
         >
-           <template slot="items.sectionName" slot-scope="{ value }">
-                {{value ? value : '---' }}
-            </template>
+          
         </EKTable>
     </div>
 </template>
@@ -74,15 +72,7 @@ export default {
                 label: "اسم المادة",
                 field: "name"
             },
-            {
-                label: "اسم الكلية",
-                field: "facultyName"
-            },
-            
-            {
-                label: "اسم القسم",
-                field: "sectionName"
-            },
+           
             {
                 label: "عدد الدورات",
                 field: "examCount",
@@ -118,7 +108,7 @@ export default {
     computed: {
         ...mapState({
             faculties: state => state.faculties.faculties,
-            year: state => state.globalStore.year
+            subjectYear: state => state.globalStore.subjectYear
         }),
         ...mapGetters(["semester", "subjectsList"])
     },
