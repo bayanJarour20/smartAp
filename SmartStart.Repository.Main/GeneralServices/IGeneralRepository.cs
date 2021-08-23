@@ -13,6 +13,7 @@ namespace SmartStart.Repository.Main.GeneralServices
     {
         Task<OperationResult<object>> GetRemaining(Guid UserId);
         Task<OperationResult<object>> SetSelected(SelectedDto selectedDto, Guid UserId);
+        Task<OperationResult<bool>> RemoveSelected(SelectedDto selectedDto, Guid UserId);
         Task<OperationResult<object>> GetSelected(Guid UserId);
         Task<OperationResult<object>> ActivateCode(string Code, Guid UserId);
     }

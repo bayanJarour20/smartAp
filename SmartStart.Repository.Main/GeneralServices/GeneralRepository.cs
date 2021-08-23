@@ -24,6 +24,8 @@ namespace SmartStart.Repository.Main.GeneralServices
             => await RepositoryHandler(_getRemaining(UserId));
         public async Task<OperationResult<object>> SetSelected(SelectedDto selectedDto, Guid UserId)
             => await RepositoryHandler(_setSelected(selectedDto, UserId));
+        public async Task<OperationResult<bool>> RemoveSelected(SelectedDto selectedDto, Guid UserId)
+            => await RepositoryHandler(_removeSelected(selectedDto, UserId));
         public async Task<OperationResult<object>> GetSelected(Guid UserId)
             => await RepositoryHandler(_getSelected(UserId));
         public async Task<OperationResult<object>> ActivateCode(string Code, Guid UserId)
@@ -34,14 +36,30 @@ namespace SmartStart.Repository.Main.GeneralServices
                 object res = _query<SubjectFaculty>().Include(s => s.Section)
                                                      .Include(s => s.Semester)
                                                      .Include(s => s.Faculty)
+                                                     .ThenInclude(s => s.University)
+                                                     .Include(s => s.Subject)
+                                                     .ThenInclude(t => t.Exams)
+                                                     .ThenInclude(t => t.ExamQuestions)
+                                                     .ThenInclude(t => t.Question)
+                                                     .ThenInclude(t => t.QuestionTags)
+                                                     .Include(s => s.Subject)
+                                                     .ThenInclude(t => t.Exams)
+                                                     .ThenInclude(t => t.ExamQuestions)
+                                                     .ThenInclude(t => t.Question)
+                                                     .ThenInclude(t => t.QuestionDocuments)
+                                                     .Include(s => s.Subject)
+                                                     .ThenInclude(t => t.Exams)
+                                                     .ThenInclude(t => t.ExamQuestions)
+                                                     .ThenInclude(t => t.Question)
+                                                     .ThenInclude(t => t.Answers)
                                                      .Where(s => !s.SubjectFacultyAppUsers.Where(ss => ss.AppUserId == UserId
                                                                                                     && ss.DefaultSelected).Any())
                                                      .ToList()
-                                                     .GroupBy(s => new { s.FacultyId, s.Faculty.Name })
+                                                     .GroupBy(s => new { s.FacultyId, s.Faculty.Name, UniversityName = s.Faculty.University.Name })
                                                      .Select(s => new
                                                      {
                                                          FacultyId = s.Key.FacultyId,
-                                                         FacultyName = s.Key.Name,
+                                                         FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
                                                          Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
                                                                           .Select(s2 => new
                                                                           {
@@ -82,7 +100,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             && s.SectionId == selectedDto.SectionId
                                                                                             && s.Year == selectedDto.Year
                                                                                             && s.SemesterId == selectedDto.SemesterId).ToListAsync());
-              var res = new List<object>(); 
+              var res = new List<object>();
               foreach (var subjectFaculty in SubjectFaculties)
               {
                   await Context.SubjectFacultyAppUsers.AddAsync(new SubjectFacultyAppUser
@@ -96,12 +114,28 @@ namespace SmartStart.Repository.Main.GeneralServices
               await Context.SaveChangesAsync();
               return operation.SetSuccess(res);
           };
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSelected(SelectedDto selectedDto, Guid UserId)
+          => async operation =>
+          {
+
+              var SubjectFacultyAppUsers = (await _query<SubjectFacultyAppUser>().Where(s => s.SubjectFaculty.FacultyId == selectedDto.FacultyId
+                                                                                    && s.SubjectFaculty.SectionId == selectedDto.SectionId
+                                                                                    && s.SubjectFaculty.Year == selectedDto.Year
+                                                                                    && s.SubjectFaculty.SemesterId == selectedDto.SemesterId
+                                                                                    && s.AppUserId == UserId).ToListAsync());
+              Context.SubjectFacultyAppUsers.RemoveRange(SubjectFacultyAppUsers);
+              
+              await Context.SaveChangesAsync();
+              
+              return operation.SetSuccess(true);
+          };
         private Func<OperationResult<object>, Task<OperationResult<object>>> _getSelected(Guid UserId)
             => async operation =>
             {
                 var res = _query<SubjectFaculty>().Include(s => s.Section)
                                                   .Include(s => s.Semester)
                                                   .Include(s => s.Faculty)
+                                                  .ThenInclude(s => s.University)
                                                   .Include(s => s.Subject)
                                                   .ThenInclude(t => t.SubjectTags)
                                                   .ThenInclude(t => t.Tag)
@@ -113,13 +147,28 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                   .ThenInclude(t => t.Exams)
                                                   .ThenInclude(t => t.ExamTags)
                                                   .ThenInclude(t => t.Tag)
+                                                  .Include(s => s.Subject)
+                                                  .ThenInclude(t => t.Exams)
+                                                  .ThenInclude(t => t.ExamQuestions)
+                                                  .ThenInclude(t => t.Question)
+                                                  .ThenInclude(t => t.QuestionTags)
+                                                  .Include(s => s.Subject)
+                                                  .ThenInclude(t => t.Exams)
+                                                  .ThenInclude(t => t.ExamQuestions)
+                                                  .ThenInclude(t => t.Question)
+                                                  .ThenInclude(t => t.QuestionDocuments)
+                                                  .Include(s => s.Subject)
+                                                  .ThenInclude(t => t.Exams)
+                                                  .ThenInclude(t => t.ExamQuestions)
+                                                  .ThenInclude(t => t.Question)
+                                                  .ThenInclude(t => t.Answers)
                                                   .Where(s => s.SubjectFacultyAppUsers.Where(a => a.AppUserId == UserId).Any())
                                                   .ToList()
-                                                  .GroupBy(s => new { s.FacultyId, s.Faculty.Name })
+                                                  .GroupBy(s => new { s.FacultyId, s.Faculty.Name, UniversityName = s.Faculty.University.Name })
                                                   .Select(s => new
                                                   {
                                                       FacultyId = s.Key.FacultyId,
-                                                      FacultyName = s.Key.Name,
+                                                      FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
                                                       Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
                                                                     .Select(s2 => new
                                                                     {

@@ -7,12 +7,17 @@ export default {
         subjectDto: {
             id: '00000000-0000-0000-0000-000000000000',
             name: '',
-            isFree:false,
+            isFree:true,
             file: null,
             type: 0,
             imagePath: '',
             subjectFaculties:[],
-            description: ''
+            description: '',
+            price:0,
+            examCount:0,
+            bankCount: 0,
+            microscopeCount: 0,
+            interviewCount: 0,
         }
     },
     mutations: {
@@ -20,19 +25,22 @@ export default {
             state.subjectsList = payload
         },
         Upload_Subject_Create(state, payload) {
+            console.log(payload)
             state.subjectsList.unshift(payload)
+            
         },
         Reset_Subject_Dto(state) {
             Object.assign(
                 state.subjectDto, {
                     id: '00000000-0000-0000-0000-000000000000',
                     name: '',
-                    isFree:false,
+                    isFree:true,
                     file: null,
                     type: 0,
                     imagePath: '',
                     subjectFaculties:[],
-                    description: ''
+                    description: '',
+                    price:0
                 })
         },
         Subject_Details(state, payload) {
@@ -42,7 +50,11 @@ export default {
                 file: payload.file,
                 type: payload.type,
                 imagePath: payload.imagePath,
-                description: payload.description
+                description: payload.description,
+                examCount:payload.examCount,
+                bankCount: payload.bankCount,
+                microscopeCount: payload.microscopeCount,
+                interviewCount: payload.interviewCount,
             })
         },
         subj_List_Dto(state,payload){
@@ -72,19 +84,24 @@ export default {
             })
         },
         uploadSubject({commit}, payload) {
-            api.post('Subject/Upload', payload.formData, ({data}) => {
-                if(!payload.id) {
+            api.post('Subject/SetSubject', payload.formData, ({data}) => {
+                
+                if(payload.id!=null) {
+                    console.log(!payload.id)
                     commit('Upload_Subject_Create', data)
                 }
+            },{
+                success:!payload.id?"تم إضافة المادة بنجاح":"تم تعديل المادة بنجاح",
+                error:!payload.id?"فشل إضافة المادة":"فشل تعديل المادة",
             })
         },
         subjectDetails({commit}, id) {
-            api.get('Subject/Details/' + id, ({data}) => {
+            api.get('Subject/SubjectDetails?subjectId=' + id, ({data}) => {
                 commit('Subject_Details', data)
             })
         },
         deleteSubject({commit}, id) {    
-            console.log(id)  
+            
             api.delete("Subject/RemoveSubject?subjectId=" + id, ({ data }) => {
                 if(data) {
                     router.push('/subjects')
