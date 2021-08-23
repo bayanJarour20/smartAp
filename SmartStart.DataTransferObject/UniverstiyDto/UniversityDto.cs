@@ -14,6 +14,7 @@ namespace SmartStart.DataTransferObject.UniverstiyDto
         public Guid Id { get; set; }
         public string Name { get; set; }
         public Guid CityId { get; set; }
+        public string CityName { get; set; }
 
         public static Expression<Func<University, UniversityDto>> Selector { get; set; } = university => new UniversityDto() { Id = university.Id, Name = university.Name, CityId = university.CityId };
         public static Expression<Func<UniversityDto, University>> InverseSelector { get; set; } = university => new University() { Id = university.Id, Name = university.Name, CityId = university.CityId };
