@@ -36,14 +36,30 @@ namespace SmartStart.Repository.Main.GeneralServices
                 object res = _query<SubjectFaculty>().Include(s => s.Section)
                                                      .Include(s => s.Semester)
                                                      .Include(s => s.Faculty)
+                                                     .ThenInclude(s => s.University)
+                                                     .Include(s => s.Subject)
+                                                     .ThenInclude(t => t.Exams)
+                                                     .ThenInclude(t => t.ExamQuestions)
+                                                     .ThenInclude(t => t.Question)
+                                                     .ThenInclude(t => t.QuestionTags)
+                                                     .Include(s => s.Subject)
+                                                     .ThenInclude(t => t.Exams)
+                                                     .ThenInclude(t => t.ExamQuestions)
+                                                     .ThenInclude(t => t.Question)
+                                                     .ThenInclude(t => t.QuestionDocuments)
+                                                     .Include(s => s.Subject)
+                                                     .ThenInclude(t => t.Exams)
+                                                     .ThenInclude(t => t.ExamQuestions)
+                                                     .ThenInclude(t => t.Question)
+                                                     .ThenInclude(t => t.Answers)
                                                      .Where(s => !s.SubjectFacultyAppUsers.Where(ss => ss.AppUserId == UserId
                                                                                                     && ss.DefaultSelected).Any())
                                                      .ToList()
-                                                     .GroupBy(s => new { s.FacultyId, s.Faculty.Name })
+                                                     .GroupBy(s => new { s.FacultyId, s.Faculty.Name, UniversityName = s.Faculty.University.Name })
                                                      .Select(s => new
                                                      {
                                                          FacultyId = s.Key.FacultyId,
-                                                         FacultyName = s.Key.Name,
+                                                         FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
                                                          Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
                                                                           .Select(s2 => new
                                                                           {
@@ -119,6 +135,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                 var res = _query<SubjectFaculty>().Include(s => s.Section)
                                                   .Include(s => s.Semester)
                                                   .Include(s => s.Faculty)
+                                                  .ThenInclude(s => s.University)
                                                   .Include(s => s.Subject)
                                                   .ThenInclude(t => t.SubjectTags)
                                                   .ThenInclude(t => t.Tag)
@@ -130,13 +147,28 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                   .ThenInclude(t => t.Exams)
                                                   .ThenInclude(t => t.ExamTags)
                                                   .ThenInclude(t => t.Tag)
+                                                  .Include(s => s.Subject)
+                                                  .ThenInclude(t => t.Exams)
+                                                  .ThenInclude(t => t.ExamQuestions)
+                                                  .ThenInclude(t => t.Question)
+                                                  .ThenInclude(t => t.QuestionTags)
+                                                  .Include(s => s.Subject)
+                                                  .ThenInclude(t => t.Exams)
+                                                  .ThenInclude(t => t.ExamQuestions)
+                                                  .ThenInclude(t => t.Question)
+                                                  .ThenInclude(t => t.QuestionDocuments)
+                                                  .Include(s => s.Subject)
+                                                  .ThenInclude(t => t.Exams)
+                                                  .ThenInclude(t => t.ExamQuestions)
+                                                  .ThenInclude(t => t.Question)
+                                                  .ThenInclude(t => t.Answers)
                                                   .Where(s => s.SubjectFacultyAppUsers.Where(a => a.AppUserId == UserId).Any())
                                                   .ToList()
-                                                  .GroupBy(s => new { s.FacultyId, s.Faculty.Name })
+                                                  .GroupBy(s => new { s.FacultyId, s.Faculty.Name, UniversityName = s.Faculty.University.Name })
                                                   .Select(s => new
                                                   {
                                                       FacultyId = s.Key.FacultyId,
-                                                      FacultyName = s.Key.Name,
+                                                      FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
                                                       Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
                                                                     .Select(s2 => new
                                                                     {
