@@ -1,6 +1,9 @@
 ﻿using Elkood.Web.Common.ContextResult.OperationContext;
+using Elkood.Web.Helper.ExtensionMethods.String;
 using Elkood.Web.Service.BoundedContext;
 using Elkood.Web.Service.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmartStart.DataTransferObject.ExamDto;
 using SmartStart.DataTransferObject.QuestionDto;
@@ -10,6 +13,7 @@ using SmartStart.SharedKernel.Enums;
 using SmartStart.SqlServer.DataBase;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -20,8 +24,13 @@ namespace SmartStart.Repository.Main.ExamServices
     [ElRepository]
     public class ExamRepository : ElRepository<SmartStartDbContext, Guid, Exam>, IExamRepository
     {
-        public ExamRepository(SmartStartDbContext context) : base(context)
+
+
+        private readonly IWebHostEnvironment webHostEnvironment;
+
+        public ExamRepository(SmartStartDbContext context, IWebHostEnvironment webHostEnvironment) : base(context)
         {
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
@@ -65,7 +74,14 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id)
             => await RepositoryHandler(_getAllInterviewQuestion(id));
 
-       
+
+        public async Task<OperationResult<ExamDocumentDto>> AddExamDocument(ExamDocumentDto dto)
+            => await RepositoryHandler(_addExamDocument(dto));
+        public async Task<OperationResult<bool>> DeleteExamDocument(Guid documentId)
+            => await RepositoryHandler(_deleteExamDocument(documentId));
+        public async Task<OperationResult<bool>> DeleteExamDocument(IEnumerable<Guid> documentIds)
+            => await RepositoryHandler(_deleteRangeExamDocuments(documentIds));
+
         #region - Exam -
 
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllExam()
@@ -413,5 +429,129 @@ namespace SmartStart.Repository.Main.ExamServices
 
         #endregion
 
+
+        #region ExamDocumnets
+
+        private Func<OperationResult<ExamDocumentDto>, Task<OperationResult<ExamDocumentDto>>> _addExamDocument(ExamDocumentDto examDocumentDto)
+            => async operation => {
+
+                var result = TryUploadImage(examDocumentDto.File, out string path);
+                if (result.IsSuccess)
+                {
+                    Document documentModel = new Document()
+                    {
+                        Name = examDocumentDto.Name,
+                        Path = path,
+                        Type = examDocumentDto.Type,
+                    };
+
+                    ExamDocument examDocumentModel = new ExamDocument()
+                    {
+                        Document = documentModel,
+                        ExamId = examDocumentDto.Id,
+                        Note = examDocumentDto.Note
+                    };
+
+                    await Context.ExamDocuments.AddAsync(examDocumentModel);
+
+                    await Context.SaveChangesAsync();
+
+                    examDocumentDto.Path = documentModel.Path;
+
+                    return operation.SetSuccess(examDocumentDto);
+                }
+                return operation.SetFailed("Failed upload, Message: " + result.FullExceptionMessage);
+
+            };
+
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteExamDocument(Guid documentId)
+            => async operation =>
+            {
+
+                await Context.SoftDeleteTraversalAsync<Document, ExamDocument>(p => p.Id == documentId, p => p.ExamDocuments);
+
+                var documentPath = await Context.Documents.Where(e => e.DateDeleted == null)
+                                                    .Where(e => e.Id == documentId)
+                                                    .Select(e => e.Path)
+                                                    .FirstOrDefaultAsync();
+
+                TryDeleteImage(documentPath);
+
+                //Context.SoftDelete(await FindAsync(id));
+
+                return operation.SetSuccess(true);
+            };
+
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRangeExamDocuments(IEnumerable<Guid> documentIds)
+          => async operation =>
+          {
+
+              foreach (Guid id in documentIds)
+              {
+                  await Context.SoftDeleteTraversalAsync<Document, ExamDocument>(p => p.Id == id, p => p.ExamDocuments);
+
+                  var documentPath = await Context.Documents.Where(e => e.DateDeleted == null)
+                                                  .Where(e => e.Id == id)
+                                                  .Select(e => e.Path)
+                                                  .FirstOrDefaultAsync();
+                  if (documentPath != null)
+                      TryDeleteImage(documentPath);
+
+              }
+
+                //Context.SoftDelete(await FindAsync(id));
+
+                return operation.SetSuccess(true);
+          };
+
+
+        #endregion
+
+
+
+
+
+        #region Helper Functions
+
+        private OperationResult<bool> TryUploadImage(IFormFile image, out string path)
+        {
+            path = null;
+            try
+            {
+                if (image != null)
+                {
+                    var documentsDirectory = Path.Combine("wwwroot", "Documents", "Exam_Document");
+                    if (!Directory.Exists(documentsDirectory))
+                    {
+                        Directory.CreateDirectory(documentsDirectory);
+                    }
+                    path = Path.Combine("Documents", "Exam_Document", Guid.NewGuid().ToString() + "_" + image.FileName);
+                    string filePath = Path.Combine(webHostEnvironment.WebRootPath, path);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        image.CopyTo(fileStream);
+                    }
+                }
+                return new OperationResult<bool>().SetSuccess(true);
+            }
+            catch (Exception e) when (e is IOException || e is Exception)
+            {
+                return new OperationResult<bool>().SetException(e);
+            }
+        }
+
+        private OperationResult<bool> TryDeleteImage(string path)
+        {
+            if (!path.IsNullOrEmpty())
+            {
+                string filePath = Path.Combine(webHostEnvironment.WebRootPath, path);
+                try { File.Delete(filePath); } catch (Exception e) { return new OperationResult<bool>().SetException(e); }
+            }
+            return new OperationResult<bool>().SetSuccess(true);
+        }
+
+        #endregion
     }
 }
