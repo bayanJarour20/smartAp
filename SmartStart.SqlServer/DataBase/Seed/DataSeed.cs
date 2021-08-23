@@ -39,6 +39,10 @@ namespace SmartStart.SqlServer.DataBase.Seed
             await TagSeed(context);
             await SubjectSeed(context);
             await PackageSeed(context);
+            await QuestionSeed(context);
+            await ExamAndBankSeed(context);
+            await InterviewSeed(context);
+
         }
 
         private static async Task CitySeed(SmartStartDbContext context)
@@ -406,6 +410,297 @@ namespace SmartStart.SqlServer.DataBase.Seed
                 await context.SaveChangesAsync();
             }
         }
+        private static async Task QuestionSeed(SmartStartDbContext context)
+        {
+            if (!context.Questions.Where(e => !e.DateDeleted.HasValue).Any())
+            {
+                var res = new List<Question>();
+
+                await context.AddAsync(new Question
+                {
+                    DateCreated = DateTime.Now,
+                    AnswerType = AnswerTypes.MultiChoice,
+                    Hint = "تذكر التشريح كلمة عربية",
+                    QuestionType = QuestionTypes.Multi,
+                    Title = "يعتبر الحمص من النباتات",
+                    Answers = new List<Answer>()
+                    {
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "النهار الطويل"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "النهار القصير"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "المحايدة"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = true,
+                            Title = "جميع الإجابات صحيحة"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "جميع الإجابات خاطئة"
+                        },
+                    }
+                });
+                await context.AddAsync(new Question
+                {
+                    DateCreated = DateTime.Now,
+                    AnswerType = AnswerTypes.MultiChoice,
+                    QuestionType = QuestionTypes.Multi,
+                    Title = "يزرع العدس في معظم المحافظات السورية	",
+                    Answers = new List<Answer>()
+                    {
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "شهر تشرين الثاني"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = true,
+                            Title = "عروة ربيعية"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "في منتصف شهر نيسان"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "أيلول"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "جميع الإجابات خاطئة"
+                        },
+                    }
+                });
+                await context.AddAsync(new Question
+                {
+                    DateCreated = DateTime.Now,
+                    AnswerType = AnswerTypes.MultiChoice,
+                    QuestionType = QuestionTypes.Multi,
+                    Title = "التقيد بموعد زراعة القطن يؤثر في",
+                    Answers = new List<Answer>()
+                    {
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "تجنب تاثير موجات الحر العالية خلال شهر تموز واب"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "الحصول على اقطان نظيفة"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "الإجابة A و B"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = true,
+                            Title = "إضافة اسمدة"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "تقليل الري"
+                        },
+                    }
+                });
+                await context.AddAsync(new Question
+                {
+                    DateCreated = DateTime.Now,
+                    AnswerType = AnswerTypes.MultiChoice,
+                    QuestionType = QuestionTypes.Multi,
+                    Title = "يتم ترقيع القطن",
+                    Answers = new List<Answer>()
+                    {
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "يعد15 يوما من الزراعة"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = true,
+                            Title = "أيام من الزراعة"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "بعد التعشيب"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "بعد التفريد"
+                        },
+                        new Answer()
+                        {
+                            IsCorrect = false,
+                            Title = "جميع الإجابات خاطئة"
+                        },
+                    }
+                });
+                for (int i = 0; i < 56; i++)
+                {
+                    var idx = RandomInteger(0, 4);
+                    await context.AddAsync(new Question
+                    {
+                        DateCreated = DateTime.Now,
+                        AnswerType = AnswerTypes.MultiChoice,
+                        QuestionType = QuestionTypes.Multi,
+                        Title = RandomString(35),
+                        Answers = new List<Answer>()
+                        {
+                            new Answer()
+                            {
+                                IsCorrect = (idx == 0),
+                                Title = RandomString(RandomInteger(12, 20))
+                            },
+                            new Answer()
+                            {
+                                IsCorrect = (idx == 1),
+                                Title = RandomString(RandomInteger(12, 20))
+                            },
+                            new Answer()
+                            {
+                                IsCorrect = (idx == 2),
+                                Title = RandomString(RandomInteger(12, 20))
+                            },
+                            new Answer()
+                            {
+                                IsCorrect = (idx == 3),
+                                Title = RandomString(RandomInteger(12, 20))
+                            },
+                            new Answer()
+                            {
+                                IsCorrect = (idx == 4),
+                                Title = RandomString(RandomInteger(12, 20))
+                            },
+                        }
+                    });
+                }
+                for (int i = 0; i < 20; i++)
+                {
+                    await context.AddAsync(new Question
+                    {
+                        DateCreated = DateTime.Now,
+                        AnswerType = AnswerTypes.Text,
+                        QuestionType = QuestionTypes.Single,
+                        Title = RandomString(RandomInteger(30, 40)),
+                        Answers = new List<Answer>()
+                        {
+                            new Answer()
+                            {
+                                Title = RandomString(RandomInteger(50, 70))
+                            },
+                        }
+                    });
+                }
+                await context.SaveChangesAsync();
+            }
+        }
+        private static async Task ExamAndBankSeed(SmartStartDbContext context)
+        {
+            if (!context.Exams.Where(e => !e.DateDeleted.HasValue && (e.Type == TabTypes.Bank || e.Type == TabTypes.Exam)).Any())
+            {
+                var questions = context.Questions.Where(q => !q.DateDeleted.HasValue
+                                                          && q.AnswerType == AnswerTypes.MultiChoice);
+                var res = new List<ExamQuestion>();
+                var exam = new Exam
+                {
+                    DateCreated = DateTime.Now,
+                    Name = "فحص البغاضة",
+                    SubjectId = context.Subjects.Where(s => !s.DateDeleted.HasValue).Skip(RandomInteger(0, context.Subjects.Where(s => !s.DateDeleted.HasValue).Count() - 1)).First().Id,
+                    Type = TabTypes.Exam,
+                    Year = 2020,
+                };
+                short i = 1; 
+                await context.Exams.AddAsync(exam);
+                await context.SaveChangesAsync(); 
+                foreach (var item in questions.Take(30))
+                {
+                    res.Add(new ExamQuestion
+                    {
+                        ExamId = exam.Id,
+                        QuestionId = item.Id,
+                        Order = i
+                    });
+                    i++; 
+                }
+                var bank = new Exam
+                {
+                    DateCreated = DateTime.Now,
+                    Name = "بنك البغاضة",
+                    SubjectId = context.Subjects.Where(s => !s.DateDeleted.HasValue).Skip(RandomInteger(0, context.Subjects.Where(s => !s.DateDeleted.HasValue).Count() - 1)).First().Id,
+                    Type = TabTypes.Bank,
+                    Year = 2019,
+                };
+                i = 1;
+                await context.Exams.AddAsync(bank);
+                foreach (var item in questions.Skip(30).Take(30))
+                {
+                    res.Add(new ExamQuestion
+                    {
+                        ExamId = bank.Id,
+                        QuestionId = item.Id,
+                        Order = i
+                    });
+                    i++;
+                }
+                await context.ExamQuestions.AddRangeAsync(res);
+                await context.SaveChangesAsync();
+            }
+        }
+        private static async Task InterviewSeed(SmartStartDbContext context)
+        {
+            if (!context.Exams.Where(e => !e.DateDeleted.HasValue && (e.Type == TabTypes.Interview)).Any())
+            {
+                var questions = context.Questions.Where(q => !q.DateDeleted.HasValue
+                                                          && q.AnswerType == AnswerTypes.Text);
+                var res = new List<ExamQuestion>();
+                var exam = new Exam
+                {
+                    DateCreated = DateTime.Now,
+                    Name = "مقابلة البغاضة",
+                    SubjectId = context.Subjects.Where(s => !s.DateDeleted.HasValue).Skip(RandomInteger(0, context.Subjects.Where(s => !s.DateDeleted.HasValue).Count() - 1)).First().Id,
+                    Type = TabTypes.Interview,
+                    Year = 2020,
+                };
+                short i = 1;
+                await context.Exams.AddAsync(exam);
+                await context.SaveChangesAsync();
+                foreach (var item in questions)
+                {
+                    res.Add(new ExamQuestion
+                    {
+                        ExamId = exam.Id,
+                        QuestionId = item.Id,
+                        Order = i
+                    });
+                    i++;
+                }
+                await context.ExamQuestions.AddRangeAsync(res);
+                await context.SaveChangesAsync();
+            }
+        }
+
 
         #region Helper Functions
         public static int RandomInteger(int start, int end)
@@ -416,6 +711,12 @@ namespace SmartStart.SqlServer.DataBase.Seed
         {
             const string chars = "0123456789";
             return "09" + new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789   ";
+            return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
         #endregion
