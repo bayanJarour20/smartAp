@@ -31,6 +31,7 @@ namespace SmartStart.Repository.Main.ExamServices
         {
         }
 
+        #region Exam
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
             => await RepositoryHandler(_getAllExam());
         public async Task<OperationResult<bool>> DeleteExam(Guid id)
@@ -43,7 +44,9 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_updateExam(dto));
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllExamQuestion(Guid id)
             => await RepositoryHandler(_getAllExamQuestion(id));
+        #endregion
 
+        #region Bank
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllBank()
             => await RepositoryHandler(_getAllBank());
         public async Task<OperationResult<bool>> DeleteBank(Guid id)
@@ -57,6 +60,9 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllBankQuestion(Guid id)
             => await RepositoryHandler(_getAllBankQuestion(id));
 
+        #endregion
+
+        #region Interview
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllInterview()
             => await RepositoryHandler(_getAllInterview());
         public async Task<OperationResult<bool>> DeleteInterview(Guid id)
@@ -70,6 +76,9 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id)
             => await RepositoryHandler(_getAllInterviewQuestion(id));
 
+        #endregion
+
+        #region Microscope
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllMicroscope()
             => await RepositoryHandler(_getAllMicroscope());
         public async Task<OperationResult<MicroscopeDocumentsDto>> DetailsMicroscope(Guid id)
@@ -86,14 +95,16 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_updateSectionsMicroscope(dto));
         public async Task<OperationResult<bool>> DeleteSectionsMicroscope(Guid id)
             => await RepositoryHandler(_deleteSectionsMicroscope(id));
+        #endregion
 
-
+        #region ExamDocumnets
         public async Task<OperationResult<ExamDocumentDto>> AddExamDocument(ExamDocumentDto dto)
-            => await RepositoryHandler(_addExamDocument(dto));
+           => await RepositoryHandler(_addExamDocument(dto));
         public async Task<OperationResult<bool>> DeleteExamDocument(Guid documentId)
             => await RepositoryHandler(_deleteExamDocument(documentId));
         public async Task<OperationResult<bool>> DeleteExamDocument(IEnumerable<Guid> documentIds)
             => await RepositoryHandler(_deleteRangeExamDocuments(documentIds));
+        #endregion
 
         #region - Exam -
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllExam()
@@ -102,7 +113,6 @@ namespace SmartStart.Repository.Main.ExamServices
                 var Exams = await GetAllAsync(exam => exam.Type == TabTypes.Exam);
                 return operation.SetSuccess(Exams);
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteExam(Guid id)
             => async operation =>
             {
@@ -110,7 +120,6 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, $"{id} : not exist.");
                 return operation.SetSuccess(true, " Success Delete. ");
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteExam(IEnumerable<Guid> ids)
             => async operation =>
             {
@@ -118,17 +127,14 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, $"{ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete All.");
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addExam(ExamDto dto)
             => async operation =>
             {
                 var exam = await AddAsync(dto, TabTypes.Exam);
                 return operation.SetSuccess(exam);
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateExam(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Exam);
-
         private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllExamQuestion(Guid id)
             => async operation =>
             {
@@ -144,7 +150,6 @@ namespace SmartStart.Repository.Main.ExamServices
                 var Banks = await GetAllAsync(exam => exam.Type == TabTypes.Bank);
                 return operatoin.SetSuccess(Banks);
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteBank(Guid id)
             => async operation =>
             {
@@ -152,7 +157,6 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, $"{id}: not exist. ");
                 return operation.SetSuccess(true, "Sussecc Delete.");
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteBank(IEnumerable<Guid> ids)
             => async operation =>
             {
@@ -160,17 +164,14 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, $"{ids}: not exist. ");
                 return operation.SetSuccess(true, "Sussecc Delete.");
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addBank(ExamDto dto)
             => async operation =>
             {
                 var bank = await AddAsync(dto, TabTypes.Bank);
                 return operation.SetSuccess(bank);
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateBank(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Bank);
-
         private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllBankQuestion(Guid id)
             => async operation =>
             {
@@ -186,7 +187,6 @@ namespace SmartStart.Repository.Main.ExamServices
                 var Interviews = await GetAllAsync(exam => exam.Type == TabTypes.Interview);
                 return operation.SetSuccess(Interviews);
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteInterview(Guid id)
             => async operation =>
             {
@@ -194,7 +194,6 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, "${id} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteInterview(IEnumerable<Guid> ids)
             => async operation =>
             {
@@ -202,17 +201,14 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, "${ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addInterview(ExamDto dto)
             => async operation =>
             {
                 var interview = await AddAsync(dto, TabTypes.Interview);
                 return operation.SetSuccess(interview);
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateInterview(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Interview);
-
         private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllInterviewQuestion(Guid id)
             => async operation =>
             {
@@ -228,7 +224,6 @@ namespace SmartStart.Repository.Main.ExamServices
                 var Microscopes = await GetAllAsync(exam => exam.Type == TabTypes.Microscope);
                 return operation.SetSuccess(Microscopes);
             };
-
         private Func<OperationResult<MicroscopeDocumentsDto>, Task<OperationResult<MicroscopeDocumentsDto>>> _detailsMicroscope(Guid id)
             => async operation =>
             {
@@ -270,7 +265,6 @@ namespace SmartStart.Repository.Main.ExamServices
                                             }).FirstOrDefaultAsync();
                 return operation.SetSuccess(microscope);
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteMicroscope(Guid id)
             => async operation =>
             {
@@ -278,7 +272,6 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, "${id} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteMicroscope(IEnumerable<Guid> ids)
             => async operation =>
             {
@@ -286,17 +279,14 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, "${ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addMicroscope(ExamDto dto)
             => async operation =>
             {
                 var microscope = await AddAsync(dto, TabTypes.Microscope);
                 return operation.SetSuccess(microscope);
             };
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateMicroscope(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Microscope);
-
         private Func<OperationResult<MicroscopeDocumentsDto>, Task<OperationResult<MicroscopeDocumentsDto>>> _updateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
             => async operation =>
             {
@@ -382,8 +372,6 @@ namespace SmartStart.Repository.Main.ExamServices
                     }
                 }
             };
-
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteSectionsMicroscope(Guid id)
             => async operation =>
             {
@@ -419,7 +407,6 @@ namespace SmartStart.Repository.Main.ExamServices
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                               }).ToListAsync();
         }
-
         private async Task<bool> TryDeleteAsync(Guid examId, TabTypes examType)
         {
             var one = await TrackingQuery.Where(exam => exam.Id == examId).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).FirstOrDefaultAsync();
@@ -430,7 +417,6 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
             return true;
         }
-
         private async Task<bool> TryMultiDeleteAsync(IEnumerable<Guid> examIds, TabTypes examType)
         {
             var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).ToListAsync();
@@ -444,7 +430,6 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
             return true;
         }
-
         private async void Delete(Exam exam)
         {
             foreach (var tag in exam.ExamTags)
@@ -462,8 +447,7 @@ namespace SmartStart.Repository.Main.ExamServices
                     Context.Documents.Remove(doc.Document);
                 }
             }
-        }
-        
+        }   
         private async Task<ExamDetailsDto> AddAsync(ExamDto dto, TabTypes examType)
         {
             var exam = new Exam
@@ -500,7 +484,6 @@ namespace SmartStart.Repository.Main.ExamServices
                                   QuestionsCount = exam.ExamQuestions.Count(),
                               }).FirstOrDefaultAsync();
         }
-
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
         {
             var exam = await FindAsync(dto.Id);
@@ -535,7 +518,6 @@ namespace SmartStart.Repository.Main.ExamServices
                                 QuestionsCount = exam.ExamQuestions.Count(e => e.DateDeleted == null),
                             }).FirstOrDefaultAsync());
         }
-
         private async Task<IEnumerable<ExamDetailsQuestionDto>> GetAllQuestionAsync(Expression<Func<Exam, bool>> predicate)
         {
             return await Query.Where(predicate)
@@ -588,12 +570,9 @@ namespace SmartStart.Repository.Main.ExamServices
                                   }),
                               }).ToListAsync();
         }
-
         #endregion
 
-
-        #region ExamDocumnets
-
+        #region - ExamDocumnets - 
         private Func<OperationResult<ExamDocumentDto>, Task<OperationResult<ExamDocumentDto>>> _addExamDocument(ExamDocumentDto examDocumentDto)
             => async operation => {
 
@@ -625,8 +604,6 @@ namespace SmartStart.Repository.Main.ExamServices
                 return operation.SetFailed("Failed upload, Message: " + result.FullExceptionMessage);
 
             };
-
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteExamDocument(Guid documentId)
             => async operation =>
             {
@@ -644,8 +621,6 @@ namespace SmartStart.Repository.Main.ExamServices
 
                 return operation.SetSuccess(true);
             };
-
-
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRangeExamDocuments(IEnumerable<Guid> documentIds)
           => async operation =>
           {
@@ -667,8 +642,6 @@ namespace SmartStart.Repository.Main.ExamServices
 
                 return operation.SetSuccess(true);
           };
-
-
         private async Task<OperationResult<bool>> TryDeleteFileAsync(string path)
         {
             if(!path.IsNullOrEmpty())
@@ -686,9 +659,6 @@ namespace SmartStart.Repository.Main.ExamServices
             return new OperationResult<bool>().SetSuccess(true);
         }
         #endregion
-
-
-
 
 
         #region Helper Functions
