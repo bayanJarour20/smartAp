@@ -48,6 +48,22 @@ namespace SmartStart.Controllers
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> GetAllExamQuestion([Required] Guid id)
             => await repository.GetAllExamQuestion(id).ToJsonResultAsync();
+
+        [Route("api/Exam/Documents")]
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> AddExamDocument([FromForm] ExamDocumentDto dto)
+            => await repository.AddExamDocument(dto).ToJsonResultAsync();
+
+        [Route("api/Exam/Documents/{id}")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> DeleteExamDocument([Required] Guid id)
+            => await repository.DeleteExamDocument(id).ToJsonResultAsync();
+
+        [Route("api/Exam/Documents")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> DeleteRangeExamDocument(IEnumerable<Guid> ids)
+           => await repository.DeleteRangeExamDocument(ids).ToJsonResultAsync();
+
         #endregion
 
         #region - Bank -

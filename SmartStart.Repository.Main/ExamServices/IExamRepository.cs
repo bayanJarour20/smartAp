@@ -41,5 +41,13 @@ namespace SmartStart.Repository.Main.ExamServices
         Task<OperationResult<ExamDetailsDto>> UpdateMicroscope(ExamDto dto);
         Task<OperationResult<MicroscopeDocumentsDto>> UpdateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto);
         Task<OperationResult<bool>> DeleteSectionsMicroscope(Guid id);
+
+
+        Task<OperationResult<ExamDocumentDto>> AddExamDocument(ExamDocumentDto dto);
+
+        Task<OperationResult<bool>> DeleteExamDocument(Guid documentId);
+
+        Task<OperationResult<bool>> DeleteRangeExamDocument(IEnumerable<Guid> documentIds);
+            
     }
 }
