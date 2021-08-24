@@ -267,37 +267,6 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteMicroscope(Guid id)
             => async operation =>
             {
-                //var microscope = await TrackingQuery.Where(exam => exam.Id == id)
-                //                                    .Include(exam => exam.ExamTags)
-                //                                    .Include(exam => exam.ExamQuestions)
-                //                                    .ThenInclude(q => q.Question)
-                //                                    .ThenInclude(q => q.Answers)
-                //                                    .Include("ExamQuestions.Question.QuestionTags")
-                //                                    .Include("ExamQuestions.Question.QuestionDocuments")
-                //                                    .Include("ExamQuestions.Question.QuestionDocuments.Document")
-                //                                    .SingleOrDefaultAsync();
-                //if (microscope == null)
-                //    return (OperationResultTypes.NotExist, $"{id} : not exist.");
-
-                //foreach (var tag in microscope.ExamTags)
-                //    Context.SoftDelete(tag);
-
-                //foreach (var question in microscope.ExamQuestions)
-                //    Context.SoftDelete(question);
-                //foreach (var tag in question.Question.QuestionTags)
-                //{
-                //    Context.SoftDelete(tag);
-                //}
-                //foreach (var doc in question.Question.QuestionDocuments)
-                //{
-                //    if (doc.Document.QuestionDocuments.Where(e => e.QuestionId != question.QuestionId).Count() == 1)
-                //    {
-                //        await TryDeleteFileAsync(doc.Document.Path);
-                //        Context.Documents.Remove(doc.Document);
-                //    }
-                //}
-                //Context.SoftDelete(microscope);
-                //await Context.SaveChangesAsync();
                 if (!(await TryDeleteAsync(id, TabTypes.Microscope)))
                     return (OperationResultTypes.NotExist, "${id} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
