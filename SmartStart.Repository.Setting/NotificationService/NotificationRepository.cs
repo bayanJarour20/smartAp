@@ -28,7 +28,7 @@ namespace SmartStart.Repository.Setting.NotificationService
             this.httpClient = httpClient;
         }
 
-        public async Task<OperationResult<IEnumerable<NotificationToMeDto>>> GetNotifications(Guid id)
+        public async Task<OperationResult<NotificationTupleDto>> GetNotifications(Guid id)
             => await RepositoryHandler(_getNotifications(id));
 
         public async Task<OperationResult<IEnumerable<NotificationUsersDto>>> GetAll()
@@ -39,6 +39,9 @@ namespace SmartStart.Repository.Setting.NotificationService
 
         public async Task<OperationResult<bool>> Delete(Guid id)
             => await RepositoryHandler(_delete(id));
+
+        public async Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids)
+           => await RepositoryHandler(_deleteRange(ids));
 
         private Func<OperationResult<IEnumerable<NotificationUsersDto>>, Task<OperationResult<IEnumerable<NotificationUsersDto>>>> _getAll()
            => async operation =>
@@ -56,24 +59,43 @@ namespace SmartStart.Repository.Setting.NotificationService
                return operation.SetSuccess(allNotification);
            };
 
-        private Func<OperationResult<IEnumerable<NotificationToMeDto>>, Task<OperationResult<IEnumerable<NotificationToMeDto>>>> _getNotifications(Guid id)
+        private Func<OperationResult<NotificationTupleDto>, Task<OperationResult<NotificationTupleDto>>> _getNotifications(Guid id)
             => async operation =>
             {
-                var notifications = await Query.Include(notification => notification.UserNotifications).Where(notification => notification.Type == NotificationTypes.User &&
-                                                                       (!notification.UserNotifications.Any() ||
-                                                                       notification.UserNotifications.Any(usernotification => usernotification.AppUserId == id)
-                                                                        ))
-                                               .Select(notification => new NotificationToMeDto()
-                                               {
-                                                   Id = notification.Id,
-                                                   Title = notification.Title,
-                                                   Body = notification.Body,
-                                                   Date = notification.Date,
-                                                   NotificationType = NotificationTypes.User,
-                                                   IsToMe = notification.UserNotifications.Any()
-                                               }).ToListAsync();
+                var notificationsAll = await Query.Include(notification => notification.UserNotifications)
+                                                  .Where(notification => notification.Type == NotificationTypes.User
+                                                                      && (!notification.UserNotifications.Any()
+                                                                      || notification.UserNotifications.Any(usernotification => usernotification.AppUserId == id)))
+                                                  .Select(notification => new NotificationToMeDto()
+                                                  {
+                                                      Id = notification.Id,
+                                                      Title = notification.Title,
+                                                      Body = notification.Body,
+                                                      Date = notification.Date,
+                                                      NotificationType = NotificationTypes.User,
+                                                      IsToMe = notification.UserNotifications.Any()
+                                                  }).ToListAsync();
 
-                return operation.SetSuccess(notifications);
+                var notificationsToday = await Query.Include(notification => notification.UserNotifications)
+                                                    .Where(notification => notification.Type == NotificationTypes.User
+                                                                        && notification.Date.Date == DateTime.Now.Date
+                                                                        && (!notification.UserNotifications.Any()
+                                                                        || notification.UserNotifications.Any(usernotification => usernotification.AppUserId == id)))
+                                                    .Select(notification => new NotificationToMeDto()
+                                                    {
+                                                        Id = notification.Id,
+                                                        Title = notification.Title,
+                                                        Body = notification.Body,
+                                                        Date = notification.Date,
+                                                        NotificationType = NotificationTypes.User,
+                                                        IsToMe = notification.UserNotifications.Any()
+                                                    }).ToListAsync();
+
+                return operation.SetSuccess(new NotificationTupleDto 
+                {
+                    NotificationAll = notificationsAll,
+                    NotificationToday = notificationsToday
+                });
             };
 
         private Func<OperationResult<NotificationUsersDto>, Task<OperationResult<NotificationUsersDto>>> _add(NotificationUsersDto notificationDto)
@@ -132,6 +154,31 @@ namespace SmartStart.Repository.Setting.NotificationService
                 return operation.SetSuccess(true, $"{nameof(rowEffected)}: {rowEffected}");
             };
 
+
+
+        
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRange(IEnumerable<Guid> ids)
+           => async operation =>
+           {
+
+               var NotificationModels = await Query.Where(e => ids.Contains(e.Id)).Include(e => e.UserNotifications).ToListAsync();
+
+
+               foreach(Notification item in NotificationModels)
+               {
+                   await Context.SoftDeleteTraversalAsync((Expression<Func<Notification, bool>>)(noti => noti.Id == item.Id ), noti => noti.UserNotifications);
+                   //await Context.SaveChangesAsync();
+               }
+
+
+               //await Context.SaveChangesAsync();
+
+               int rowEffected = await Context.SaveChangesDeletedAsync();
+               return operation.SetSuccess(true, $"{nameof(rowEffected)}: {rowEffected}");
+           };
+
+
         public async Task<OperationResult<bool>> SendNotification(NotificationUsersDto notificationDto)
         {
             try
@@ -141,11 +188,11 @@ namespace SmartStart.Repository.Setting.NotificationService
                 string deviceId = "";
 
                 // send to user
-                applicationID = "AAAAtfcMGl8:APA91bF42b3aDoLzGo-uADNi7N0d3DOo-3OdeF8_v6iAu9-a9d8YP2EhX2q6hVK_CVk2NxsUV-r4G0Mxvzug_E7blWvSKuqUF_kcVtT2aFsGCkjW81L7-rYwEmoD3rvD7MgTDZWG8caD";
+                applicationID = "AAAAHzROU30:APA91bH1VZu_L9RVY6XeDdw4zfVOn0fl-0g0Pp-UdkBMWDSm_HlHQ42c4HP90JViiW_msm9dnsndkmheoe-FNRZNghq-qTnwLNXWRfQx2F-ykm5zlw63uBB8akVCoXrX7eRFLVlDYK3F";
                 //senderId = "24555187283";
                 if (notificationDto.NotificationType == NotificationTypes.Seller)
                 {
-                    applicationID = "AAAA5X-gqQ8:APA91bFWF3sFyhVYGTd7C0SmLsFGMZuzlX8gOYlZlx76u79BhYD1c9VMbqMZj4KpQCtZVmGMvUPiFDT8VOMbQ89R4dGE0r1juQXZ44yXh-wguxte2zCBLuFJJcEpXaFPm_mcY3XlKRDG";
+                    applicationID = "AAAAlcnPf1U:APA91bHkhXRsgPpxMV3PV2KmasV2Es_eHbuezoeWET76JRQahFanVwtTipDKO3HjCTtzseq_bZCXxvCiPTU1j-dBmkxSjgxG187lKGownV5CkcBWdbt9eJ2_s-zz18C32Zms94XEwa82";
                 }
 
                 if (!(notificationDto.UserIds?.Any() ?? false))

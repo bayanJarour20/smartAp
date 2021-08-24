@@ -23,7 +23,7 @@ namespace SmartStart.Model.Security
             UserNotifications = new HashSet<UserNotification>();
             Invoices = new HashSet<Invoice>();
             Rates = new HashSet<Rate>();
-            SubjectAppUsers = new HashSet<SubjectAppUser>();
+            SubjectFacultyAppUsers = new HashSet<SubjectFacultyAppUser>();
             Codes = new HashSet<Code>();
             UserCodes = new HashSet<Code>();
             Feedbacks = new HashSet<Feedback>();
@@ -77,7 +77,7 @@ namespace SmartStart.Model.Security
         public ICollection<UserNotification> UserNotifications { get; set; }
         public ICollection<Invoice> Invoices { get; set; }
         public ICollection<Rate> Rates { get; set; }
-        public ICollection<SubjectAppUser> SubjectAppUsers { get; set; }
+        public ICollection<SubjectFacultyAppUser> SubjectFacultyAppUsers { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
         public ICollection<FacultyPOSUser> Faculties { get; set; }
 

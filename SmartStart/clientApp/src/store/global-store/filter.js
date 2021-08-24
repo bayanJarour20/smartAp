@@ -38,8 +38,8 @@ export default {
                     getSearchResultOnRow(state, cource) &&
                     (cource.semesterId == state.filterDto.semesterId ||
                         !state.filterDto.semesterId) &&
-                    (cource.subject.facultyId == state.filterDto.facultyId ||
-                        !state.filterDto.facultyId) &&
+                    // (cource.subject.facultyId == state.filterDto.facultyId ||
+                    //     !state.filterDto.facultyId) &&
                     (cource.year == state.filterDto.examYear ||
                         !state.filterDto.examYear) &&
                     (cource.subjectId == state.filterDto.subjectId ||
@@ -148,7 +148,12 @@ export default {
         },
         usersList(state, getter, glState){
             return glState.accounts.usersList.filter(pack => {
-                return getSearchResultOnRow(state, pack)
+                
+                    return getSearchResultOnRow(state, pack) &&
+                      (pack.faculties.findIndex(fa => fa.id == state.filterDto.facultyId) != -1 ||!state.filterDto.facultyId)
+               
+              
+                 
             }) 
         }
     },

@@ -11,9 +11,11 @@ namespace SmartStart.Repository.Setting.NotificationService
 {
     public interface INotificationRepository : IElRepository
     {
-        Task<OperationResult<IEnumerable<NotificationToMeDto>>> GetNotifications(Guid id);
+        Task<OperationResult<NotificationTupleDto>> GetNotifications(Guid id);
         Task<OperationResult<IEnumerable<NotificationUsersDto>>> GetAll();
         Task<OperationResult<NotificationUsersDto>> Add(NotificationUsersDto notificationDto);
         Task<OperationResult<bool>> Delete(Guid id);
+
+        Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids);
     }
 }

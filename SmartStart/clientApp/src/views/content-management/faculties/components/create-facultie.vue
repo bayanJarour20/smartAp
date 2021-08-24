@@ -31,20 +31,20 @@
                                 message: 'يجب تحديد حقل الجامعة'
                             }
                         ]"
-                        :options="university"
+                        :options="universitiesList"
                         name="university"
                         v-model="facultyDto.universityId"
                         :clearable="true"
                     />
                     <EKInputText
                         :rules="[
-                            { type: 'required', message: 'اسم الكلية إجباري' },
+                            { type: 'required', message: 'عدد السنوات إجباري' },
                             { type: 'min_value:1', message: 'عدد السنوات يجب ان يكون اكبر او يساوي الواحد' }
                         ]"
                         label="عدد السنوات"
-                        v-model="facultyDto.numberOfYear"
+                        v-model="facultyDto.numOfYears"
                         placeholder="ادخل عدد السنوات"
-                        name="numberOfYear"
+                        name="numOfYears"
                         type="number"
                     />
                     <EKInputImage
@@ -59,7 +59,7 @@
                                 : null
                         "
                     >
-                    </EKInputImage>
+                    </EKInputImage>                   
                 </template>
             </EKDialog>
         </b-form>
@@ -90,11 +90,12 @@ export default {
     computed: {
         ...mapState({
             facultyDto: state => state.faculties.facultyDto,
-            university: state => state.university.universities
+            universitiesList: state => state.globalStore.universitiesList
         })
     },
     created() {
         this.fetchUniversity();
+       
     },
     methods: {
         ...mapActions(["fetchUniversity", "actionFaculty", "deleteFaculty"]),
@@ -107,8 +108,8 @@ export default {
                     var facultyFormData = new FormData();
                     if (!this.facultyDto.id) {
                         facultyFormData.append(
-                            "numberOfYear",
-                            this.facultyDto.numberOfYear
+                            "numOfYears",
+                            this.facultyDto.numOfYears
                         );
                         facultyFormData.append("name", this.facultyDto.name);
                         facultyFormData.append("file", this.facultyDto.file);

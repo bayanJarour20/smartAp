@@ -7,8 +7,10 @@
                     :items="citiesList"
                     :columns="citiesColumn"
                     isPlus
+                    selectedLabel="id"
                     @plus="setCityDialogForm()"
                     @details="setCityDialogForm($event)"
+                    @delete-selected="deleteCity"
                 >
                 </EKTable>
             </b-col>
@@ -18,8 +20,10 @@
                     :items="universitiesList"
                     :columns="universitiesColumn"
                     isPlus
+                    selectedLabel="id"
                     @plus="setUniversityDialogForm()"
                     @details="setUniversityDialogForm($event)"
+                    @delete-selected="deleteUniversity"
                 >
                 </EKTable>
             </b-col>
@@ -31,10 +35,12 @@
                     isPlus
                     @plus="setTagDialogForm(0)"
                     @details="setTagDialogForm(0, $event)"
+                    @delete-selected="deleteTag"
                 >
                 </EKTable>
             </b-col>
             <b-col cols="12" md="6" lg="4">
+              
                 <EKTable
                     title="الفصول"
                     :items="semester"
@@ -42,6 +48,7 @@
                     isPlus
                     @plus="setTagDialogForm(1)"
                     @details="setTagDialogForm(1, $event)"
+                    @delete-selected="deleteTag"
                 >
                 </EKTable>
             </b-col>
@@ -53,6 +60,7 @@
                     isPlus
                     @plus="setTagDialogForm(4)"
                     @details="setTagDialogForm(4, $event)"
+                    @delete-selected="deleteTag"
                 >
                 </EKTable>
             </b-col>
@@ -64,6 +72,7 @@
                     isPlus
                     @plus="setTagDialogForm(2)"
                     @details="setTagDialogForm(2, $event)"
+                    @delete-selected="deleteTag"
                 >
                 </EKTable>
             </b-col>
@@ -75,6 +84,7 @@
                     isPlus
                     @plus="setTagDialogForm(3)"
                     @details="setTagDialogForm(3, $event)"
+                    @delete-selected="deleteTag"
                 >
                 </EKTable>
             </b-col>
@@ -225,13 +235,17 @@ export default {
         // this.fetchTotalTag();
         this.fetchUniversity();
         this.fetchCity();
+        this.fetchTotalTag();
     },
 
     methods: {
         ...mapActions([
             "fetchTotalTag",
             "fetchUniversity",
-            "fetchCity"
+            "fetchCity",
+            "deleteCityList",
+            "deleteUniversityList",
+            "deleteTagList"
         ]),
         setCityDialogForm(item) {
             if (!item) {
@@ -266,6 +280,15 @@ export default {
             } else if (type == 4) {
                 this.$refs.sectionsDialog.open()
             }
+        },
+        deleteCity(list){
+            this.deleteCityList(list)
+        },
+        deleteTag(list){
+            this.deleteTagList(list)
+        },
+        deleteUniversity(list){
+          this.deleteUniversityList(list)
         }
     }
 };

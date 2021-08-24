@@ -14,4 +14,5 @@ namespace SmartStart.DataTransferObject.SubjectDto
         public int InterviewCount { get; set; }
         public DateTime DateCreate { get; set; }
     }
+   
 }

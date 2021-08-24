@@ -15,7 +15,7 @@ namespace SmartStart.Model.Business
         public Package()
         {
             CodePackages = new HashSet<CodePackage>();
-            PackageSubjects = new HashSet<PackageSubject>();
+            PackageSubjectFaculties = new HashSet<PackageSubjectFaculty>();
         }
 
         [ColumnDataType(DataBaseTypes.NVARCHAR, TypeConstants.MediumString)]
@@ -44,6 +44,6 @@ namespace SmartStart.Model.Business
 
 
         public ICollection<CodePackage> CodePackages { get; set; }
-        public ICollection<PackageSubject> PackageSubjects { get; set; }
+        public ICollection<PackageSubjectFaculty> PackageSubjectFaculties { get; set; }
     }
 }

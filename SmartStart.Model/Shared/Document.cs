@@ -17,6 +17,7 @@ namespace SmartStart.Model.Shared
         public Document()
         {
             QuestionDocuments = new HashSet<QuestionDocument>();
+            ExamDocuments = new HashSet<ExamDocument>();
         }
 
         [ColumnDataType(DataBaseTypes.NVARCHAR, TypeConstants.NounString)]
@@ -30,5 +31,6 @@ namespace SmartStart.Model.Shared
         public DocumentTypes Type { get; set; }
 
         public ICollection<QuestionDocument> QuestionDocuments { get; set; }
+        public ICollection<ExamDocument> ExamDocuments { get; set; }
     }
 }

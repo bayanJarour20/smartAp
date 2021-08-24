@@ -3,6 +3,8 @@ using Elkood.Web.MVC;
 using Microsoft.AspNetCore.Mvc;
 using SmartStart.DataTransferObject.UniverstiyDto;
 using SmartStart.Repository.General.UniversityService;
+using SmartStart.Security;
+using SmartStart.SharedKernel.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +15,7 @@ namespace SmartStart.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
     public class UniversityController : ElControllerBase<Guid, IUniversityRepository>
     {
         public UniversityController(IUniversityRepository repository) : base(repository) { }

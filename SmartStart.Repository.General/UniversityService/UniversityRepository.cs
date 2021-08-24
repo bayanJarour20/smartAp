@@ -41,13 +41,15 @@ namespace SmartStart.Repository.General.UniversityService
            => async operation =>
            {
 
-               var allUniversities = await Query.Select(university => new UniversityDto
-               {
-                   Id = university.Id,
-                   CityId = university.CityId,
-                   Name = university.Name
-               })
-               .ToListAsync();
+               var allUniversities = await Query.Include(u => u.City)
+                                                .Select(university => new UniversityDto
+                                                {
+                                                    Id = university.Id,
+                                                    CityId = university.CityId,
+                                                    Name = university.Name,
+                                                    CityName = university.City.Name
+                                                })
+                                                .ToListAsync();
 
                return operation.SetSuccess(allUniversities);
            };
@@ -116,11 +118,11 @@ namespace SmartStart.Repository.General.UniversityService
 
                 ids.ToList().ForEach(id =>
                 {
-                     Context.SoftDelete<University>(id);
+                    Context.SoftDelete<University>(id);
                 });
 
 
-                await Context.SaveChangesAsync(); ;
+                await Context.SaveChangesAsync();
 
                 return operation.SetSuccess(true);
             };

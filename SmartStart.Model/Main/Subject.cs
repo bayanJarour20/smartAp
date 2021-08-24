@@ -19,7 +19,7 @@ namespace SmartStart.Model.Main
         {
             SubjectTags = new HashSet<SubjectTag>();
             Exams = new HashSet<Exam>();
-            SubjectAppUsers = new HashSet<SubjectAppUser>();
+            SubjectFaculties = new HashSet<SubjectFaculty>();
         }
 
         [ColumnDataType(DataBaseTypes.NVARCHAR, TypeConstants.NounString)]
@@ -41,8 +41,6 @@ namespace SmartStart.Model.Main
 
         public ICollection<SubjectTag> SubjectTags { get; set; }
         public ICollection<Exam> Exams { get; set; }
-        public ICollection<SubjectAppUser> SubjectAppUsers { get; set; }
-        public ICollection<PackageSubject> Packages{ get; set; }
-        public ICollection<SubjectFaculty> Faculties{ get; set; }
+        public ICollection<SubjectFaculty> SubjectFaculties { get; set; }
     }
 }

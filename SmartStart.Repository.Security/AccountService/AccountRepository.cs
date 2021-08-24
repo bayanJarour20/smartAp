@@ -115,7 +115,7 @@ namespace SmartStart.Repository.Security.AccountService
                     if (updateResult.Succeeded)
                     {
                         AccountDto accountDto = await FillAccount(user, true);
-                        accountDto.HasSubject = await Context.SubjectAppUsers.AnyAsync(su => su.AppUserId == accountDto.Id);
+                        accountDto.HasSubject = await Context.SubjectFacultyAppUsers.AnyAsync(su => su.AppUserId == accountDto.Id);
                         AssignRefreshTokenIfRememberMe(signinDto.RememberMe, accountDto);
 
                         await TemporaryFillingInBlacklist(user);
@@ -208,7 +208,6 @@ namespace SmartStart.Repository.Security.AccountService
                     Birthday = account.Birthday,
                     Address = account.Address,
                     Gender = account.Gender,
-                    FacultyId = account.FacultyId,
                     SubscriptionDate = account.SubscriptionDate,
                     Type = UserTypes.Dashboard,
                     DateActivated = account.DateActivated
@@ -244,7 +243,6 @@ namespace SmartStart.Repository.Security.AccountService
                 User.Address = account.Address;
                 User.Gender = account.Gender;
                 User.DateBlocked = account.DateBlocked;
-                User.FacultyId = account.FacultyId;
                 User.SubscriptionDate = account.SubscriptionDate;
                 User.Type = UserTypes.Dashboard;
 
@@ -380,6 +378,7 @@ namespace SmartStart.Repository.Security.AccountService
                 Token = GenerateJwtToken(user, roles, expierDate),
                 RefreshToken = user.PasswordHash,
                 SubscriptionDate = user.SubscriptionDate,
+                Gender = user.Gender
             };
             return UserDto;
         }
