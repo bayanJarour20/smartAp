@@ -45,7 +45,6 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllExamQuestion(Guid id)
             => await RepositoryHandler(_getAllExamQuestion(id));
 
-
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllBank()
             => await RepositoryHandler(_getAllBank());
         public async Task<OperationResult<bool>> DeleteBank(Guid id)
@@ -59,7 +58,6 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllBankQuestion(Guid id)
             => await RepositoryHandler(_getAllBankQuestion(id));
 
-
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllInterview()
             => await RepositoryHandler(_getAllInterview());
         public async Task<OperationResult<bool>> DeleteInterview(Guid id)
@@ -72,7 +70,6 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_updateInterview(dto));
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id)
             => await RepositoryHandler(_getAllInterviewQuestion(id));
-
 
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllMicroscope()
             => await RepositoryHandler(_getAllMicroscope());
@@ -92,7 +89,6 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_deleteSectionsMicroscope(id));
 
         #region - Exam -
-
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllExam()
             => async operation =>
             {
@@ -103,7 +99,7 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteExam(Guid id)
             => async operation =>
             {
-                if (!(await TryDelete(id, TabTypes.Exam)))
+                if (!(await TryDeleteAsync(id, TabTypes.Exam)))
                     return (OperationResultTypes.NotExist, $"{id} : not exist.");
                 return operation.SetSuccess(true, " Success Delete. ");
             };
@@ -111,7 +107,7 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteExam(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDelete(ids, TabTypes.Exam)))
+                if (!(await TryMultiDeleteAsync(ids, TabTypes.Exam)))
                     return (OperationResultTypes.NotExist, $"{ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete All.");
             };
@@ -132,11 +128,9 @@ namespace SmartStart.Repository.Main.ExamServices
                 var examQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Exam);
                 return operation.SetSuccess(examQuestions);
             };
-
         #endregion
 
         #region - Bank -
-
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllBank()
             => async operatoin =>
             {
@@ -147,20 +141,16 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteBank(Guid id)
             => async operation =>
             {
-                if (!(await TryDelete(id, TabTypes.Bank)))
-                {
+                if (!(await TryDeleteAsync(id, TabTypes.Bank)))
                     return (OperationResultTypes.NotExist, $"{id}: not exist. ");
-                }
                 return operation.SetSuccess(true, "Sussecc Delete.");
             };
 
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteBank(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDelete(ids, TabTypes.Bank)))
-                {
+                if (!(await TryMultiDeleteAsync(ids, TabTypes.Bank)))
                     return (OperationResultTypes.NotExist, $"{ids}: not exist. ");
-                }
                 return operation.SetSuccess(true, "Sussecc Delete.");
             };
 
@@ -171,7 +161,6 @@ namespace SmartStart.Repository.Main.ExamServices
                 return operation.SetSuccess(bank);
             };
 
-
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateBank(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Bank);
 
@@ -181,11 +170,9 @@ namespace SmartStart.Repository.Main.ExamServices
                 var bankQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Bank);
                 return operation.SetSuccess(bankQuestions);
             };
-
         #endregion
 
         #region - Interview -
-
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllInterview()
             => async operation =>
             {
@@ -196,20 +183,16 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteInterview(Guid id)
             => async operation =>
             {
-                if (!(await TryDelete(id, TabTypes.Interview)))
-                {
+                if (!(await TryDeleteAsync(id, TabTypes.Interview)))
                     return (OperationResultTypes.NotExist, "${id} : not exist.");
-                }
                 return operation.SetSuccess(true, "Success Delete.");
             };
 
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteInterview(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDelete(ids, TabTypes.Interview)))
-                {
+                if (!(await TryMultiDeleteAsync(ids, TabTypes.Interview)))
                     return (OperationResultTypes.NotExist, "${ids} : not exist.");
-                }
                 return operation.SetSuccess(true, "Success Delete.");
             };
 
@@ -229,11 +212,9 @@ namespace SmartStart.Repository.Main.ExamServices
                 var interviewQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Interview);
                 return operation.SetSuccess(interviewQuestions);
             };
-
         #endregion
 
         #region - Microscope -
-
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllMicroscope()
             => async operation =>
             {
@@ -254,16 +235,13 @@ namespace SmartStart.Repository.Main.ExamServices
                                                 SubjectId = exam.SubjectId,
                                                 Year = exam.Year,
                                                 Type = TabTypes.Microscope,
-
                                                 TagIds = exam.ExamTags.Select(t => t.TagId).ToList(),
-
                                                 Documents = exam.ExamDocuments.Select(doc => new ExamDocumentDto
                                                 {
                                                     Id = doc.Id,
                                                     Note = doc.Note,
                                                     Path = doc.Document.Path,
                                                 }).ToList(),
-
                                                 Sections = exam.ExamQuestions.Select(section => new ExamQuestionDocumnetsDto
                                                 {
                                                     Id = section.Id,
@@ -289,56 +267,48 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteMicroscope(Guid id)
             => async operation =>
             {
-                var microscope = await TrackingQuery.Where(exam => exam.Id == id)
-                                                    .Include(exam => exam.ExamTags)
-                                                    .Include(exam => exam.ExamQuestions)
-                                                    .ThenInclude(q => q.Question)
-                                                    .ThenInclude(q => q.Answers)
-                                                    .Include("ExamQuestions.Question.QuestionTags")
-                                                    .Include("ExamQuestions.Question.QuestionDocuments")
-                                                    .Include("ExamQuestions.Question.QuestionDocuments.Document")
-                                                    .SingleOrDefaultAsync();
-                if (microscope == null)
-                {
-                    return (OperationResultTypes.NotExist, $"{id} : not exist.");
-                }
-                foreach (var tag in microscope.ExamTags)
-                {
-                    Context.SoftDelete(tag);
-                }
-                foreach (var question in microscope.ExamQuestions)
-                {
-                    foreach (var answer in question.Question.Answers)
-                    {
-                        Context.SoftDelete(answer);
-                    }
-                    foreach (var tag in question.Question.QuestionTags)
-                    {
-                        Context.SoftDelete(tag);
-                    }
-                    foreach (var doc in question.Question.QuestionDocuments)
-                    {
-                        if (doc.Document.QuestionDocuments.Where(e => e.QuestionId != question.QuestionId).Count() == 1)
-                        {
-                            await TryDeleteFileAsync(doc.Document.Path);
-                            Context.Documents.Remove(doc.Document);
-                        }
-                    }
-                    Context.SoftDelete(question);
-                }
-                Context.SoftDelete(microscope);
-                await Context.SaveChangesAsync();
-                return operation.SetSuccess(true);
+                //var microscope = await TrackingQuery.Where(exam => exam.Id == id)
+                //                                    .Include(exam => exam.ExamTags)
+                //                                    .Include(exam => exam.ExamQuestions)
+                //                                    .ThenInclude(q => q.Question)
+                //                                    .ThenInclude(q => q.Answers)
+                //                                    .Include("ExamQuestions.Question.QuestionTags")
+                //                                    .Include("ExamQuestions.Question.QuestionDocuments")
+                //                                    .Include("ExamQuestions.Question.QuestionDocuments.Document")
+                //                                    .SingleOrDefaultAsync();
+                //if (microscope == null)
+                //    return (OperationResultTypes.NotExist, $"{id} : not exist.");
+
+                //foreach (var tag in microscope.ExamTags)
+                //    Context.SoftDelete(tag);
+
+                //foreach (var question in microscope.ExamQuestions)
+                //    Context.SoftDelete(question);
+                //foreach (var tag in question.Question.QuestionTags)
+                //{
+                //    Context.SoftDelete(tag);
+                //}
+                //foreach (var doc in question.Question.QuestionDocuments)
+                //{
+                //    if (doc.Document.QuestionDocuments.Where(e => e.QuestionId != question.QuestionId).Count() == 1)
+                //    {
+                //        await TryDeleteFileAsync(doc.Document.Path);
+                //        Context.Documents.Remove(doc.Document);
+                //    }
+                //}
+                //Context.SoftDelete(microscope);
+                //await Context.SaveChangesAsync();
+                if (!(await TryDeleteAsync(id, TabTypes.Microscope)))
+                    return (OperationResultTypes.NotExist, "${id} : not exist.");
+                return operation.SetSuccess(true, "Success Delete.");
             };
 
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteMicroscope(IEnumerable<Guid> ids)
             => async operation =>
             {
-                foreach (var id in ids)
-                {
-                    await DeleteMicroscope(id);
-                }
-                return operation.SetSuccess(true);
+                if (!(await TryMultiDeleteAsync(ids, TabTypes.Interview)))
+                    return (OperationResultTypes.NotExist, "${ids} : not exist.");
+                return operation.SetSuccess(true, "Success Delete.");
             };
 
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addMicroscope(ExamDto dto)
@@ -381,7 +351,7 @@ namespace SmartStart.Repository.Main.ExamServices
                                 examQuestions.Question.AnswerType = section.AnswerType;
                                 foreach (var docs in examQuestions.Question.QuestionDocuments)
                                 {
-                                    var doc = section.Documents.SingleOrDefault(d => d.SectionImageId == docs.Id);
+                                    var doc = section.Documents.Where(d => d.SectionImageId == docs.Id).SingleOrDefault();
                                     if (doc is not null)
                                         docs.Note = doc.Note;
                                 }
@@ -389,14 +359,11 @@ namespace SmartStart.Repository.Main.ExamServices
 
                             (IEnumerable<Guid> newTags, IEnumerable<Guid> oldTags) = examQuestions.Question.QuestionTags.IsolatedExcept(section?.Tags ?? new List<Guid>(), x => x.TagId, x => x);
                             foreach (var oldTag in oldTags)
-                            {
                                 examQuestions.Question.QuestionTags.Remove(examQuestions.Question.QuestionTags.Single(t => t.TagId == oldTag));
-                            }
+                            
                             var AddTag = section?.Tags.Where(tag => newTags.Contains(tag)).Select(tag => new QuestionTag { TagId = tag, QuestionId = section.Id });
                             foreach (var newTag in AddTag)
-                            {
                                 examQuestions.Question.QuestionTags.Add(newTag);
-                            }
 
                             (IEnumerable<QuestionDocumentNote> newDocs, IEnumerable<QuestionDocument> oldDocs) = examQuestions.Question.QuestionDocuments.IsolatedExceptOldNew(section?.Documents ?? new List<QuestionDocumentNote>(), x => x.DocumentId, x => x.SectionImageId);
                             foreach (var oldDoc in oldDocs)
@@ -408,18 +375,16 @@ namespace SmartStart.Repository.Main.ExamServices
                                     await TryDeleteFileAsync(oldDoc.Document.Path);
                                     Context.Documents.Remove(oldDoc.Document);
                                 }
-
                             }
-
                             foreach (var newDoc in newDocs)
                             {
                                 examQuestions.Question.QuestionDocuments.Add(new QuestionDocument
                                 {
-                                    Document = new Document()
+                                    Note = newDoc.Note,
+                                    Document = new Document
                                     {
                                         Type = DocumentTypes.Image
                                     },
-                                    Note = newDoc.Note,
                                 });
                                 dto.Sections.ToList().First().Documents.ToList().Add(new QuestionDocumentNote
                                 {
@@ -432,7 +397,7 @@ namespace SmartStart.Repository.Main.ExamServices
                         }
                         await Context.SaveChangesAsync();
                         await transaction.CommitAsync();
-                        return operation.SetSuccess(new MicroscopeDocumentsDto() { Id = dto.Id, Sections = dto.Sections });
+                        return operation.SetSuccess(new MicroscopeDocumentsDto { Id = dto.Id, Sections = dto.Sections });
                     }
                     catch (Exception ex )
                     {
@@ -446,44 +411,17 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteSectionsMicroscope(Guid id)
             => async operation =>
             {
-                
-                using(var transaction = await Context.Database.BeginTransactionAsync())
-                {
-                    try
-                    {
-                        var microscope = await _trackingQuery<Question>().Where(q => q.Id == id).Include(q => q.QuestionDocuments).ThenInclude(d => d.Document).SingleOrDefaultAsync();
-                        if (microscope == null)
-                            return (OperationResultTypes.NotExist, $"{id} : not exist.");
-                        Context.SoftDelete(microscope);
-                        foreach (var doc in microscope.QuestionDocuments)
-                        {
-                            Context.SoftDelete(doc);
+                    var microscope = await _query<ExamQuestion>().Where(q => q.Id == id).SingleOrDefaultAsync();
+                    if (microscope == null)
+                        return (OperationResultTypes.NotExist, $"{id} : not exist.");
+                    Context.SoftDelete(microscope);
 
-                            if (!doc.Document.QuestionDocuments.Where(e => e.QuestionId != microscope.Id).Any())
-                            {
-                                await TryDeleteFileAsync(doc.Document.Path);
-                                Context.Documents.Remove(doc.Document);
-                            }
-                            Context.QuestionDocuments.Remove(doc);
-                        }
-
-                        await Context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                        return operation.SetSuccess(true);
-                    
-                    }
-                    catch(Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        return operation.SetException(ex);
-                    }
-                }
+                    await Context.SaveChangesAsync();
+                    return operation.SetSuccess(true);
             };
-
         #endregion
 
         #region - Tab -
-
         private async Task<IEnumerable<ExamDetailsDto>> GetAllAsync(Expression<Func<Exam, bool>> predicate)
         {
             return await Query.Where(exam => exam.Type == TabTypes.Exam)
@@ -506,64 +444,50 @@ namespace SmartStart.Repository.Main.ExamServices
                               }).ToListAsync();
         }
 
-        private async Task<bool> TryDelete(Guid examId, TabTypes examType)
+        private async Task<bool> TryDeleteAsync(Guid examId, TabTypes examType)
         {
             var one = await TrackingQuery.Where(exam => exam.Id == examId).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).FirstOrDefaultAsync();
             if (one is null)
                 return false;
-            foreach (var tag in one.ExamTags)
-            {
+            Context.SoftDelete(one);
+            Delete(one);
+            await Context.SaveChangesAsync();
+            return true;
+        }
+
+        private async Task<bool> TryMultiDeleteAsync(IEnumerable<Guid> examIds, TabTypes examType)
+        {
+            var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).ToListAsync();
+            if (list is null)
+                return false;
+            list.ForEach(item => Context.SoftDelete(item));
+
+            foreach (var one in list)
+                Delete(one);
+
+            await Context.SaveChangesAsync();
+            return true;
+        }
+
+        private async void Delete(Exam exam)
+        {
+            foreach (var tag in exam.ExamTags)
                 Context.SoftDelete(tag);
-            }
-            foreach (var question in one.ExamQuestions)
-            {
+
+            foreach (var question in exam.ExamQuestions)
                 Context.SoftDelete(question);
-            }
-            foreach (var doc in one.ExamDocuments)
+
+            foreach (var doc in exam.ExamDocuments)
             {
                 var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
-                if(exams.Count() == 1)
+                if (!exams.Any())
                 {
                     await TryDeleteFileAsync(doc.Document.Path);
                     Context.Documents.Remove(doc.Document);
                 }
             }
-            Context.SoftDelete(one);
-            await Context.SaveChangesAsync();
-            return true;
         }
-
-        private async Task<bool> TryMultiDelete(IEnumerable<Guid> examIds, TabTypes examType)
-        {
-            var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).ToListAsync();
-            if (list is null)
-                return false;
-            foreach (var one in list)
-            {
-                foreach (var tag in one.ExamTags)
-                {
-                    Context.SoftDelete(tag);
-                }
-                foreach (var question in one.ExamQuestions)
-                {
-                    Context.SoftDelete(question);
-                }
-                var docs = Context.ExamDocuments.Where(ed => ed.ExamId == one.Id).ToList();
-                foreach (var doc in docs)
-                {
-                    var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
-                    if (exams.Count() == 1)
-                    {
-                        await TryDeleteFileAsync(doc.Document.Path);
-                        Context.Documents.Remove(doc.Document);
-                    }
-                }
-            }
-            list.ForEach(item => Context.SoftDelete(item));
-            await Context.SaveChangesAsync();
-            return true;
-        }
-
+        
         private async Task<ExamDetailsDto> AddAsync(ExamDto dto, TabTypes examType)
         {
             var exam = new Exam
@@ -575,19 +499,13 @@ namespace SmartStart.Repository.Main.ExamServices
                 SubjectId = dto.SubjectId,
                 Type = examType,
             };
-
             if(dto.TagIds is not null)
             {
-                exam.ExamTags = dto.TagIds.Distinct().Select(id => new ExamTag
-                {
-                    TagId = id
-                }).ToList();
+                exam.ExamTags = dto.TagIds.Distinct().Select(id => new ExamTag { TagId = id }).ToList();
             }
-
             await Context.AddAsync(exam);
             await Context.SaveChangesAsync();
             dto.Id = exam.Id;
-
             return await Query.Where(exam => exam.Id == dto.Id)
                               .Select(exam => new ExamDetailsDto
                               {
@@ -605,13 +523,11 @@ namespace SmartStart.Repository.Main.ExamServices
                                   SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
                                   QuestionsCount = exam.ExamQuestions.Count(),
                               }).FirstOrDefaultAsync();
-
         }
 
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
         {
             var exam = await FindAsync(dto.Id);
-
             if (exam is null || exam.Type != examType)
                 return OperationResultTypes.NotExist;
             exam.Name = dto.Name;
@@ -619,12 +535,12 @@ namespace SmartStart.Repository.Main.ExamServices
             exam.Price = dto.Price;
             exam.SubjectId = dto.SubjectId;
             exam.Year = dto.Year;
-            var currentTags = await Context.ExamTags.Where(et => et.ExamId == dto.Id).ToListAsync();
-            var newTags = dto.TagIds.Except(currentTags.Select(et => et.Id));
-            var oldTags = currentTags.Select(et => et.Id).Except(dto.TagIds).ToList();
-            Context.ExamTags.RemoveRange(currentTags.Where(t => oldTags.Contains(t.Id)).ToList());
-            await Context.ExamTags.AddRangeAsync(newTags.Select(et => new ExamTag() { ExamId = dto.Id, TagId = et }));
+
+            (IEnumerable<Guid> addTag, IEnumerable<ExamTag> removeTag) = exam.ExamTags.IsolatedExceptOldNew(dto?.TagIds ?? new List<Guid>(), x => x.TagId, x => x);
+            Context.RemoveRange(removeTag);
+            await Context.ExamTags.AddRangeAsync(addTag.Select(tag => new ExamTag() { ExamId = dto.Id, TagId = tag }));
             await Context.SaveChangesAsync();
+
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
                             .Select(exam => new ExamDetailsDto
                             {
