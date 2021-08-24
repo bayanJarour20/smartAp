@@ -157,6 +157,11 @@ namespace SmartStart.Repository.Invoice.InvoiceService
                                      .ThenInclude(seller => seller.Rates)
                                      .Where(invoice => invoice.Id == invoiceId)
                                      .SingleOrDefaultAsync();
+            if (invoice == null)
+            {
+                return operation.SetFailed("Invoice Not Found", OperationResultTypes.Forbidden);
+            }
+
             var codeList = invoice.Codes;
             var rateList = invoice.Seller.Rates;
             var InvoiceDetails = getInvoiceDetails(codeList.ToList(), rateList.ToList());
@@ -211,7 +216,7 @@ namespace SmartStart.Repository.Invoice.InvoiceService
                                              .ToListAsync();
             if (InvoiceModels.Count == null)
             {
-                return operation.SetFailed("Invoices Not Found", OperationResultTypes.NotExist);
+                return operation.SetFailed("Invoices Not Found", OperationResultTypes.Forbidden);
             }
 
             var temp = TrackingQuery.OrderBy(t => t.Date).LastOrDefault();
