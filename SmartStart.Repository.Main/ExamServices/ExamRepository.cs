@@ -27,9 +27,7 @@ namespace SmartStart.Repository.Main.ExamServices
     {
         private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ExamRepository(SmartStartDbContext context, IWebHostEnvironment webHostEnvironment) : base(context)
-        {
-        }
+        public ExamRepository(SmartStartDbContext context, IWebHostEnvironment webHostEnvironment) : base(context) { }
 
         #region Exam
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
@@ -138,7 +136,8 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<IEnumerable<ExamDetailsQuestionDto>>, Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>>> _getAllExamQuestion(Guid id)
             => async operation =>
             {
-                var examQuestions = await GetAllQuestionAsync(exam => exam.Id == id && exam.Type == TabTypes.Exam);
+                var examQuestions = await GetAllQuestionAsync(exam => exam.Id == id 
+                                                                   && exam.Type == TabTypes.Exam);
                 return operation.SetSuccess(examQuestions);
             };
         #endregion
@@ -390,26 +389,15 @@ namespace SmartStart.Repository.Main.ExamServices
         {
             return await Query.Where(predicate)
                               .Include(exam => exam.Subject)
-                              .Select(exam => new ExamDetailsDto
-                              {
-                                  Id = exam.Id,
-                                  Name = exam.Name,
-                                  Year = exam.Year,
-                                  Type = exam.Type,
-                                  DateCreated = exam.DateCreated,
-                                  SubjectId = exam.SubjectId,
-                                  SubjectName = exam.Subject.Name,
-                                  Price = exam.Price,
-                                  IsFree = exam.IsFree,
-                                  QuestionsCount = exam.ExamQuestions.Count(),
-                                  SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
-                                  SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
-                                  TagIds = exam.ExamTags.Select(et => et.Id),
-                              }).ToListAsync();
+                              .Select(exam => fileExamDetails(exam)).ToListAsync();
         }
         private async Task<bool> TryDeleteAsync(Guid examId, TabTypes examType)
         {
-            var one = await TrackingQuery.Where(exam => exam.Id == examId).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).FirstOrDefaultAsync();
+            var one = await TrackingQuery.Where(exam => exam.Id == examId)
+                                         .Include(e => e.ExamQuestions)
+                                         .Include(e => e.ExamTags)
+                                         .Include(e => e.ExamDocuments)
+                                         .FirstOrDefaultAsync();
             if (one is null)
                 return false;
             Context.SoftDelete(one);
@@ -419,7 +407,11 @@ namespace SmartStart.Repository.Main.ExamServices
         }
         private async Task<bool> TryMultiDeleteAsync(IEnumerable<Guid> examIds, TabTypes examType)
         {
-            var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).ToListAsync();
+            var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id))
+                                          .Include(e => e.ExamQuestions)
+                                          .Include(e => e.ExamTags)
+                                          .Include(e => e.ExamDocuments)
+                                          .ToListAsync();
             if (list is null)
                 return false;
             list.ForEach(item => Context.SoftDelete(item));
@@ -430,24 +422,6 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
             return true;
         }
-        private async void Delete(Exam exam)
-        {
-            foreach (var tag in exam.ExamTags)
-                Context.SoftDelete(tag);
-
-            foreach (var question in exam.ExamQuestions)
-                Context.SoftDelete(question);
-
-            foreach (var doc in exam.ExamDocuments)
-            {
-                var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
-                if (!exams.Any())
-                {
-                    await TryDeleteFileAsync(doc.Document.Path);
-                    Context.Documents.Remove(doc.Document);
-                }
-            }
-        }   
         private async Task<ExamDetailsDto> AddAsync(ExamDto dto, TabTypes examType)
         {
             var exam = new Exam
@@ -467,22 +441,7 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
             dto.Id = exam.Id;
             return await Query.Where(exam => exam.Id == dto.Id)
-                              .Select(exam => new ExamDetailsDto
-                              {
-                                  Id = exam.Id,
-                                  Name = exam.Name,
-                                  Year = exam.Year,
-                                  DateCreated = exam.DateCreated,
-                                  IsFree = exam.IsFree,
-                                  Price = exam.Price,
-                                  Type = exam.Type,
-                                  TagIds = exam.ExamTags.Select(et => et.TagId),
-                                  SubjectName = exam.Subject.Name,
-                                  SubjectId = exam.SubjectId,
-                                  SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
-                                  SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
-                                  QuestionsCount = exam.ExamQuestions.Count(),
-                              }).FirstOrDefaultAsync();
+                              .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync();
         }
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
         {
@@ -501,22 +460,7 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
 
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
-                            .Select(exam => new ExamDetailsDto
-                            {
-                                Id = exam.Id,
-                                Name = exam.Name,
-                                Year = exam.Year,
-                                DateCreated = exam.DateCreated,
-                                IsFree = exam.IsFree,
-                                Price = exam.Price,
-                                Type = exam.Type,
-                                TagIds = exam.ExamTags.Select(et => et.TagId),
-                                SubjectName = exam.Subject.Name,
-                                SubjectId = exam.SubjectId,
-                                SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
-                                SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
-                                QuestionsCount = exam.ExamQuestions.Count(e => e.DateDeleted == null),
-                            }).FirstOrDefaultAsync());
+                            .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync());
         }
         private async Task<IEnumerable<ExamDetailsQuestionDto>> GetAllQuestionAsync(Expression<Func<Exam, bool>> predicate)
         {
@@ -569,6 +513,44 @@ namespace SmartStart.Repository.Main.ExamServices
                                       Path = doc.Document.Path
                                   }),
                               }).ToListAsync();
+        }
+        private ExamDetailsDto fileExamDetails(Exam exam)
+        {
+            return new ExamDetailsDto
+            {
+                Id = exam.Id,
+                Name = exam.Name,
+                Year = exam.Year,
+                Type = exam.Type,
+                IsFree = exam.IsFree,
+                DateCreated = exam.DateCreated,
+                SubjectId = exam.SubjectId,
+                SubjectName = exam.Subject.Name,
+                Price = exam.Price,
+                TagIds = exam.ExamTags.Select(et => et.Id),
+                SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
+                SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
+                QuestionsCount = exam.ExamQuestions.Count(),
+            };
+        }
+        private async void Delete(Exam exam)
+        {
+            foreach (var tag in exam.ExamTags)
+                Context.SoftDelete(tag);
+
+            foreach (var question in exam.ExamQuestions)
+                Context.SoftDelete(question);
+
+            foreach (var doc in exam.ExamDocuments)
+            {
+                var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id
+                                                           && ed.DateDeleted == null).ToList();
+                if (!exams.Any())
+                {
+                    await TryDeleteFileAsync(doc.Document.Path);
+                    Context.Documents.Remove(doc.Document);
+                }
+            }
         }
         #endregion
 
