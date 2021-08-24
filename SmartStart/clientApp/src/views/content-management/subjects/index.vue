@@ -26,7 +26,7 @@
                         <EKInputSelect
                             label="السنة"
                             placeholder="اختر السنة "
-                            :options="[{id: 0, name: 'الكل'}, ...year]"
+                            :options="[{id: 0, name: 'الكل'}, ...subjectYear]"
                             name="select"
                             :clearable="true"
                             v-model="filterSubjectDto.year"
@@ -48,13 +48,11 @@
         <EKTable
             :items="subjectsList"
             :columns="columns"
-            selectedLabel="name"
+            selectedLabel="id"
             @details="openSubjectDEtails"
-            @delete-selected="fireDeleteEvent"
+            @delete-selected="subjectList"
         >
-           <template slot="items.sectionName" slot-scope="{ value }">
-                {{value ? value : '---' }}
-            </template>
+          
         </EKTable>
     </div>
 </template>
@@ -74,15 +72,7 @@ export default {
                 label: "اسم المادة",
                 field: "name"
             },
-            {
-                label: "اسم الكلية",
-                field: "facultyName"
-            },
-            
-            {
-                label: "اسم القسم",
-                field: "sectionName"
-            },
+           
             {
                 label: "عدد الدورات",
                 field: "examCount",
@@ -118,7 +108,7 @@ export default {
     computed: {
         ...mapState({
             faculties: state => state.faculties.faculties,
-            year: state => state.globalStore.year
+            subjectYear: state => state.globalStore.subjectYear
         }),
         ...mapGetters(["semester", "subjectsList"])
     },
@@ -128,12 +118,12 @@ export default {
         this.fetchSubject();
     },
     methods: {
-        ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails"]),
+        ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails","subjListDto"]),
         openSubjectDEtails(props) {
             this.$router.push("/subjects/" + props.row.id);
         },
-        fireDeleteEvent(list) {
-            console.log(list);
+        subjectList(list) {
+            this.subjListDto(list)
         }
     },
     beforeDestroy() {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SmartStart.SharedKernel.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace SmartStart.DataTransferObject.ExamDto
     public class ExamDocumentDto
     {
         public Guid Id { get; set; }
+        public string Name { get; set; }
+        public DocumentTypes Type { get; set; }
         public string Note { get; set; }
         public string Path { get; set; }
         public IFormFile File { get; set; }

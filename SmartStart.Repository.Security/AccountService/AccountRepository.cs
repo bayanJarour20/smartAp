@@ -378,6 +378,7 @@ namespace SmartStart.Repository.Security.AccountService
                 Token = GenerateJwtToken(user, roles, expierDate),
                 RefreshToken = user.PasswordHash,
                 SubscriptionDate = user.SubscriptionDate,
+                Gender = user.Gender
             };
             return UserDto;
         }

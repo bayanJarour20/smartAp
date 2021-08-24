@@ -17,5 +17,6 @@ namespace SmartStart.DataTransferObject.AccountDto
         public DateTime? Birthday { get; set; }
         public DateTime? SubscriptionDate { get; set; }
         public bool HasSubject { get; set; }
+        public bool Gender { get; set; }
     }
 }
