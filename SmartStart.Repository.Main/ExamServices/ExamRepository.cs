@@ -400,7 +400,7 @@ namespace SmartStart.Repository.Main.ExamServices
         #region - Tab -
         private async Task<IEnumerable<ExamDetailsDto>> GetAllAsync(Expression<Func<Exam, bool>> predicate)
         {
-            return await Query.Where(exam => exam.Type == TabTypes.Exam)
+            return await Query.Where(predicate)
                               .Include(exam => exam.Subject)
                               .Select(exam => new ExamDetailsDto
                               {
