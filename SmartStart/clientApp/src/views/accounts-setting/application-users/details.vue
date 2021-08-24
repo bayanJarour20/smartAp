@@ -28,31 +28,10 @@
                                 v-model="userDto.name"
                             />
                             <div style="margin-top:25px">
-                            <EKInputSelect
-                                label="الكليات المختارة"
-                                placeholder="أدخل الكلية التابع لها المستخدم"
-                                :rules="[{ type: 'required', message: 'الحقل إجباري' }]"
-                                :options="faculties"
-                                name="facultyId"
-                                v-model="userDto.facultyId"
-                                
-                            />
+                            
                             </div>
                         </b-col>
-                        <!-- <b-col cols="12" md="6">
-                            <EKInputText
-                                :rules="[
-                                    {
-                                        type: 'required',
-                                        message: 'اسم المستخدم مطلوب'
-                                    }
-                                ]"
-                                label="اسم المستخدم"
-                                placeholder="ادخل اسم المستخدم"
-                                name="username"
-                                v-model="userDto.userName"
-                            />
-                        </b-col> -->
+                      
                         <b-col cols="12" md="6">
                             <EKInputText
                                 readonly
@@ -79,24 +58,6 @@
                             />
                         </b-col>
                         
-                        <!-- <b-col cols="12"  md="6" lg="4">
-                            <EKInputText
-                                :rules="[
-                                    {
-                                        type: 'required',
-                                        message: 'بريد الإلكتروني مطلوب'
-                                    },
-                                    {
-                                        type: 'email',
-                                        message: 'يجب أن يكون بريد إلكتلروني'
-                                    }
-                                ]"
-                                label="بريد الإلكتروني"
-                                placeholder="ادخل بريد الإلكتروني"
-                                name="emailName"
-                                v-model="userDto.email"
-                            />
-                        </b-col> -->
                         <b-col cols="12"  md="6" lg="4">
                             <EKInputText
                                 label="كلمة السر"
@@ -205,7 +166,7 @@
             الاشتراكات({{userDto.codes ? userDto.codes.length : '0'}})
             
         </h2>
-        <EKTable :items="userDto.codes" :columns="columns" selectedLabel="name">
+        <EKTable :items="userDto.codes" :columns="columns" selectedLabel="id"  @delete-selected="UserList" >
             <template slot="items.userName" slot-scope="{ value }">
                 {{value ? value : '---' }}
             </template>
@@ -226,13 +187,12 @@ import EKInputPicker from "@Ekcore/components/EK-forms/EK-input-picker";
 import EKTable from "@Ekcore/components/EK-table";
 import { mapActions, mapState } from "vuex";
 import EKInputTextarea from "@Ekcore/components/EK-forms/EK-input-textarea";
-import EKInputSelect from "@Ekcore/components/EK-forms/EK-input-select";
 export default {
     components: {
         EKInputText,
         EKInputPicker,
         EKTable,
-        EKInputSelect,
+       
         EKInputTextarea
     },
     computed: {
@@ -285,8 +245,12 @@ export default {
             "updateUser",
             "blockUser",
             "deleteUser",
-            "getFacultiesDetails"
-        ])
+            "getFacultiesDetails",
+            "UserListDto"
+        ]),
+        UserList(list){
+            this.UserListDto(list)
+        }
     }
 };
 </script>

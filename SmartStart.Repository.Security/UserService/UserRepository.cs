@@ -236,21 +236,49 @@ namespace SmartStart.Repository.Security.UserService
         private Func<OperationResult<IEnumerable<AppUserDto>>, Task<OperationResult<IEnumerable<AppUserDto>>>> _getAllUser()
             => async operation => {
 
-                var AllQyery = _query<AppUser>().Include(f => f.UserCodes)
+                var AllQyery =  _query<AppUser>().Include(f => f.UserCodes)
                                                  .Include(x => x.SubjectFacultyAppUsers)
                                                  .ThenInclude(x => x.SubjectFaculty)
                                                  .ThenInclude(x => x.Faculty)
                                                  //.ThenInclude(x => x.Faculties)
-                                                 .Where(user => user.Type == UserTypes.User);
+                                                 .Where(user => user.Type == UserTypes.User)
+                                                 .Where(user => user.DateDeleted == null);
 
-                var UserFaculties = AllQyery.Select(user => new UserFacultyList
+
+
+                //var userFac = await Query.SelectMany(x=> x.SubjectFacultyAppUsers).Select(b => new SubjectFacultyUserDto
+                //{
+                //    Id = b.AppUserId,
+                //    FacultyId = b.SubjectFacultyId,
+                //    SubjectId = b.SubjectFacultyId
+
+                //}).Select(ul => new UserFacultyList { 
+                //    Id = ul.Id,
+
+                //    Faculties = 
+                    
+                //})
+
+                //var UserFacl = await Query.SelectMany(user => user.Codes).SelectMany(e => e.CodePackages)
+                //                                       .Select(e => e.Package).SelectMany(e => e.PackageSubjectFaculties)
+                //                                       .Select(e => e.SubjectFaculty).Select(e => new FacultySelectDto
+                //                                       {
+                //                                           Id = e.Faculty.Id,
+
+                //                                           Name = e.Faculty.Name
+
+                //                                       })
+                //                                       .ToListAsync();
+
+                var UserFaculties = Query.Select(user => new UserFacultyList
                 {
                     Id = user.Id,
                     Faculties = user.SubjectFacultyAppUsers.Select(e => new FacultySelectDto
                     {
                         Id = e.SubjectFaculty.FacultyId,
                         Name = e.SubjectFaculty.Faculty.Name
-                    }).ToList()
+                    })
+                    .ToList()
                 })
                 .ToList();
 
@@ -258,15 +286,18 @@ namespace SmartStart.Repository.Security.UserService
                 Dictionary<Guid, List<FacultySelectDto>> dic = new Dictionary<Guid, List<FacultySelectDto>>();
 
 
-               
+                //for (int i = 0; i < UserFacl.Count(); i++)
+                //{
+
+                //    dic[UserFacl[i].Id] = UserFacl[i].Faculties.Distinct().ToList();
+                //}
+
+
                 for (int i = 0; i < UserFaculties.Count(); i++)
                 {
 
                     dic[UserFaculties[i].Id] = UserFaculties[i].Faculties.Distinct().ToList();
                 }
-
-
-
 
 
                 var list = await AllQyery.OrderByDescending(w => w.DateCreated)
@@ -286,8 +317,8 @@ namespace SmartStart.Repository.Security.UserService
                                Type = user.Type,
                                SubscriptionDate = user.SubscriptionDate,
                                SubscriptionCount = user.UserCodes.Count(),
-                               Faculties = dic[user.Id],
-                               
+                               Faculties = dic[user.Id]
+
                            })
                            .ToListAsync();
 

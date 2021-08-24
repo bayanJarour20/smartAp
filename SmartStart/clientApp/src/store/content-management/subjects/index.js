@@ -7,11 +7,14 @@ export default {
         subjectDto: {
             id: '',
             name: '',
+            year: 0,
+            file: null,
             type: 0,
             imagePath: '',
-            doctors:[],
-            description: '',
-            isFree:true
+            facultyId: 0,
+            tagIds: [],
+            semesterId: 0,  sectionId: 0,
+            description: ''
         }
     },
     mutations: {
@@ -26,23 +29,28 @@ export default {
                 state.subjectDto, {
                     id: '',
                     name: '',
+                    year: 0,
+                    file: null,
                     type: 0,
                     imagePath: '',
-                    doctors:[],
-                    description: '',
-                    isFree:true
+                    facultyId: 0,
+                    tagIds: [],
+                    semesterId: 0,sectionId: 0,
+                    description: ''
                 })
         },
         Subject_Details(state, payload) {
             Object.assign(state.subjectDto, {
                 id: payload.id,
                 name: payload.name,
-               
-            
+                year: payload.year,
+                file: payload.file,
                 type: payload.type,
                 imagePath: payload.imagePath,
-               
-               
+                facultyId: payload.facultyId,
+                tagIds: payload.tagIds.filter((id) => {
+                    return store.getters.tagsList.findIndex(i => i.id == id) != -1
+                }),
                 doctorsId: payload.tagIds.filter((id) => {
                     return store.getters.doctors.findIndex(i => i.id == id) != -1
                 }),
@@ -64,16 +72,6 @@ export default {
                     commit('Upload_Subject_Create', data)
                 }
             })
-        },
-        addSubject({commit},payload){
-            
-           
-                api.post('Subject/SetSubject', payload.formData, ({data}) => {
-                    if(!payload.id) {
-                        commit('Upload_Subject_Create', data)
-                    }
-                })
-            
         },
         subjectDetails({commit}, id) {
             api.get('Subject/Details/' + id, ({data}) => {

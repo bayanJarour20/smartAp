@@ -4,7 +4,7 @@ export default {
         codesList: [],
         codeDto: {
             discountRate: 0,
-            packageIds: ''
+            packageIds: null
         }
     },
     mutations: {
@@ -13,6 +13,28 @@ export default {
         },
         Generate_Code(state, data) {
             state.codesList.unshift(data)
+        },
+        Code_List_Dto(state,payload){
+            let MapOfIds = new Map(); 
+            var idx; 
+            var tempList = []; 
+            for(idx = 0 ; idx < payload.length ; idx++) {
+                 MapOfIds.set(payload[idx] , 1);
+            }
+            for(idx = 0 ; idx < state.codesList.length ; idx++) {
+                if(MapOfIds.has(state.codesList[idx].id) === false) {
+                    tempList.push(state.codesList[idx]); 
+                }
+            }
+            state.codesList = tempList; 
+         
+        },
+        Reset_code_Dto(state){
+           
+            Object.assign(state.codeDto, {
+                discountRate: 0,
+                packageIds: null
+            })
         }
     },
     actions: {
@@ -24,7 +46,18 @@ export default {
         GenerateCode({commit}, payload) {
             api.post('Code/Generate', payload, ({data}) => {
                 commit('Generate_Code', data)
+            },{
+                success:"تم إضافة الكود بنجاح",
+                error:"فشل إضافة الكود"
             })
+        },
+        CodeListDto({commit},ids){
+            api.delete("Code/RemoveCodes",({ data }) => {
+                if(data) {
+                    commit("Code_List_Dto", ids);
+                }
+            },{confirm: 'هل تريد فعلا حذف الأكواد المحددة', success: 'تم حذف الأكواد المحددة بنجاح', error: "فشل حذف الأكواد المحددة " },
+            ids)
         }
     }
 };

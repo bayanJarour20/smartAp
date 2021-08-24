@@ -32,7 +32,6 @@ namespace SmartStart.Repository.Main.ExamServices
             this.webHostEnvironment = webHostEnvironment;
         }
 
-
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
             => await RepositoryHandler(_getAllExam());
         public async Task<OperationResult<bool>> DeleteExam(Guid id)
@@ -501,8 +500,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   Price = exam.Price,
                                   IsFree = exam.IsFree,
                                   QuestionsCount = exam.ExamQuestions.Count(),
-                                  SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
-                                  SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
+                                  SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
+                                  SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                               }).ToListAsync();
         }
@@ -602,8 +601,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   TagIds = exam.ExamTags.Select(et => et.TagId),
                                   SubjectName = exam.Subject.Name,
                                   SubjectId = exam.SubjectId,
-                                  SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
-                                  SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
+                                  SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
+                                  SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
                                   QuestionsCount = exam.ExamQuestions.Count(),
                               }).FirstOrDefaultAsync();
 
@@ -639,8 +638,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                 TagIds = exam.ExamTags.Select(et => et.TagId),
                                 SubjectName = exam.Subject.Name,
                                 SubjectId = exam.SubjectId,
-                                SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
-                                SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
+                                SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
+                                SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
                                 QuestionsCount = exam.ExamQuestions.Count(e => e.DateDeleted == null),
                             }).FirstOrDefaultAsync());
         }
@@ -659,8 +658,8 @@ namespace SmartStart.Repository.Main.ExamServices
                                   Price = exam.Price,
                                   IsFree = exam.IsFree,
                                   QuestionsCount = exam.ExamQuestions.Count(),
-                                  SemesterId = exam.Subject.Faculties.Select(f => f.SemesterId).ToList(),
-                                  SectionId = exam.Subject.Faculties.Select(f => f.SectionId).ToList(),
+                                  SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
+                                  SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
                                   TagIds = exam.ExamTags.Select(et => et.Id),
                                   Questions = exam.ExamQuestions.Select(question => new QuestionImagesTagsAnswersDto
                                   {

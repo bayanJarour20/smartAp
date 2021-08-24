@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "@/store";
+import accounts from "./accounts-setting";
 
 // Routes
 // import { canNavigate } from "@/libs/acl/routeProtection";
@@ -41,6 +42,7 @@ const router = new VueRouter({
         },
         ...contentManagement,
         ...codes,
+        ...accounts,
         // test components
         {
             path: "/settings",
