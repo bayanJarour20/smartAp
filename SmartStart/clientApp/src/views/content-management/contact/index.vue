@@ -41,7 +41,7 @@ export default {
             },
             {
                 label: "اسم الطالب",
-                field: "appHserName"
+                field: "appUserName"
             },
             {
                 label: "تاريخ الإرسال",

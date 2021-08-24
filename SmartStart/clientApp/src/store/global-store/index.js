@@ -33,7 +33,6 @@ export default {
     },
     getters: {
         tagsList({ totalTagsList }) {
-            console.log(totalTagsList)
             return totalTagsList.filter(item => item.type == 0);
         },
         semester({ totalTagsList }) {
@@ -62,7 +61,6 @@ export default {
             store.state.banks.banksList = payload.banks;
         },
         Total_Tag_Fetch(state, payload) {
-            console.log(payload)
             state.totalTagsList = payload;
         },
         Fetch_University(state, payload) {
@@ -201,7 +199,6 @@ export default {
                 commit("Get_Basic_Exams", data);
             });
         },
-
         fetchTotalTag({ commit }) {
             api.get("Tag/Fetch", ({ data }) => {
                 commit("Total_Tag_Fetch", data);
@@ -214,7 +211,7 @@ export default {
             });
         },
         fetchCity({ commit }) {
-            api.get("City/GetAllCites", ({ data }) => {
+            api.get("City/Fetch", ({ data }) => {
                 commit("Fetch_City", data);
             });
         },
@@ -363,7 +360,6 @@ export default {
             ids)
         },
         deleteCityList({commit}, ids) {
-            
             api.delete("City/DeleteRange",({ data }) => {
                 if(data) {
                     commit("delete_City_List", ids);
@@ -393,22 +389,6 @@ export default {
                     confirm: "هل انت متأكد من حذف الجامعة",
                     success: "تم حذف الجامعة بنجاح",
                     error: "فشل الجامعة المدينة"
-                }
-            );
-        },
-        // TODO: complete this
-        deleteRangeUniversity(ctx, ids) {
-            api.delete("​University/DeleteRange", ids,
-                ({ data }) => {
-                    if (data) {
-                        console.log(data)
-                        // commit("Delete_University", id);
-                    }
-                },
-                {
-                    confirm: "هل انت متأكد من حذف الجامعات المحددة",
-                    success: "تم حذف الجامعات بنجاح",
-                    error: "فشل الجامعات المدينة"
                 }
             );
         },

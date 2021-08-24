@@ -8,7 +8,7 @@ namespace SmartStart.DataTransferObject.FeedbackDto
 {
     public class FeedbackDetailsDto : FeedbackDto
     {
-        public string AppHserName { get; set; }
+        public string AppUserName { get; set; }
         public DateTime SendDate { get; set; }
     }
 }

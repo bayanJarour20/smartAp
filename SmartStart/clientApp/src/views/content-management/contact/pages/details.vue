@@ -7,10 +7,10 @@
                         <b-row>
                             <b-col cols="12" md="4">
                                 <EKInputText
-                                    v-model="feedbackDto.appHserName"
+                                    v-model="feedbackDto.appUserName"
                                     label="اسم الطالب "
                                     readonly
-                                    name="appHserName"
+                                    name="appUserName"
                                 />
                             </b-col>
                             <b-col cols="12" md="4">

@@ -8,10 +8,9 @@ export default {
             title: "",
             body: "",
             appUserId: "",
-            appHserName: "",
+            appUserName: "",
             reply: "",
-            replyDate: null,
-            // sendDate: null
+            replyDate: null
         },
         feedbackFilterDto: {
             body: "",
@@ -45,7 +44,7 @@ export default {
             });
         },
         getFeedbackDetail({commit}, id) {
-            api.get('Feedback/GetById?id=' + id, ({data}) => {
+            api.get('Feedback/Details?id=' + id, ({data}) => {
                 commit('Feedbacks_Details', data)
             })
         },

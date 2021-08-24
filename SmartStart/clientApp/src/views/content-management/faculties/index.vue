@@ -1,5 +1,6 @@
 <template>
-    <div>       <!-- // selectedLabel --- opthinal props - default value: id -->
+    <div>
+        <!-- // selectedLabel --- opthinal props - default value: id -->
         <EKTable
             :items="facultiesList"
             :columns="columns"
@@ -9,20 +10,19 @@
         >
         </EKTable>
         <createFacultie ref="editFacultieDialog" title="تعديل كلية" isEdit />
-        
     </div>
 </template>
 <script>
 import createFacultie from "./components/create-facultie";
 import EKTable from "@Ekcore/components/EK-table";
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 export default {
     components: {
         EKTable,
         createFacultie
     },
     computed: {
-        ...mapGetters(['facultiesList'])
+        ...mapGetters(["facultiesList"])
     },
     data: () => ({
         columns: [
@@ -33,7 +33,7 @@ export default {
             {
                 label: "عدد السنوات",
                 field: "numOfYears",
-                type:  'number'
+                type: "number"
             },
             {
                 label: "تفاصيل",
@@ -43,21 +43,20 @@ export default {
         ]
     }),
     created() {
-        this.getFacultiesDetails()
+        this.getFacultiesDetails();
     },
     methods: {
-        ...mapActions(["getFacultiesDetails","deleteFacultyList"]),
+        ...mapActions(["getFacultiesDetails", "deleteFacultyList"]),
         openEditFaculityDialog(p) {
-            this.$store.commit('Set_Facultie_Dto', p.row)
+            this.$store.commit("Set_Facultie_Dto", p.row);
             this.$refs.editFacultieDialog.openDialog();
         },
         fireDeleteEvent(list) {
-           
-          this.deleteFacultyList(list)
+            this.deleteFacultyList(list);
         }
     },
     beforeDestroy() {
-        this.$store.commit('Reset_Search_Dto')
+        this.$store.commit("Reset_Search_Dto");
     }
 };
 </script>

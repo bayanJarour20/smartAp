@@ -46,6 +46,7 @@ namespace SmartStart.Repository.General.FacultyService
                 {
                     Id = s.Id,
                     Name = s.Name,
+                    UniversityId = s.UniversityId,
                     NumOfYears = s.NumberOfYear,
                     SubjectCount = s.Subjects.Count()
                 }).ToListAsync();

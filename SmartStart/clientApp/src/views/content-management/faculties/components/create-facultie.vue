@@ -95,7 +95,6 @@ export default {
     },
     created() {
         this.fetchUniversity();
-       
     },
     methods: {
         ...mapActions(["fetchUniversity", "actionFaculty", "deleteFaculty"]),

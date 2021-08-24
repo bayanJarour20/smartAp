@@ -31,7 +31,6 @@ namespace SmartStart.Repository.Setting.FeedbackService
             => await RepositoryHandler(_multiDelete(ids));
 
 
-
         private Func<OperationResult<IEnumerable<FeedbackDetailsDto>>, Task<OperationResult<IEnumerable<FeedbackDetailsDto>>>> _getAll()
             => async operation => operation.SetSuccess(await Query.Select(Store.Query.SelectorDetails).ToListAsync());
 

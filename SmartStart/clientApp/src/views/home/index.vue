@@ -144,11 +144,10 @@
                                 {{homeObj.totalValueCode}}
                             </h5>
                             <b-card-text class="text-muted font-small-2">
-                                <span> {{100 - Math.floor(homeObj.totalValueCode / homeObj.lastTotalValueCode * 100) >= 0 ? ' ربح اكبر من الشهر الماضي بنسبة' : 'اقل من الشهر بالماضي بنسبة'}} </span>
+                                <span> {{homeObj.lastTotalValueCode ? (100 - Math.floor(homeObj.totalValueCode / homeObj.lastTotalValueCode * 100) >= 0 ? ' ربح اكبر من الشهر الماضي بنسبة' : 'اقل من الشهر بالماضي بنسبة') : 0}} </span>
                                 <span class="font-weight-bolder">
-                                    {{100 - Math.floor(homeObj.totalValueCode / homeObj.lastTotalValueCode * 100)}}%
-                                </span
-                                >
+                                    {{homeObj.lastTotalValueCode ? (100 - Math.floor(homeObj.totalValueCode / homeObj.lastTotalValueCode * 100)) : 0}}%
+                                </span>
                             </b-card-text>
                         </b-col>
                         <b-col cols="6">
@@ -173,11 +172,10 @@
                                 {{homeObj.worthlyValueCode}}
                             </h5>
                             <b-card-text class="text-muted font-small-2">
-                                <span> {{100 - Math.floor(homeObj.worthlyValueCode / homeObj.lastworthlyValueCode * 100) >= 0 ? ' ربح اكبر من الشهر الماضي بنسبة' : 'اقل من الشهر بالماضي بنسبة'}} </span>
+                                <span> {{homeObj.lastworthlyValueCode ? (100 - Math.floor(homeObj.worthlyValueCode / homeObj.lastworthlyValueCode * 100) >= 0 ? ' ربح اكبر من الشهر الماضي بنسبة' : 'اقل من الشهر بالماضي بنسبة') : 0}} </span>
                                 <span class="font-weight-bolder">
-                                    {{100 - Math.floor(homeObj.worthlyValueCode / homeObj.lastworthlyValueCode * 100)}}%
-                                </span
-                                >
+                                    {{homeObj.lastworthlyValueCode ? (100 - Math.floor(homeObj.worthlyValueCode / homeObj.lastworthlyValueCode * 100)) : 0}}%
+                                </span>
                             </b-card-text>
                         </b-col>
                         <b-col cols="6">
