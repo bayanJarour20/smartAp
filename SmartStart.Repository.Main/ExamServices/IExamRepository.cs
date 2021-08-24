@@ -33,5 +33,13 @@ namespace SmartStart.Repository.Main.ExamServices
         Task<OperationResult<ExamDetailsDto>> UpdateInterview(ExamDto dto);
         Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id);
 
+        Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllMicroscope();
+        Task<OperationResult<MicroscopeDocumentsDto>> DetailsMicroscope(Guid id);
+        Task<OperationResult<bool>> DeleteMicroscope(Guid id);
+        Task<OperationResult<bool>> MultiDeleteMicroscope(IEnumerable<Guid> ids);
+        Task<OperationResult<ExamDetailsDto>> AddMicroscope(ExamDto dto);
+        Task<OperationResult<ExamDetailsDto>> UpdateMicroscope(ExamDto dto);
+        Task<OperationResult<MicroscopeDocumentsDto>> UpdateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto);
+        Task<OperationResult<bool>> DeleteSectionsMicroscope(Guid id);
     }
 }

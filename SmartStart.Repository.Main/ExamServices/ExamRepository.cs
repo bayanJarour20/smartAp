@@ -10,6 +10,7 @@ using SmartStart.DataTransferObject.QuestionDto;
 using SmartStart.Model.Main;
 using SmartStart.Model.Shared;
 using SmartStart.SharedKernel.Enums;
+using SmartStart.SharedKernel.ExtensionMethods;
 using SmartStart.SqlServer.DataBase;
 using System;
 using System.Collections.Generic;
@@ -24,13 +25,10 @@ namespace SmartStart.Repository.Main.ExamServices
     [ElRepository]
     public class ExamRepository : ElRepository<SmartStartDbContext, Guid, Exam>, IExamRepository
     {
-
-
         private readonly IWebHostEnvironment webHostEnvironment;
 
         public ExamRepository(SmartStartDbContext context, IWebHostEnvironment webHostEnvironment) : base(context)
         {
-            this.webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
@@ -73,6 +71,24 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_updateInterview(dto));
         public async Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllInterviewQuestion(Guid id)
             => await RepositoryHandler(_getAllInterviewQuestion(id));
+
+
+        public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllMicroscope()
+            => await RepositoryHandler(_getAllMicroscope());
+        public async Task<OperationResult<MicroscopeDocumentsDto>> DetailsMicroscope(Guid id)
+            => await RepositoryHandler(_detailsMicroscope(id));
+        public async Task<OperationResult<bool>> DeleteMicroscope(Guid id)
+            => await RepositoryHandler(_deleteMicroscope(id));
+        public async Task<OperationResult<bool>> MultiDeleteMicroscope(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_multiDeleteMicroscope(ids));
+        public async Task<OperationResult<ExamDetailsDto>> AddMicroscope(ExamDto dto)
+            => await RepositoryHandler(_addMicroscope(dto));
+        public async Task<OperationResult<ExamDetailsDto>> UpdateMicroscope(ExamDto dto)
+            => await RepositoryHandler(_updateMicroscope(dto));
+        public async Task<OperationResult<MicroscopeDocumentsDto>> UpdateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
+            => await RepositoryHandler(_updateSectionsMicroscope(dto));
+        public async Task<OperationResult<bool>> DeleteSectionsMicroscope(Guid id)
+            => await RepositoryHandler(_deleteSectionsMicroscope(id));
 
 
         public async Task<OperationResult<ExamDocumentDto>> AddExamDocument(ExamDocumentDto dto)
@@ -223,6 +239,256 @@ namespace SmartStart.Repository.Main.ExamServices
 
         #endregion
 
+        #region - Microscope -
+
+        private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllMicroscope()
+            => async operation =>
+            {
+                var Microscopes = await GetAllAsync(exam => exam.Type == TabTypes.Microscope);
+                return operation.SetSuccess(Microscopes);
+            };
+
+        private Func<OperationResult<MicroscopeDocumentsDto>, Task<OperationResult<MicroscopeDocumentsDto>>> _detailsMicroscope(Guid id)
+            => async operation =>
+            {
+                var microscope = await Query.Where(exam => exam.Id == id)
+                                            .Select(exam => new MicroscopeDocumentsDto
+                                            {
+                                                Id = exam.Id,
+                                                Name = exam.Name,
+                                                IsFree = exam.IsFree,
+                                                Price = exam.Price,
+                                                SubjectId = exam.SubjectId,
+                                                Year = exam.Year,
+                                                Type = TabTypes.Microscope,
+
+                                                TagIds = exam.ExamTags.Select(t => t.TagId).ToList(),
+
+                                                Documents = exam.ExamDocuments.Select(doc => new ExamDocumentDto
+                                                {
+                                                    Id = doc.Id,
+                                                    Note = doc.Note,
+                                                    Path = doc.Document.Path,
+                                                }).ToList(),
+
+                                                Sections = exam.ExamQuestions.Select(section => new ExamQuestionDocumnetsDto
+                                                {
+                                                    Id = section.Id,
+                                                    Order = section.Order,
+                                                    Hint = section.Question.Hint,
+                                                    Title = section.Question.Title,
+                                                    IsCorrected = section.Question.IsCorrected,
+                                                    DateCreated = section.DateCreated,
+                                                    QuestionType = section.Question.QuestionType,
+                                                    AnswerType = section.Question.AnswerType,
+                                                    Tags = section.Question.QuestionTags.Select(t => t.TagId),
+                                                    Documents = section.Question.QuestionDocuments.Select(doc => new QuestionDocumentNote
+                                                    {
+                                                        SectionImageId = doc.Id,
+                                                        Note = doc.Note,
+                                                        Path = doc.Document.Path,
+                                                    }),
+                                                }).ToList(),
+                                            }).FirstOrDefaultAsync();
+                return operation.SetSuccess(microscope);
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteMicroscope(Guid id)
+            => async operation =>
+            {
+                var microscope = await TrackingQuery.Where(exam => exam.Id == id)
+                                                    .Include(exam => exam.ExamTags)
+                                                    .Include(exam => exam.ExamQuestions)
+                                                    .ThenInclude(q => q.Question)
+                                                    .ThenInclude(q => q.Answers)
+                                                    .Include("ExamQuestions.Question.QuestionTags")
+                                                    .Include("ExamQuestions.Question.QuestionDocuments")
+                                                    .Include("ExamQuestions.Question.QuestionDocuments.Document")
+                                                    .SingleOrDefaultAsync();
+                if (microscope == null)
+                {
+                    return (OperationResultTypes.NotExist, $"{id} : not exist.");
+                }
+                foreach (var tag in microscope.ExamTags)
+                {
+                    Context.SoftDelete(tag);
+                }
+                foreach (var question in microscope.ExamQuestions)
+                {
+                    foreach (var answer in question.Question.Answers)
+                    {
+                        Context.SoftDelete(answer);
+                    }
+                    foreach (var tag in question.Question.QuestionTags)
+                    {
+                        Context.SoftDelete(tag);
+                    }
+                    foreach (var doc in question.Question.QuestionDocuments)
+                    {
+                        if (doc.Document.QuestionDocuments.Where(e => e.QuestionId != question.QuestionId).Count() == 1)
+                        {
+                            await TryDeleteFileAsync(doc.Document.Path);
+                            Context.Documents.Remove(doc.Document);
+                        }
+                    }
+                    Context.SoftDelete(question);
+                }
+                Context.SoftDelete(microscope);
+                await Context.SaveChangesAsync();
+                return operation.SetSuccess(true);
+            };
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteMicroscope(IEnumerable<Guid> ids)
+            => async operation =>
+            {
+                foreach (var id in ids)
+                {
+                    await DeleteMicroscope(id);
+                }
+                return operation.SetSuccess(true);
+            };
+
+        private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _addMicroscope(ExamDto dto)
+            => async operation =>
+            {
+                var microscope = await AddAsync(dto, TabTypes.Microscope);
+                return operation.SetSuccess(microscope);
+            };
+
+        private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateMicroscope(ExamDto dto)
+            => async operation => await UpdateAsync(operation, dto, TabTypes.Microscope);
+
+        private Func<OperationResult<MicroscopeDocumentsDto>, Task<OperationResult<MicroscopeDocumentsDto>>> _updateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
+            => async operation =>
+            {
+                var microscope = await TrackingQuery.Where(exam => exam.Id == dto.Id)
+                                                    .Include(e => e.ExamQuestions)
+                                                    .ThenInclude(e => e.Question)
+                                                    .ThenInclude(q => q.QuestionTags)
+                                                    .ThenInclude(q => q.Question.QuestionDocuments)
+                                                    .ThenInclude(q => q.Document)
+                                                    .FirstOrDefaultAsync();
+                if (microscope == null)
+                    return (OperationResultTypes.NotExist, $"{dto.Id} : Microscope not Found.");
+
+                using (var transaction = await Context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        foreach (var examQuestions in microscope.ExamQuestions)
+                        {
+                            var section = dto.Sections.SingleOrDefault(sec => sec.Id == examQuestions.Id);
+                            if (section is not null)
+                            {
+                                examQuestions.Order = section.Order;
+                                examQuestions.Question.Title = section.Title;
+                                examQuestions.Question.Hint = section.Hint;
+                                examQuestions.Question.IsCorrected = section.IsCorrected;
+                                examQuestions.Question.QuestionType = section.QuestionType;
+                                examQuestions.Question.AnswerType = section.AnswerType;
+                                foreach (var docs in examQuestions.Question.QuestionDocuments)
+                                {
+                                    var doc = section.Documents.SingleOrDefault(d => d.SectionImageId == docs.Id);
+                                    if (doc is not null)
+                                        docs.Note = doc.Note;
+                                }
+                            }
+
+                            (IEnumerable<Guid> newTags, IEnumerable<Guid> oldTags) = examQuestions.Question.QuestionTags.IsolatedExcept(section?.Tags ?? new List<Guid>(), x => x.TagId, x => x);
+                            foreach (var oldTag in oldTags)
+                            {
+                                examQuestions.Question.QuestionTags.Remove(examQuestions.Question.QuestionTags.Single(t => t.TagId == oldTag));
+                            }
+                            var AddTag = section?.Tags.Where(tag => newTags.Contains(tag)).Select(tag => new QuestionTag { TagId = tag, QuestionId = section.Id });
+                            foreach (var newTag in AddTag)
+                            {
+                                examQuestions.Question.QuestionTags.Add(newTag);
+                            }
+
+                            (IEnumerable<QuestionDocumentNote> newDocs, IEnumerable<QuestionDocument> oldDocs) = examQuestions.Question.QuestionDocuments.IsolatedExceptOldNew(section?.Documents ?? new List<QuestionDocumentNote>(), x => x.DocumentId, x => x.SectionImageId);
+                            foreach (var oldDoc in oldDocs)
+                            {
+                                examQuestions.Question.QuestionDocuments.Remove(oldDoc);
+                                var exams = Context.QuestionDocuments.Where(q => q.DocumentId == oldDoc.Id && q.DateDeleted == null).ToList();
+                                if (!exams.Any())
+                                {
+                                    await TryDeleteFileAsync(oldDoc.Document.Path);
+                                    Context.Documents.Remove(oldDoc.Document);
+                                }
+
+                            }
+
+                            foreach (var newDoc in newDocs)
+                            {
+                                examQuestions.Question.QuestionDocuments.Add(new QuestionDocument
+                                {
+                                    Document = new Document()
+                                    {
+                                        Type = DocumentTypes.Image
+                                    },
+                                    Note = newDoc.Note,
+                                });
+                                dto.Sections.ToList().First().Documents.ToList().Add(new QuestionDocumentNote
+                                {
+                                    SectionImageId = newDoc.SectionImageId,
+                                    Note = newDoc.Note,
+                                    File = newDoc.File,
+                                    Path = newDoc.Path
+                                });
+                            }
+                        }
+                        await Context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        return operation.SetSuccess(new MicroscopeDocumentsDto() { Id = dto.Id, Sections = dto.Sections });
+                    }
+                    catch (Exception ex )
+                    {
+                        await transaction.RollbackAsync();
+                        return operation.SetException(ex);
+                    }
+                }
+            };
+
+
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteSectionsMicroscope(Guid id)
+            => async operation =>
+            {
+                
+                using(var transaction = await Context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var microscope = await _trackingQuery<Question>().Where(q => q.Id == id).Include(q => q.QuestionDocuments).ThenInclude(d => d.Document).SingleOrDefaultAsync();
+                        if (microscope == null)
+                            return (OperationResultTypes.NotExist, $"{id} : not exist.");
+                        Context.SoftDelete(microscope);
+                        foreach (var doc in microscope.QuestionDocuments)
+                        {
+                            Context.SoftDelete(doc);
+
+                            if (!doc.Document.QuestionDocuments.Where(e => e.QuestionId != microscope.Id).Any())
+                            {
+                                await TryDeleteFileAsync(doc.Document.Path);
+                                Context.Documents.Remove(doc.Document);
+                            }
+                            Context.QuestionDocuments.Remove(doc);
+                        }
+
+                        await Context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        return operation.SetSuccess(true);
+                    
+                    }
+                    catch(Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        return operation.SetException(ex);
+                    }
+                }
+            };
+
+        #endregion
+
         #region - Tab -
 
         private async Task<IEnumerable<ExamDetailsDto>> GetAllAsync(Expression<Func<Exam, bool>> predicate)
@@ -252,13 +518,21 @@ namespace SmartStart.Repository.Main.ExamServices
             var one = await TrackingQuery.Where(exam => exam.Id == examId).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).FirstOrDefaultAsync();
             if (one is null)
                 return false;
-            var docs = Context.ExamDocuments.Where(exam => exam.Id == examId).ToList();
-            foreach (var doc in docs)
+            foreach (var tag in one.ExamTags)
+            {
+                Context.SoftDelete(tag);
+            }
+            foreach (var question in one.ExamQuestions)
+            {
+                Context.SoftDelete(question);
+            }
+            foreach (var doc in one.ExamDocuments)
             {
                 var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
                 if(exams.Count() == 1)
                 {
-                    Context.Remove(doc);
+                    await TryDeleteFileAsync(doc.Document.Path);
+                    Context.Documents.Remove(doc.Document);
                 }
             }
             Context.SoftDelete(one);
@@ -271,19 +545,28 @@ namespace SmartStart.Repository.Main.ExamServices
             var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id)).Include(e => e.ExamQuestions).Include(e => e.ExamTags).Include(e => e.ExamDocuments).ToListAsync();
             if (list is null)
                 return false;
-            foreach (var exam in list)
+            foreach (var one in list)
             {
-                var docs = Context.ExamDocuments.Where(ed => ed.ExamId == exam.Id).ToList();
+                foreach (var tag in one.ExamTags)
+                {
+                    Context.SoftDelete(tag);
+                }
+                foreach (var question in one.ExamQuestions)
+                {
+                    Context.SoftDelete(question);
+                }
+                var docs = Context.ExamDocuments.Where(ed => ed.ExamId == one.Id).ToList();
                 foreach (var doc in docs)
                 {
                     var exams = Context.ExamDocuments.Where(ed => ed.DocumentId == doc.Id && ed.DateDeleted == null).ToList();
                     if (exams.Count() == 1)
                     {
-                        Context.Remove(doc);
+                        await TryDeleteFileAsync(doc.Document.Path);
+                        Context.Documents.Remove(doc.Document);
                     }
                 }
-                Context.SoftDelete(exam);
             }
+            list.ForEach(item => Context.SoftDelete(item));
             await Context.SaveChangesAsync();
             return true;
         }
@@ -338,23 +621,17 @@ namespace SmartStart.Repository.Main.ExamServices
 
             if (exam is null || exam.Type != examType)
                 return OperationResultTypes.NotExist;
-
             exam.Name = dto.Name;
             exam.IsFree = dto.IsFree;
             exam.Price = dto.Price;
             exam.SubjectId = dto.SubjectId;
             exam.Year = dto.Year;
-
             var currentTags = await Context.ExamTags.Where(et => et.ExamId == dto.Id).ToListAsync();
             var newTags = dto.TagIds.Except(currentTags.Select(et => et.Id));
             var oldTags = currentTags.Select(et => et.Id).Except(dto.TagIds).ToList();
-
             Context.ExamTags.RemoveRange(currentTags.Where(t => oldTags.Contains(t.Id)).ToList());
-
             await Context.ExamTags.AddRangeAsync(newTags.Select(et => new ExamTag() { ExamId = dto.Id, TagId = et }));
-
             await Context.SaveChangesAsync();
-
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
                             .Select(exam => new ExamDetailsDto
                             {
@@ -507,6 +784,22 @@ namespace SmartStart.Repository.Main.ExamServices
           };
 
 
+        private async Task<OperationResult<bool>> TryDeleteFileAsync(string path)
+        {
+            if(!path.IsNullOrEmpty())
+            {
+                var pathFile = Path.Combine(webHostEnvironment.WebRootPath, path);
+                try
+                {
+                    File.Delete(path);
+                }
+                catch(Exception ex)
+                {
+                    return new OperationResult<bool>().SetException(ex);
+                }
+            }
+            return new OperationResult<bool>().SetSuccess(true);
+        }
         #endregion
 
 
