@@ -130,12 +130,16 @@ namespace SmartStart.Repository.Main.GeneralServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSelected(SelectedDto selectedDto, Guid UserId)
           => async operation =>
           {
-
               var SubjectFacultyAppUsers = (await _query<SubjectFacultyAppUser>().Where(s => s.SubjectFaculty.FacultyId == selectedDto.FacultyId
                                                                                     && s.SubjectFaculty.SectionId == selectedDto.SectionId
                                                                                     && s.SubjectFaculty.Year == selectedDto.Year
                                                                                     && s.SubjectFaculty.SemesterId == selectedDto.SemesterId
                                                                                     && s.AppUserId == UserId).ToListAsync());
+              if (SubjectFacultyAppUsers == null || SubjectFacultyAppUsers.Count() == 0)
+              {
+                  return operation.SetSuccess(false);
+              }
+
               Context.SubjectFacultyAppUsers.RemoveRange(SubjectFacultyAppUsers);
               
               await Context.SaveChangesAsync();
