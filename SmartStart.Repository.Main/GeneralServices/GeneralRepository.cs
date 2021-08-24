@@ -112,7 +112,20 @@ namespace SmartStart.Repository.Main.GeneralServices
                   res.Add(fillDto(subjectFaculty.Subject, subjectFaculty.PackageSubjectFaculties.ToList(), UserId));
               }
               await Context.SaveChangesAsync();
-              return operation.SetSuccess(res);
+              return operation.SetSuccess(new 
+              {
+                  Subjects = res,
+                  SubjectFaculty = new
+                  {
+                      FacultyId = SubjectFaculties.First().FacultyId,
+                      FacultyName = SubjectFaculties.First().Faculty.Name,
+                      SectionId = SubjectFaculties.First().SectionId,
+                      SectionName = SubjectFaculties.First().Section.Name,
+                      SemesterId = SubjectFaculties.First().SemesterId,
+                      SemesterName = SubjectFaculties.First().Semester.Name,
+                      Year = SubjectFaculties.First().Year
+                  }
+              });
           };
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSelected(SelectedDto selectedDto, Guid UserId)
           => async operation =>
