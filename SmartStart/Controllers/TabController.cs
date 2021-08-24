@@ -61,7 +61,7 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> DeleteBank([Required] Guid id)
             => await repository.DeleteBank(id).IntoAsync(o =>o).ToJsonResultAsync();
 
-        [Route("api/Bank/MultiDelete/{ids}")]
+        [Route("api/Bank/MultiDelete")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> MultiDeleteBank([Required] IEnumerable<Guid> ids)
            => await repository.MultiDeleteBank(ids).IntoAsync(o => o).ToJsonResultAsync();
@@ -93,9 +93,9 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> DeleteInterview([Required] Guid id)
             => await repository.DeleteInterview(id).IntoAsync(o => o).ToJsonResultAsync();
 
-        [Route("api/Interview/MultiDelete/{ids}")]
+        [Route("api/Interview/MultiDelete")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDelete([Required] IEnumerable<Guid> ids)
+        public async Task<IActionResult> MultiDeleteInterview([Required] IEnumerable<Guid> ids)
             => await repository.MultiDeleteInterview(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Interview/Add")]
@@ -130,7 +130,7 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> DeleteMicroscope([Required] Guid id)
             => await repository.DeleteMicroscope(id).ToJsonResultAsync();
 
-        [Route("api/Microscope/MultiDelete/")]
+        [Route("api/Microscope/MultiDelete")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> MultiDeleteMicroscope([Required] IEnumerable<Guid> ids)
             => await repository.MultiDeleteMicroscope(ids).ToJsonResultAsync();
