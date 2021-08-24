@@ -123,6 +123,7 @@ namespace SmartStart.SharedKernel.ExtensionMethods
             return (Add, remove);
         }
 
+        public static bool HasException(this OperatinResultBase operatin) => operatin.OperationResultType == OperationResultTypes.Exception;
 
 
     }

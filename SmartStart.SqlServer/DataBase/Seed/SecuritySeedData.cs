@@ -28,7 +28,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
             await InsureCreateSuperAdminAsync(userManager, roleManager, newRole);
             await InsureCreateSellerAsync(userManager, roleManager, newRole);
              
-            await InsureCreateUserAsync(userManager, roleManager, newRole);
+            //await InsureCreateUserAsync(userManager, roleManager, newRole);
             await InsureCreateGuidSellerAsync(userManager);
         }
 
@@ -115,29 +115,29 @@ namespace SmartStart.SqlServer.DataBase.Seed
                     Type = SharedKernel.Enums.UserTypes.Seller,
                     MoneyLimit = 10000,
                     Rates = new List<Rate>() { new Rate() { DiscountRate = 0.1f } },
-                    Codes = new List<Code>()
-                    {
-                        new Code()
-                        {
-                            DiscountRate = 0,
-                            Value = 1000,
-                            Hash = "J3a3aO",
-                            CodePackages = new List<CodePackage>()
-                            {
-                                new CodePackage()
-                                {
-                                    Package = new Package()
-                                    {
-                                        Description = "وصف البكج المقدم",
-                                        Name = "اسم البكج",
-                                        StartDate = DateTime.Now,
-                                        EndDate = DateTime.Now.AddDays(15),
-                                        Price = 1000,
-                                    },
-                                } 
-                            }  
-                        } 
-                    },
+                    //Codes = new List<Code>()
+                    //{
+                    //    new Code()
+                    //    {
+                    //        DiscountRate = 0,
+                    //        Value = 1000,
+                    //        Hash = "J3a3aO",
+                    //        CodePackages = new List<CodePackage>()
+                    //        {
+                    //            new CodePackage()
+                    //            {
+                    //                Package = new Package()
+                    //                {
+                    //                    Description = "وصف البكج المقدم",
+                    //                    Name = "اسم البكج",
+                    //                    StartDate = DateTime.Now,
+                    //                    EndDate = DateTime.Now.AddDays(15),
+                    //                    Price = 1000,
+                    //                },
+                    //            } 
+                    //        }  
+                    //    } 
+                    //},
                 };
                 var createResult = await userManager.CreateAsync(seller, "1234");
                 if (createResult.Succeeded)

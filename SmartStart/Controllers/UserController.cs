@@ -3,6 +3,8 @@ using Elkood.Web.MVC;
 using Microsoft.AspNetCore.Mvc;
 using SmartStart.DataTransferObject.AccountDto;
 using SmartStart.Repository.Security.UserService;
+using SmartStart.Security;
+using SmartStart.SharedKernel.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +15,7 @@ namespace SmartStart.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    //[ElAuthorizeDistributed(TarafouaRoles.Admin)]
+    [ElAuthorizeDistributed(SmartStartRoles.Admin)]
     public class UserController : ElControllerBase<Guid, IUserRepository>
     {
         public UserController(IUserRepository repository) : base(repository) { }

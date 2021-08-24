@@ -165,11 +165,11 @@ namespace SmartStart.Repository.Main.SubjectService
                     MicroscopeCount = subject.Exams.Count(e => e.Type == TabTypes.Microscope),
                     DateCreate = subject.DateCreated,
                     Description = subject.Description,
-                    //Doctors = subjectDto.Doctors,
                     IsFree = subject.IsFree,
                     ImagePath = subject.ImagePath,
                     Name = subject.Name,
-                    Type = subject.Type
+                    Type = subject.Type,
+                    subjectFaculties = subjectDto.subjectFaculties
                 });
             };
         private Func<OperationResult<SubjectAllDto>, Task<OperationResult<SubjectAllDto>>> _subjectDetails(Guid subjectId)
@@ -196,9 +196,13 @@ namespace SmartStart.Repository.Main.SubjectService
                                          subjectFaculties = s.SubjectFaculties.Select(f => new SubjectFacultyDto
                                          {
                                              FacultyId = f.FacultyId,
+                                             FacultyName = f.Faculty != null? f.Faculty.Name : "",
                                              SectionId = f.SectionId,
+                                             SectionName = f.Section != null? f.Section.Name : "",
                                              SemesterId = f.SemesterId,
+                                             SemesterName = f.Semester != null? f.Semester.Name : "",
                                              DoctorId = f.DoctorId,
+                                             DoctorName = f.Doctor != null? f.Doctor.Name : "",
                                              Year = f.Year,
                                              Price = f.Price
                                          }).ToList()

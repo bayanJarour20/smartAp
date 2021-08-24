@@ -14,7 +14,7 @@ namespace SmartStart.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    //[ElAuthorizeDistributed(SmartStartRoles.Admin)]
+    [ElAuthorizeDistributed(SmartStartRoles.Admin)]
     public class InvoiceController : ElControllerBase<Guid, IInvoiceRepository>
     {
         public InvoiceController(IInvoiceRepository repository) : base(repository) { }

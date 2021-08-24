@@ -41,7 +41,7 @@ import {
     uniAngleUp,
     uniEllipsisV,
     uniSync,
-    uniAngleDown
+    uniAngleDown,
 } from "vue-unicons/src/icons";
 
 Unicon.add([
