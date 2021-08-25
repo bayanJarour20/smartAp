@@ -37,8 +37,8 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_getAllExam());
         public async Task<OperationResult<bool>> DeleteExam(Guid id)
             => await RepositoryHandler(_deleteExam(id));
-        public async Task<OperationResult<bool>> MultiDeleteExam(IEnumerable<Guid> ids)
-            => await RepositoryHandler(_multiDeleteExam(ids));
+        public async Task<OperationResult<bool>> DeleteRangeExam(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_deleteRangeExam(ids));
         public async Task<OperationResult<ExamDetailsDto>> AddExam(ExamDto exam)
             => await RepositoryHandler(_addExam(exam));
         public async Task<OperationResult<ExamDetailsDto>> UpdateExam(ExamDto dto)
@@ -52,8 +52,8 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_getAllBank());
         public async Task<OperationResult<bool>> DeleteBank(Guid id)
             => await RepositoryHandler(_deleteBank(id));
-        public async Task<OperationResult<bool>> MultiDeleteBank(IEnumerable<Guid> ids)
-            => await RepositoryHandler(_multiDeleteBank(ids));
+        public async Task<OperationResult<bool>> DeleteRangeBank(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_deleteRangeBank(ids));
         public async Task<OperationResult<ExamDetailsDto>> AddBank(ExamDto dto)
             => await RepositoryHandler(_addBank(dto));
         public async Task<OperationResult<ExamDetailsDto>> UpdateBank(ExamDto dto)
@@ -121,10 +121,10 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, $"{id} : not exist.");
                 return operation.SetSuccess(true, " Success Delete. ");
             };
-        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteExam(IEnumerable<Guid> ids)
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRangeExam(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDeleteAsync(ids, TabTypes.Exam)))
+                if (!(await TryDeleteRangeAsync(ids, TabTypes.Exam)))
                     return (OperationResultTypes.NotExist, $"{ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete All.");
             };
@@ -159,10 +159,10 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, $"{id}: not exist. ");
                 return operation.SetSuccess(true, "Sussecc Delete.");
             };
-        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteBank(IEnumerable<Guid> ids)
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRangeBank(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDeleteAsync(ids, TabTypes.Bank)))
+                if (!(await TryDeleteRangeAsync(ids, TabTypes.Bank)))
                     return (OperationResultTypes.NotExist, $"{ids}: not exist. ");
                 return operation.SetSuccess(true, "Sussecc Delete.");
             };
@@ -199,7 +199,7 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteInterview(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDeleteAsync(ids, TabTypes.Interview)))
+                if (!(await TryDeleteRangeAsync(ids, TabTypes.Interview)))
                     return (OperationResultTypes.NotExist, "${ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
@@ -277,7 +277,7 @@ namespace SmartStart.Repository.Main.ExamServices
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteMicroscope(IEnumerable<Guid> ids)
             => async operation =>
             {
-                if (!(await TryMultiDeleteAsync(ids, TabTypes.Interview)))
+                if (!(await TryDeleteRangeAsync(ids, TabTypes.Interview)))
                     return (OperationResultTypes.NotExist, "${ids} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
@@ -408,7 +408,7 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
             return true;
         }
-        private async Task<bool> TryMultiDeleteAsync(IEnumerable<Guid> examIds, TabTypes examType)
+        private async Task<bool> TryDeleteRangeAsync(IEnumerable<Guid> examIds, TabTypes examType)
         {
             var list = await TrackingQuery.Where(exam => examIds.Contains(exam.Id))
                                           .Include(e => e.ExamQuestions)

@@ -31,8 +31,8 @@ namespace SmartStart.Controllers
 
         [Route("api/Exam/MultiDelete/{ids}")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteExam([Required] IEnumerable<Guid> ids)
-            => await repository.MultiDeleteExam(ids).IntoAsync(o => o).ToJsonResultAsync();
+        public async Task<IActionResult> DeleteRangeExam([Required] IEnumerable<Guid> ids)
+            => await repository.DeleteRangeExam(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Exam/Add")]
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
@@ -79,8 +79,8 @@ namespace SmartStart.Controllers
 
         [Route("api/Bank/MultiDelete")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteBank([Required] IEnumerable<Guid> ids)
-           => await repository.MultiDeleteBank(ids).IntoAsync(o => o).ToJsonResultAsync();
+        public async Task<IActionResult> DeleteRangeBank([Required] IEnumerable<Guid> ids)
+           => await repository.DeleteRangeBank(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Bank/Add")]
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
@@ -111,7 +111,7 @@ namespace SmartStart.Controllers
 
         [Route("api/Interview/MultiDelete")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteInterview([Required] IEnumerable<Guid> ids)
+        public async Task<IActionResult> DeleteRangeInterview([Required] IEnumerable<Guid> ids)
             => await repository.MultiDeleteInterview(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Interview/Add")]

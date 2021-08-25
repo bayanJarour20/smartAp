@@ -14,14 +14,14 @@ namespace SmartStart.Repository.Main.ExamServices
 
         Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam();
         Task<OperationResult<bool>> DeleteExam(Guid id);
-        Task<OperationResult<bool>> MultiDeleteExam(IEnumerable<Guid> ids);
+        Task<OperationResult<bool>> DeleteRangeExam(IEnumerable<Guid> ids);
         Task<OperationResult<ExamDetailsDto>> AddExam(ExamDto dto);
         Task<OperationResult<ExamDetailsDto>> UpdateExam(ExamDto dto);
         Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllExamQuestion(Guid id);
 
         Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllBank();
         Task<OperationResult<bool>> DeleteBank(Guid id);
-        Task<OperationResult<bool>> MultiDeleteBank(IEnumerable<Guid> ids);
+        Task<OperationResult<bool>> DeleteRangeBank(IEnumerable<Guid> ids);
         Task<OperationResult<ExamDetailsDto>> AddBank(ExamDto dto);
         Task<OperationResult<ExamDetailsDto>> UpdateBank(ExamDto dto);
         Task<OperationResult<IEnumerable<ExamDetailsQuestionDto>>> GetAllBankQuestion(Guid id);

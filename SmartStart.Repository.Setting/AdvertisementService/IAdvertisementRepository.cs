@@ -15,5 +15,6 @@ namespace SmartStart.Repository.Setting.AdvertisementService
     {
         Task<OperationResult<AdvertisementDto>> Upload(AdvertisementDto dto, IFormFile file);
         Task<OperationResult<IEnumerable<AdvertisementDto>>> GetAdvertisement();
+        Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids);
     }
 }
