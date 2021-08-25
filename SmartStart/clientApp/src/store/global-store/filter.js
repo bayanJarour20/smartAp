@@ -23,12 +23,16 @@ export default {
             return glState.subjects.subjectsList.filter(subject => {
                 return (
                     getSearchResultOnRow(state, subject) &&
-                    (subject.facultyId == state.filterDto.facultyId ||
-                        !state.filterDto.facultyId) &&
-                    (subject.semesterId == state.filterDto.semesterId ||
-                        !state.filterDto.semesterId) &&
-                    (subject.year == state.filterDto.year ||
-                        !state.filterDto.year) 
+                    subject.subjectFaculties.findIndex((facSub) => (
+                        (facSub.facultyId == state.filterDto.facultyId ||
+                            !state.filterDto.facultyId) &&
+                        (facSub.semesterId == state.filterDto.semesterId ||
+                            !state.filterDto.semesterId) &&
+                        (facSub.year == state.filterDto.year ||
+                            !state.filterDto.year)
+                            
+                            )
+                    ) != -1
                 );
             });
         },
@@ -148,12 +152,8 @@ export default {
         },
         usersList(state, getter, glState){
             return glState.accounts.usersList.filter(pack => {
-                
-                    return getSearchResultOnRow(state, pack) &&
-                      (pack.faculties.findIndex(fa => fa.id == state.filterDto.facultyId) != -1 ||!state.filterDto.facultyId)
-               
-              
-                 
+                return getSearchResultOnRow(state, pack) &&
+                    (pack.faculties.findIndex(fa => fa.id == state.filterDto.facultyId) != -1 ||!state.filterDto.facultyId)
             }) 
         }
     },

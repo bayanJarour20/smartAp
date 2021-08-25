@@ -52,7 +52,6 @@
             @details="openSubjectDEtails"
             @delete-selected="subjectList"
         >
-          
         </EKTable>
     </div>
 </template>
