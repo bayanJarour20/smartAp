@@ -117,12 +117,12 @@ export default {
         this.fetchSubject();
     },
     methods: {
-        ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails","subjListDto"]),
+        ...mapActions(["fetchSubject", "fetchTotalTag", "getFacultiesDetails","deleteSubjList"]),
         openSubjectDEtails(props) {
             this.$router.push("/subjects/" + props.row.id);
         },
         subjectList(list) {
-            this.subjListDto(list)
+            this.deleteSubjList(list)
         }
     },
     beforeDestroy() {

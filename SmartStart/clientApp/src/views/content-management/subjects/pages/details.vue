@@ -50,7 +50,7 @@
                                                 ' أدخل الكلية التي تكون المادة التابعة لها'
                                         }
                                     ]"
-                                    :options="faculties.filter((fac) => subjectDto.subjectFaculties.findIndex((sf) => sf.req.FacultyId == fac.id) == -1)"
+                                    :options="faculties.filter((fac) => subjectDto.subjectFaculties.findIndex((sf) => sf.req.facultyId == fac.id) == -1)"
                                     name="facultyId"
                                 />
                                 <EKInputSelect
@@ -111,39 +111,62 @@
                                     name="doctorsId"
                                     :clearable="true"
                                 />
-                            </ValidationObserver>
-                            <b-button
-                                variant="primary"
-                                class="w-100 my-1"
-                                @click="addSubjectFactlesDetails"
-                                ><unicon
-                                    name="plus"
-                                    width="18"
-                                    height="18"
-                                    fill="#fff"
-                                />
-                            </b-button>
-                            <div
-                                v-for="(subject,
-                                index) in subjectDto.subjectFaculties"
-                                :key="index"
-                            >
-                                <div class="div-subject">
-                                    {{ subject.show.faculty }} -{{
-                                        subject.show.section
-                                    }}-{{ subject.show.semester }}
-                                    <unicon
-                                        name="times"
+                                <b-button
+                                    variant="primary"
+                                    class="w-100 my-1"
+                                    @click="addSubjectFactlesDetails"
+                                    ><unicon
+                                        name="plus"
                                         width="18"
                                         height="18"
-                                        fill="#7367f0"
-                                        @click="deleteSubjectIndex(index)"
+                                        fill="#fff"
                                     />
+                                </b-button>
+                                <small class="text-danger" v-show="subjectDto.subjectFaculties.length == 0">
+                                    يجب تحديد كلية واحدة على الاقل
+                                </small>
+                                <div
+                                    v-for="(subject,
+                                    index) in subjectDto.subjectFaculties"
+                                    :key="index"
+                                >
+                                    <div class="div-subject d-flex">
+                                        <span>
+                                            {{subject.show.faculty}} - 
+                                            {{subject.show.section}} - 
+                                            {{subject.show.semester}} - 
+                                            {{subject.show.doctor}} - 
+                                            {{subject.show.year}} - 
+                                            {{subject.show.price}}
+                                        </span>
+                                        <unicon
+                                            name="times"
+                                            width="18"
+                                            height="18"
+                                            fill="#7367f0"
+                                            class="ml-auto"
+                                            @click="deleteSubjectIndex(index)"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            </ValidationObserver>
                         </b-col>
                         <b-col cols="12" md="6">
                             <ValidationObserver ref="observer">
+                                <b-form-group label="تصنيف المادة">
+                                    <div class="d-flex justify-content-between">
+                                        <b-form-radio
+                                            v-model="subjectDto.type"
+                                            value="0"
+                                            >نظري</b-form-radio
+                                        >
+                                        <b-form-radio
+                                            v-model="subjectDto.type"
+                                            value="1"
+                                            >عملي</b-form-radio
+                                        >
+                                    </div>
+                                </b-form-group>
                                 <EKInputTextarea
                                     v-model="subjectDto.description"
                                     label="شرح المادة"
@@ -167,20 +190,6 @@
                                     "
                                     @input="subjectDto.file = $event"
                                 ></EKInputImage>
-                                <b-form-group label="تصنيف المادة">
-                                    <div class="d-flex justify-content-between">
-                                        <b-form-radio
-                                            v-model="subjectDto.type"
-                                            value="0"
-                                            >نظري</b-form-radio
-                                        >
-                                        <b-form-radio
-                                            v-model="subjectDto.type"
-                                            value="1"
-                                            >عملي</b-form-radio
-                                        >
-                                    </div>
-                                </b-form-group>
                                 <div class="d-flex justify-content-between">
                                     <div>
                                         <span>عدد الدورات </span>
@@ -298,7 +307,7 @@ export default {
             "subjectDetails",
             "fetchTotalTag",
             "getFacultiesDetails",
-            "uploadSubject",
+            "setSubject",
             "deleteSubject"
         ]),
         addSubjectFactlesDetails() {
@@ -306,11 +315,11 @@ export default {
                 if (success) {
                     this.subjectDto.subjectFaculties.unshift({
                         req: {
-                            FacultyId: this.dto.faculty.id,
-                            SemesterId: this.dto.semester.id,
-                            SectionId: this.dto.section.id,
-                            DoctorId: this.dto.doctor.id,
-                            Year: this.dto.year.id,
+                            facultyId: this.dto.faculty.id,
+                            semesterId: this.dto.semester.id,
+                            sectionId: this.dto.section.id,
+                            doctorId: this.dto.doctor.id,
+                            year: this.dto.year.id,
                             price: this.dto.price
                         },
                         show: {
@@ -318,7 +327,7 @@ export default {
                             semester: this.dto.semester.name,
                             section: this.dto.section.name,
                             doctor: this.dto.doctor.name,
-                            Year: this.dto.year.name,
+                            year: this.dto.year.name,
                             price: this.dto.price
                         }
                     });
@@ -381,31 +390,31 @@ export default {
                                         "subjectFaculties[" +
                                             index +
                                             "].FacultyId",
-                                        subjectFaculties.req.FacultyId
+                                        subjectFaculties.req.facultyId
                                     );
                                     subjectFormData.append(
                                         "subjectFaculties[" +
                                             index +
                                             "].SemesterId",
-                                        subjectFaculties.req.SemesterId
+                                        subjectFaculties.req.semesterId
                                     );
                                     subjectFormData.append(
                                         "subjectFaculties[" +
                                             index +
                                             "].SectionId",
-                                        subjectFaculties.req.SectionId
+                                        subjectFaculties.req.sectionId
                                     );
 
                                     subjectFormData.append(
                                         "subjectFaculties[" +
                                             index +
                                             "].DoctorId",
-                                        subjectFaculties.req.DoctorId
+                                        subjectFaculties.req.doctorId
                                     );
 
                                     subjectFormData.append(
-                                        "subjectFaculties[" + index + "].Year",
-                                        subjectFaculties.req.Year
+                                        "subjectFaculties[" + index + "].year",
+                                        subjectFaculties.req.year
                                     );
                                     subjectFormData.append(
                                         "subjectFaculties[" + index + "].price",
@@ -413,7 +422,7 @@ export default {
                                     );
                                 }
                             );
-                            this.uploadSubject({
+                            this.setSubject({
                                 id: this.subjectDto.id,
                                 formData: subjectFormData
                             });
@@ -429,9 +438,8 @@ export default {
 .div-subject {
     border: 1px solid #7367f0;
     border-radius: 25px;
-    padding: 11px;
-    text-align: center;
-    margin: 17px 0px;
+    padding: 12px 16px;
+    margin: 16px 0px;
     color: #7367f0;
 }
 .div-number {

@@ -1,5 +1,6 @@
 import api from "@api";
 import router from "@/router";
+import store from "@/store";
 // import store from "@/store";
 export default {
     state: {
@@ -24,7 +25,7 @@ export default {
         Fetch_Subject(state, payload) {
             state.subjectsList = payload;
         },
-        Upload_Subject_Create(state, payload) {
+        subject_Create(state, payload) {
             state.subjectsList.unshift(payload);
         },
         Reset_Subject_Dto(state) {
@@ -41,18 +42,30 @@ export default {
             });
         },
         Subject_Details(state, payload) {
-            Object.assign(state.subjectDto, {
-                id: payload.id,
-                name: payload.name,
-                file: payload.file,
-                type: payload.type,
-                imagePath: payload.imagePath,
-                description: payload.description,
-                examCount: payload.examCount,
-                bankCount: payload.bankCount,
-                microscopeCount: payload.microscopeCount,
-                interviewCount: payload.interviewCount
-            });
+            payload.subjectFaculties.map((subFuc, index, list) => {
+                Object.assign(subFuc, {
+                    req: {
+                        facultyId: subFuc.facultyId,
+                        semesterId: subFuc.semesterId,
+                        sectionId: subFuc.sectionId,
+                        doctorId: subFuc.doctorId,
+                        year: subFuc.year,
+                        price: subFuc.price
+                    },
+                    show: {
+                        faculty: subFuc.facultyName,
+                        semester: subFuc.semesterName,
+                        section: subFuc.sectionName,
+                        doctor: subFuc.doctorName,
+                        year: store.state.globalStore.subjectYear.find(y => y.id == subFuc.year).name,
+                        price: subFuc.price
+                    }
+                })
+                if(list.length - 1 == index) {
+                    Object.assign(state.subjectDto, payload);
+                }
+            })
+
         },
         subj_List_Dto(state, payload) {
             let MapOfIds = new Map();
@@ -81,20 +94,24 @@ export default {
                 commit("Fetch_Subject", data);
             });
         },
-        uploadSubject({ commit }, payload) {
+        setSubject({ commit }, payload) {
             api.post(
                 "Subject/SetSubject",
                 payload.formData,
                 ({ data }) => {
-                    if (payload.id != null) {
-                        commit("Upload_Subject_Create", data);
+                    if (payload.id == "00000000-0000-0000-0000-000000000000") {
+                        commit("subject_Create", data);
                     }
                 },
                 {
-                    success: !payload.id
-                        ? "تم إضافة المادة بنجاح"
-                        : "تم تعديل المادة بنجاح",
-                    error: !payload.id ? "فشل إضافة المادة" : "فشل تعديل المادة"
+                    success:
+                        payload.id == "00000000-0000-0000-0000-000000000000"
+                            ? "تم إضافة المادة بنجاح"
+                            : "تم تعديل المادة بنجاح",
+                    error:
+                        !payload.id == "00000000-0000-0000-0000-000000000000"
+                            ? "فشل إضافة المادة"
+                            : "فشل تعديل المادة"
                 }
             );
         },
@@ -119,7 +136,7 @@ export default {
                 }
             );
         },
-        subjListDto({ commit }, ids) {
+        deleteSubjList({ commit }, ids) {
             api.delete(
                 "Subject/RemoveSubjects",
                 ({ data }) => {
