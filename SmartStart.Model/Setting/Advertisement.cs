@@ -2,6 +2,7 @@
 using Elkood.Web.Helper.Validations.Constants;
 using Elkood.Web.Helper.Validations.Enum;
 using Elkood.Web.Infrastructure.ModelEntity.Base;
+using SmartStart.SharedKernel.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,5 +22,8 @@ namespace SmartStart.Model.Setting
 
         [ColumnDataType(DataBaseTypes.DATETIME2)]
         public DateTime EndDate { get; set; }
+
+        [ColumnDataType(DataBaseTypes.TINYINT)]
+        public AdvertisementTypes Type { get; set; }
     }
 }

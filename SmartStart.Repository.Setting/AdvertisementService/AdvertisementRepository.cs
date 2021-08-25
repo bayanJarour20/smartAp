@@ -98,7 +98,8 @@ namespace SmartStart.Repository.Setting.AdvertisementService
                                                      Title = ads.Title,
                                                      ImagePath = ads.ImagePath,
                                                      StartDate = ads.StartDate,
-                                                     EndDate = ads.EndDate
+                                                     EndDate = ads.EndDate,
+                                                     Type = ads.Type,
                                                  }).ToListAsync();
 
                 return operation.SetSuccess(advertisements);
