@@ -18,7 +18,7 @@ namespace SmartStart.Controllers
     {
         public TabController(IExamRepository examRepository) : base(examRepository) { }
 
-        #region Exam 
+        #region  - Exam -
         [Route("api/Exam/GetAll")]
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> GetAllExam()
