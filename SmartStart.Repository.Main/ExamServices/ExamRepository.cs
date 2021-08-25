@@ -514,7 +514,7 @@ namespace SmartStart.Repository.Main.ExamServices
                                   }),
                               }).ToListAsync();
         }
-        private ExamDetailsDto fileExamDetails(Exam exam)
+        private static ExamDetailsDto fileExamDetails(Exam exam)
         {
             return new ExamDetailsDto
             {
