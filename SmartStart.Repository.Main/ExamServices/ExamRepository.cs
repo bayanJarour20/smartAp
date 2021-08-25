@@ -27,7 +27,10 @@ namespace SmartStart.Repository.Main.ExamServices
     {
         private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ExamRepository(SmartStartDbContext context, IWebHostEnvironment webHostEnvironment) : base(context) { }
+        public ExamRepository(SmartStartDbContext context, IWebHostEnvironment webHostEnvironment) : base(context)
+        {
+            this.webHostEnvironment = webHostEnvironment;
+        }
 
         #region Exam
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
@@ -100,7 +103,7 @@ namespace SmartStart.Repository.Main.ExamServices
            => await RepositoryHandler(_addExamDocument(dto));
         public async Task<OperationResult<bool>> DeleteExamDocument(Guid documentId)
             => await RepositoryHandler(_deleteExamDocument(documentId));
-        public async Task<OperationResult<bool>> DeleteExamDocument(IEnumerable<Guid> documentIds)
+        public async Task<OperationResult<bool>> DeleteRangeExamDocument(IEnumerable<Guid> documentIds)
             => await RepositoryHandler(_deleteRangeExamDocuments(documentIds));
         #endregion
 
@@ -580,6 +583,7 @@ namespace SmartStart.Repository.Main.ExamServices
                     await Context.SaveChangesAsync();
 
                     examDocumentDto.Path = documentModel.Path;
+                    examDocumentDto.File = null;
 
                     return operation.SetSuccess(examDocumentDto);
                 }
@@ -590,12 +594,17 @@ namespace SmartStart.Repository.Main.ExamServices
             => async operation =>
             {
 
-                await Context.SoftDeleteTraversalAsync<Document, ExamDocument>(p => p.Id == documentId, p => p.ExamDocuments);
 
                 var documentPath = await Context.Documents.Where(e => e.DateDeleted == null)
-                                                    .Where(e => e.Id == documentId)
-                                                    .Select(e => e.Path)
-                                                    .FirstOrDefaultAsync();
+                                                            .Where(e => e.Id == documentId)
+                                                            .Select(e => e.Path)
+                                                            .FirstOrDefaultAsync();
+
+                await Context.SoftDeleteTraversalAsync<Document, ExamDocument>(p => p.Id == documentId, p => p.ExamDocuments);
+
+                var result = await Context.SaveChangesAsync();
+
+
 
                 TryDeleteImage(documentPath);
 
@@ -609,14 +618,21 @@ namespace SmartStart.Repository.Main.ExamServices
 
               foreach (Guid id in documentIds)
               {
-                  await Context.SoftDeleteTraversalAsync<Document, ExamDocument>(p => p.Id == id, p => p.ExamDocuments);
 
                   var documentPath = await Context.Documents.Where(e => e.DateDeleted == null)
-                                                  .Where(e => e.Id == id)
-                                                  .Select(e => e.Path)
-                                                  .FirstOrDefaultAsync();
-                  if (documentPath != null)
-                      TryDeleteImage(documentPath);
+                                                          .Where(e => e.Id == id)
+                                                          .Select(e => e.Path)
+                                                          .FirstOrDefaultAsync();
+                                                              if (documentPath != null)
+                 TryDeleteImage(documentPath);
+
+                  await Context.SoftDeleteTraversalAsync<Document, ExamDocument>(p => p.Id == id, p => p.ExamDocuments);
+
+
+
+                  var result = await Context.SaveChangesAsync();
+
+
 
               }
 
