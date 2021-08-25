@@ -113,6 +113,7 @@ namespace SmartStart.Repository.Main.SubjectService
                 }
                 subject = await TrackingQuery.Include(s => s.SubjectTags)
                                              .ThenInclude(t => t.Tag)
+                                             .Include(s => s.SubjectFaculties)
                                              .Where(s => s.Id == subjectDto.Id).SingleOrDefaultAsync();
                 if (subject is not null)
                 {
