@@ -23,10 +23,8 @@ namespace SmartStart.Repository.Setting.FeedbackService
 
         public async Task<OperationResult<IEnumerable<FeedbackDetailsDto>>> GetAll()
             => await RepositoryHandler(_getAll());
-
         public async Task<OperationResult<FeedbackDetailsDto>> Details(Guid id)
             => await RepositoryHandler(_details(id));
-
         public async Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids)
             => await RepositoryHandler(_deleteRange(ids));
 
@@ -41,11 +39,14 @@ namespace SmartStart.Repository.Setting.FeedbackService
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRange(IEnumerable<Guid> ids)
             => async operation =>
             {
-                var Exams = await Query.Where(f => ids.Contains(f.Id)).ToListAsync();
-                if (Exams == null)
+                var Feedbacks = await Query.Where(f => ids.Contains(f.Id)).ToListAsync();
+                if (Feedbacks == null)
                     return (OperationResultTypes.NotExist, $"{ids} not exists.");
-                Exams.ForEach(e => Context.SoftDelete(e));
+
+                Feedbacks.ForEach(e => Context.SoftDelete(e));
+
                 await Context.SaveChangesAsync();
+
                 return operation.SetSuccess(true);
             };
     }

@@ -86,8 +86,8 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_detailsMicroscope(id));
         public async Task<OperationResult<bool>> DeleteMicroscope(Guid id)
             => await RepositoryHandler(_deleteMicroscope(id));
-        public async Task<OperationResult<bool>> MultiDeleteMicroscope(IEnumerable<Guid> ids)
-            => await RepositoryHandler(_multiDeleteMicroscope(ids));
+        public async Task<OperationResult<bool>> DeleteRangeMicroscope(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_deleteRangeMicroscope(ids));
         public async Task<OperationResult<ExamDetailsDto>> AddMicroscope(ExamDto dto)
             => await RepositoryHandler(_addMicroscope(dto));
         public async Task<OperationResult<ExamDetailsDto>> UpdateMicroscope(ExamDto dto)
@@ -274,7 +274,7 @@ namespace SmartStart.Repository.Main.ExamServices
                     return (OperationResultTypes.NotExist, "${id} : not exist.");
                 return operation.SetSuccess(true, "Success Delete.");
             };
-        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDeleteMicroscope(IEnumerable<Guid> ids)
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRangeMicroscope(IEnumerable<Guid> ids)
             => async operation =>
             {
                 if (!(await TryDeleteRangeAsync(ids, TabTypes.Interview)))
