@@ -41,7 +41,7 @@ namespace SmartStart.Repository.Setting.FeedbackService
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _multiDelete(IEnumerable<Guid> ids)
             => async operation =>
             {
-                var Exams = await Query.Where(f => ids.Contains(f.Id)).ToListAsync();
+                var Exams = await TrackingQuery.Where(f => ids.Contains(f.Id)).ToListAsync();
                 if (Exams == null)
                     return (OperationResultTypes.NotExist, $"{ids} not exists.");
                 Exams.ForEach(e => Context.SoftDelete(e));
