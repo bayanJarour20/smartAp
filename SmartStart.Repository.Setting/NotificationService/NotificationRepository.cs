@@ -124,14 +124,14 @@ namespace SmartStart.Repository.Setting.NotificationService
                         notificationDto.Id = notification.Id;
 
 
-                        //var res = await SendNotification(notificationDto);
-                        //if (!res.IsSuccess)
-                        //{
-                        //    await transaction.RollbackAsync();
-                        //    if (res.HasException())
-                        //        return operation.SetException(res.Exception);
-                        //    return operation.SetFailed(res.Message);
-                        //}
+                        var res = await SendNotification(notificationDto);
+                        if (!res.IsSuccess)
+                        {
+                            await transaction.RollbackAsync();
+                            if (res.HasException())
+                                return operation.SetException(res.Exception);
+                            return operation.SetFailed(res.Message);
+                        }
 
                         await transaction.CommitAsync();
                         return operation.SetSuccess(notificationDto);
@@ -179,46 +179,46 @@ namespace SmartStart.Repository.Setting.NotificationService
            };
 
 
-        //public async Task<OperationResult<bool>> SendNotification(NotificationUsersDto notificationDto)
-        //{
-        //    try
-        //    {
-        //        string applicationID = String.Empty;
-        //        //string senderId = String.Empty;
-        //        string deviceId = "";
+        public async Task<OperationResult<bool>> SendNotification(NotificationUsersDto notificationDto)
+        {
+            try
+            {
+                string applicationID = String.Empty;
+                //string senderId = String.Empty;
+                string deviceId = "";
 
-        //        // send to user
-        //        applicationID = "AAAAtfcMGl8:APA91bF42b3aDoLzGo-uADNi7N0d3DOo-3OdeF8_v6iAu9-a9d8YP2EhX2q6hVK_CVk2NxsUV-r4G0Mxvzug_E7blWvSKuqUF_kcVtT2aFsGCkjW81L7-rYwEmoD3rvD7MgTDZWG8caD";
-        //        //senderId = "24555187283";
-        //        if (notificationDto.NotificationType == NotificationTypes.Seller)
-        //        {
-        //            applicationID = "AAAA5X-gqQ8:APA91bFWF3sFyhVYGTd7C0SmLsFGMZuzlX8gOYlZlx76u79BhYD1c9VMbqMZj4KpQCtZVmGMvUPiFDT8VOMbQ89R4dGE0r1juQXZ44yXh-wguxte2zCBLuFJJcEpXaFPm_mcY3XlKRDG";
-        //        }
+                // send to user
+                applicationID = "AAAAHzROU30:APA91bH1VZu_L9RVY6XeDdw4zfVOn0fl-0g0Pp-UdkBMWDSm_HlHQ42c4HP90JViiW_msm9dnsndkmheoe-FNRZNghq-qTnwLNXWRfQx2F-ykm5zlw63uBB8akVCoXrX7eRFLVlDYK3F";
+                //senderId = "24555187283";
+                if (notificationDto.NotificationType == NotificationTypes.Seller)
+                {
+                    applicationID = "AAAAlcnPf1U:APA91bHkhXRsgPpxMV3PV2KmasV2Es_eHbuezoeWET76JRQahFanVwtTipDKO3HjCTtzseq_bZCXxvCiPTU1j-dBmkxSjgxG187lKGownV5CkcBWdbt9eJ2_s-zz18C32Zms94XEwa82";
+                }
 
-        //        if (!(notificationDto.UserIds?.Any() ?? false))
-        //        {
-        //            deviceId = "/topics/all";
-        //        }
-        //        else
-        //        {
-        //            //TODO get sudetn dev id 
-        //            //deviceId = student.DeviceToken;
-        //        }
+                if (!(notificationDto.UserIds?.Any() ?? false))
+                {
+                    deviceId = "/topics/all";
+                }
+                else
+                {
+                    //TODO get sudetn dev id 
+                    //deviceId = student.DeviceToken;
+                }
 
-        //        using (var response = await HttpFCMSender(applicationID, deviceId, notificationDto))
-        //        {
+                using (var response = await HttpFCMSender(applicationID, deviceId, notificationDto))
+                {
 
-        //            if (response.IsSuccessStatusCode)
-        //                return new OperationResult<bool>().SetSuccess(true);
+                    if (response.IsSuccessStatusCode)
+                        return new OperationResult<bool>().SetSuccess(true);
 
-        //            return new OperationResult<bool>().SetFailed(await response.RequestMessage.Content.ReadAsStringAsync());
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return new OperationResult<bool>().SetException(e);
-        //    }
-        //}
+                    return new OperationResult<bool>().SetFailed(await response.RequestMessage.Content.ReadAsStringAsync());
+                }
+            }
+            catch (Exception e)
+            {
+                return new OperationResult<bool>().SetException(e);
+            }
+        }
 
         private async Task<HttpResponseMessage> HttpFCMSender(string applicationID, string deviceId, NotificationDto notificationDto)
         {
