@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartStart.DataTransferObject.GeneralDto;
 using SmartStart.Model.Business;
 using SmartStart.Model.Main;
+using SmartStart.Model.Shared;
 using SmartStart.SharedKernel.Enums;
 using SmartStart.SqlServer.DataBase;
 using System;
@@ -91,7 +92,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                   res.Add(fillDto(subjectFaculty.Subject, subjectFaculty.PackageSubjectFaculties.ToList(), UserId));
               }
               await Context.SaveChangesAsync();
-              return operation.SetSuccess(new 
+              return operation.SetSuccess(new
               {
                   Subjects = res,
                   SubjectFaculty = new
@@ -103,7 +104,13 @@ namespace SmartStart.Repository.Main.GeneralServices
                       SemesterId = SubjectFaculties.First().SemesterId,
                       SemesterName = SubjectFaculties.First().Semester.Name,
                       Year = SubjectFaculties.First().Year
-                  }
+                  },
+                  Tags = _query<Tag>().Select(t => new
+                  {
+                      Id = t.Id,
+                      Name = t.Name, 
+                      Type = t.Type
+                  }).ToList()
               });
           };
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSelected(SelectedDto selectedDto, Guid UserId)
@@ -162,7 +169,16 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                         }).ToList()
                                                                     }).ToList()
                                                   }).ToList();
-                return operation.SetSuccess(res);
+                return operation.SetSuccess(new
+                {
+                    Data = res,
+                    Tags = _query<Tag>().Select(t => new
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        Type = t.Type
+                    }).ToList()
+                });
             };
         private Func<OperationResult<object>, Task<OperationResult<object>>> _activateCode(string Hash, Guid UserId)
           => async operation =>
