@@ -205,15 +205,11 @@ namespace SmartStart.Repository.Main.GeneralServices
         {
             return new
             {
+                Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
                 ImagePath = p.ImagePath,
-                SubjectTags = p.SubjectTags.Select(t => new
-                {
-                    TagId = t.TagId,
-                    TagName = t.Tag.Name,
-                    Type = t.Tag.Type
-                }).ToList(),
+                SubjectTags = p.SubjectTags.Select(t => t.TagId).ToList(),
                 Type = p.Type,
                 IsActive = ps.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
                 Exams = p.Exams.Where(e => e.Type == TabTypes.Exam)
@@ -227,12 +223,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                        Name = ee.Name,
                                        Price = ee.Price,
                                        Year = ee.Year,
-                                       ExamTags = ee.ExamTags.Select(t => new
-                                       {
-                                           TagId = t.TagId,
-                                           TagName = t.Tag.Name,
-                                           Type = t.Tag.Type
-                                       }).ToList(),
+                                       ExamTags = ee.ExamTags.Select(t => t.TagId).ToList(),
                                        ExamDocuments = ee.ExamDocuments.Select(t => new
                                        {
                                            Name = t.Document.Name,
@@ -241,18 +232,14 @@ namespace SmartStart.Repository.Main.GeneralServices
                                        }),
                                        ExamQuestions = ee.ExamQuestions.Select(q => new
                                        {
+                                           QuestionId = q.QuestionId,
                                            Order = q.Order,
                                            Title = q.Question.Title,
                                            Hint = q.Question.Hint,
                                            IsCorrected = q.Question.IsCorrected,
                                            QuestionType = q.Question.QuestionType,
                                            AnswerType = q.Question.AnswerType,
-                                           QuestionTags = q.Question.QuestionTags.Select(t => new
-                                           {
-                                               TagId = t.TagId,
-                                               TagName = t.Tag.Name,
-                                               Type = t.Tag.Type
-                                           }).ToList(),
+                                           QuestionTags = q.Question.QuestionTags.Select(t => t.TagId).ToList(),
                                            QuestionDocuments = q.Question.QuestionDocuments.Select(d => new
                                            {
                                                DocumentId = d.DocumentId,
@@ -265,7 +252,6 @@ namespace SmartStart.Repository.Main.GeneralServices
                                            {
                                                Id = a.Id,
                                                Title = a.Title,
-                                               Option = a.Option,
                                                IsCorrect = a.IsCorrect,
                                                CorrectionDate = a.CorrectionDate
                                            })
