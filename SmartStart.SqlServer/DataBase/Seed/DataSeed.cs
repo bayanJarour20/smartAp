@@ -80,12 +80,15 @@ namespace SmartStart.SqlServer.DataBase.Seed
                 var res = new List<Advertisement>(); 
                 for (int i = 0; i < titles.Length; i++)
                 {
+                    int f = RandomInteger(0, 1);
                     res.Add(new Advertisement
                     {
                         Title = titles[i], 
                         StartDate = new DateTime(2021, RandomInteger(1, 6), RandomInteger(1, 29)),
                         EndDate = new DateTime(2021, RandomInteger(7, 12), RandomInteger(1, 29)),
-                        ImagePath = ""
+                        ImagePath = "",
+                        Type = f == 0? AdvertisementTypes.Offer : AdvertisementTypes.Offer, 
+                        Price = f == 0? 500 * RandomInteger(7, 15) : null
                     });
                 }
                 await context.AddRangeAsync(res);
