@@ -111,7 +111,7 @@ namespace SmartStart.Repository.Invoice.CodeService
                 one.UserId = userId;
                 one.DateActivated = DateTime.Now.ToLocalTime();
 
-                var subjectIds = one.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFaculty.SubjectId));
+                var subjectIds = one.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFacultyId));
 
                 Context.AddRange(subjectIds.Except(await _query<SubjectFacultyAppUser>().Where(s => s.AppUserId == Context.CurrentUserId)
                                                                                         .Select(s => s.SubjectFacultyId)
