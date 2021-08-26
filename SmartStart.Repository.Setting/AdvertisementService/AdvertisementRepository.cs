@@ -82,7 +82,7 @@ namespace SmartStart.Repository.Setting.AdvertisementService
                 var newFile = TryUploadFile(file, out string newPath);
                 if (newFile.IsSuccess)
                 {
-                    dto.ImagePath = newPath;
+                    dto.ImagePath = (!dto.ImagePath.IsNullOrEmpty() && file is null) ? advertisement.ImagePath : newPath;
                     Context.Entry(advertisement).State = EntityState.Detached;
                     var newAdvertisement = await base.UpdateAsync(dto);
                     if (newAdvertisement.IsSuccess)
