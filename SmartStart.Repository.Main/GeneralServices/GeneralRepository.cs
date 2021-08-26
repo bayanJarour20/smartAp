@@ -76,6 +76,9 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                     .Include("Subject.SubjectTags.Tag")
                                                                     .Include("Subject.Exams.ExamDocuments.Document")
                                                                     .Include("Subject.Exams.ExamTags.Tag")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionTags")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionDocuments")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.Answers")
                                                                     .Where(s => s.FacultyId == selectedDto.FacultyId
                                                                                             && s.SectionId == selectedDto.SectionId
                                                                                             && s.Year == selectedDto.Year
