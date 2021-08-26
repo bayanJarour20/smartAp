@@ -195,7 +195,7 @@ namespace SmartStart.Repository.Main.GeneralServices
               code.UserId = UserId;
               code.DateActivated = DateTime.Now.ToLocalTime();
               
-              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFaculty.SubjectId));
+              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFacultyId));
 
               var temp = subjectIds.Except(await _query<SubjectFacultyAppUser>().Include(s => s.SubjectFaculty)
                                                                                 .ThenInclude(s => s.PackageSubjectFaculties)
