@@ -115,6 +115,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                     Type = SharedKernel.Enums.UserTypes.Seller,
                     MoneyLimit = 10000,
                     Rates = new List<Rate>() { new Rate() { DiscountRate = 0.1f } },
+                    DateActivated = DateTime.Now,
                     //Codes = new List<Code>()
                     //{
                     //    new Code()
@@ -417,6 +418,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                     Email = "SmartStartSeller@SmartStart.com",
                     Type = UserTypes.Seller,
                     MoneyLimit = 9000000,
+                    DateActivated = DateTime.Now
                 };
                 var createResult = await userManager.CreateAsync(seller, "smartstartseller1234");
                 if (createResult.Succeeded)

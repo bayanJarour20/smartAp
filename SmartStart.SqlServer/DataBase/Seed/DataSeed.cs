@@ -88,7 +88,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                         EndDate = new DateTime(2021, RandomInteger(7, 12), RandomInteger(1, 29)),
                         ImagePath = "",
                         Type = f == 0? AdvertisementTypes.Offer : AdvertisementTypes.Offer, 
-                        Price = f == 0? 500 * RandomInteger(7, 15) : null
+                        Price = f == 0? RandomInteger(0, 100) : null
                     });
                 }
                 await context.AddRangeAsync(res);

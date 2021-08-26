@@ -76,6 +76,9 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                     .Include("Subject.SubjectTags.Tag")
                                                                     .Include("Subject.Exams.ExamDocuments.Document")
                                                                     .Include("Subject.Exams.ExamTags.Tag")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionTags")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionDocuments")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.Answers")
                                                                     .Where(s => s.FacultyId == selectedDto.FacultyId
                                                                                             && s.SectionId == selectedDto.SectionId
                                                                                             && s.Year == selectedDto.Year
@@ -195,7 +198,7 @@ namespace SmartStart.Repository.Main.GeneralServices
               code.UserId = UserId;
               code.DateActivated = DateTime.Now.ToLocalTime();
               
-              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFaculty.SubjectId));
+              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFacultyId));
 
               var temp = subjectIds.Except(await _query<SubjectFacultyAppUser>().Include(s => s.SubjectFaculty)
                                                                                 .ThenInclude(s => s.PackageSubjectFaculties)
