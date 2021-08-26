@@ -66,7 +66,6 @@
                                 name="passwordName"
                                 v-model="userDto.password"
                                 :rules="[
-                                    { type: 'required', message: 'كلمة السر مطلوب' },
                                     {
                                         type: 'min:4',
                                         message: 'لايجب أن يقل عن أربعة'
