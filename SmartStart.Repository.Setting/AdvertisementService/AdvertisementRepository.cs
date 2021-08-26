@@ -107,6 +107,7 @@ namespace SmartStart.Repository.Setting.AdvertisementService
                                                      EndDate = ads.EndDate,
                                                      Price = ads.Price,
                                                      Type = ads.Type,
+                                                     Description = ads.Description
                                                  }).ToListAsync();
 
                 return operation.SetSuccess(advertisements);
