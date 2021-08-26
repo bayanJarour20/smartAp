@@ -129,15 +129,19 @@ namespace SmartStart.Repository.Security.UserService
               User.Type = UserTypes.User;
 
 
-              var setPasswordValidation = await PasswordValidator.ValidateAsync(UserManager, User, account.Password);
-              if (!setPasswordValidation.Succeeded)
+              if (!account.Password.IsNullOrEmpty())
               {
-                  var PasswordError = String.Join(",", setPasswordValidation.Errors.Select(x => x.Description));
-                  return operation.SetFailed(PasswordError);
+                  User.PasswordHash = UserManager.PasswordHasher.HashPassword(User, account.Password);
+                  {
+                      var setPasswordValidation = await PasswordValidator.ValidateAsync(UserManager, User, account.Password);
+                      if (!setPasswordValidation.Succeeded)
+                      {
+                          var PasswordError = String.Join(",", setPasswordValidation.Errors.Select(x => x.Description));
+                          return operation.SetFailed(PasswordError);
+                      }
+                  }
               }
 
-              if (!account.Password.IsNullOrEmpty())
-                  User.PasswordHash = UserManager.PasswordHasher.HashPassword(User, account.Password);
 
               IdentityResult identityResult = await UserManager.UpdateAsync(User);
               if (!identityResult.Succeeded)
