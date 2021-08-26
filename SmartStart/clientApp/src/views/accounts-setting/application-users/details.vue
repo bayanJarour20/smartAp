@@ -11,7 +11,7 @@
                  <b-badge pill :variant="userDto.dateBlocked ? 'danger' : 'success'">{{userDto.dateBlocked ? 'غير مفعل' : 'مفعل'}}</b-badge>
                 </span>
             </b-card-header>
-            <b-card-body>
+            <b-card-body class="p-0">
                 <b-col>
                     <b-row>
                         <b-col cols="12" md="6">
@@ -39,6 +39,8 @@
                                 name="dateActivated"
                                 :value="new Date(userDto.dateActivated).toLocaleDateString('en-GB')"
                             />
+                        </b-col>
+                        <b-col cols="12" md="6">
                             <EKInputText
                                 :rules="[
                                     {
@@ -57,8 +59,7 @@
                                 v-model="userDto.phoneNumber"
                             />
                         </b-col>
-                        
-                        <b-col cols="12"  md="6" lg="4">
+                        <b-col cols="12" md="6">
                             <EKInputText
                                 label="كلمة السر"
                                 placeholder="ادخل كلمة السر"
@@ -73,8 +74,7 @@
                                 ]"
                             />
                         </b-col>
-                        <b-col cols="12"  md="6" lg="4">
-                            <div style="margin-top: 12px;">
+                        <b-col cols="12" md="6">
                             <EKInputPicker
                                 label="تاريخ الميلاد"
                                 :rules="[
@@ -87,9 +87,16 @@
                                 placeholder="ادخل تاريخ الميلاد"
                                 v-model="userDto.birthday"
                             />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="3">
+                            <label class="mb-50">الجنس</label>
+                            <div class="d-flex align-items-center my-1">
+                                <label class="mb-0">ذكر</label>
+                                <b-form-checkbox switch v-model="userDto.gender"></b-form-checkbox>
+                                <label class="mb-0">انثى</label>
                             </div>
                         </b-col>
-                        <b-col cols="12"  md="6" lg="4">
+                        <b-col cols="12" md="6" lg="3">
                             <EKInputText
                                 readonly
                                 :value="userDto.codes.length"
@@ -97,14 +104,6 @@
                                 name="subscriptionCount"
                                 type="number"
                             />
-                        </b-col>
-                        <b-col cols="12"  md="6" lg="4">
-                            <label class="mb-50">الجنس</label>
-                            <div class="d-flex align-items-center mb-1">
-                                <label class="mb-0">ذكر</label>
-                                <b-form-checkbox switch v-model="userDto.gender"></b-form-checkbox>
-                                <label class="mb-0">انثى</label>
-                            </div>
                         </b-col>
                         <b-col cols="12">
                             <EKInputTextarea
@@ -192,7 +191,6 @@ export default {
         EKInputText,
         EKInputPicker,
         EKTable,
-       
         EKInputTextarea
     },
     computed: {

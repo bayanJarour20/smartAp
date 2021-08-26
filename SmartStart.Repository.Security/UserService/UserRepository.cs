@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using SmartStart.DataTransferObject.AccountDto;
 using SmartStart.DataTransferObject.FacultyDto;
 using SmartStart.DataTransferObject.UserDto;
+using SmartStart.Model.Main;
 using SmartStart.Model.Security;
 using SmartStart.SharedKernel.Enums;
 using SmartStart.SharedKernel.ExtensionMethods;
@@ -223,6 +224,7 @@ namespace SmartStart.Repository.Security.UserService
                     Birthday = account.Birthday,
                     Address = account.Address,
                     Gender = account.Gender,
+                    Faculties = new List<FacultyPOSUser>(),
                     //FacultyId = account.FacultyId,
                     SubscriptionDate = account.SubscriptionDate,
                     Type = UserTypes.User,

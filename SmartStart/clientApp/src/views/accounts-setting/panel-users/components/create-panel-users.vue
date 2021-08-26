@@ -158,9 +158,7 @@ export default {
         },
         search(query) {
             this.$store.commit('Set_Search_Dto', {
-                keys: [
-                    "userName","email","name"
-                ],
+                keys: ["userName", "email"],
                 query   
             })
         },

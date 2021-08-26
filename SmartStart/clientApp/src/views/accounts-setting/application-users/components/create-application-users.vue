@@ -31,7 +31,9 @@
                     v-model="userDto.phoneNumber"
                 />
                 <EKInputText
-                    :rules="[{ type: 'required', message: 'اسم المستخدم مطلوب' }]"
+                    :rules="[
+                        { type: 'required', message: 'اسم المستخدم مطلوب' }
+                    ]"
                     label="الاسم المستخدم"
                     placeholder="ادخل الاسم المستخدم"
                     name="user name"
@@ -39,7 +41,10 @@
                 />
                 <EKInputText
                     :rules="[
-                        { type: 'required', message: '  البريد الإلكتروني مطلوب' },
+                        {
+                            type: 'required',
+                            message: '  البريد الإلكتروني مطلوب'
+                        },
                         {
                             type: 'email',
                             message: 'يجب أن يكون النص بريدا إلكترونيا'
@@ -62,11 +67,9 @@
                     placeholder="ادخل كلمة السر "
                     name="password"
                     v-model="userDto.password"
-                />            
+                />
                 <EKInputPicker
                     label="تاريخ الميلاد"
-                     
-                     
                     name="birthday"
                     placeholder="اختر تاريخ الميلاد"
                     v-model="userDto.birthday"
@@ -74,7 +77,10 @@
                 <label class="mb-50">الجنس</label>
                 <div class="d-flex align-items-center mb-1">
                     <label class="mb-0">ذكر</label>
-                    <b-form-checkbox switch v-model="userDto.gender"></b-form-checkbox>
+                    <b-form-checkbox
+                        switch
+                        v-model="userDto.gender"
+                    ></b-form-checkbox>
                     <label class="mb-0">انثى</label>
                 </div>
                 <EKInputTextarea
@@ -83,7 +89,6 @@
                     placeholder="ادخل رقم العنوان"
                     name="address"
                 />
-               
             </ValidationObserver>
         </template>
     </EKDialog>
@@ -95,12 +100,10 @@ import EKInputPicker from "@Ekcore/components/EK-forms/EK-input-picker";
 import { ValidationObserver } from "vee-validate";
 import EKInputTextarea from "@Ekcore/components/EK-forms/EK-input-textarea";
 
-
 import { mapActions, mapState } from "vuex";
 
 export default {
     components: {
-       
         EKDialog,
         EKInputText,
         EKInputPicker,
@@ -129,13 +132,11 @@ export default {
             });
         },
         search(query) {
-            this.$store.commit('Set_Search_Dto', {
-                keys: [
-                    "userName","email","address","name"
-                ],
-                query   
-            })
-        },
+            this.$store.commit("Set_Search_Dto", {
+                keys: ["userName", "email"],
+                query
+            });
+        }
     }
 };
 </script>
