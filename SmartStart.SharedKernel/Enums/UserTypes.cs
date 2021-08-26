@@ -6,7 +6,7 @@ namespace SmartStart.SharedKernel.Enums
 {
     public enum UserTypes
     {
-        User,
+        User = 1,
         Seller,
         Dashboard,
     }
