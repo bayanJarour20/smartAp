@@ -231,7 +231,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                     FacultyId = s.Key.FacultyId,
                                                     FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
                                                     Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
-                                                                .Select(s2 => new
+                                                                .Select(s2 => new 
                                                                 {
                                                                     SectionId = s2.Key.SectionId,
                                                                     SectionName = s2.Key.Name,
@@ -264,8 +264,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                 SubjectTags = p.SubjectTags.Select(t => t.TagId).ToList(),
                 Type = p.Type,
                 IsActive = ps.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
-                Exams = p.Exams.Where(e => e.Type == TabTypes.Exam)
-                               .GroupBy(e => e.Type)
+                Exams = p.Exams.GroupBy(e => e.Type)
                                .Select(e => new
                                {
                                    Type = e.Key,
