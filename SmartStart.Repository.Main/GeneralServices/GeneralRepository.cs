@@ -60,7 +60,8 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                                   Semesters = s3.Select(s4 => new
                                                                                                   {
                                                                                                       SemesterId = s4.SemesterId,
-                                                                                                      SemesterName = s4.Semester.Name
+                                                                                                      SemesterName = s4.Semester.Name,
+                                                                                                      SelectedId = s4.Id
                                                                                                   }).ToList()
                                                                                               }).ToList()
                                                                           }).ToList()
@@ -76,6 +77,9 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                     .Include("Subject.SubjectTags.Tag")
                                                                     .Include("Subject.Exams.ExamDocuments.Document")
                                                                     .Include("Subject.Exams.ExamTags.Tag")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionTags")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionDocuments")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.Answers")
                                                                     .Where(s => s.FacultyId == selectedDto.FacultyId
                                                                                             && s.SectionId == selectedDto.SectionId
                                                                                             && s.Year == selectedDto.Year
@@ -103,7 +107,8 @@ namespace SmartStart.Repository.Main.GeneralServices
                       SectionName = SubjectFaculties.First().Section.Name,
                       SemesterId = SubjectFaculties.First().SemesterId,
                       SemesterName = SubjectFaculties.First().Semester.Name,
-                      Year = SubjectFaculties.First().Year
+                      Year = SubjectFaculties.First().Year,
+                      SelectedId = SubjectFaculties.First().Id
                   },
                   Tags = _query<Tag>().Select(t => new
                   {
@@ -195,7 +200,7 @@ namespace SmartStart.Repository.Main.GeneralServices
               code.UserId = UserId;
               code.DateActivated = DateTime.Now.ToLocalTime();
               
-              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFaculty.SubjectId));
+              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFacultyId));
 
               var temp = subjectIds.Except(await _query<SubjectFacultyAppUser>().Include(s => s.SubjectFaculty)
                                                                                 .ThenInclude(s => s.PackageSubjectFaculties)

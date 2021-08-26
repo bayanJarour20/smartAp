@@ -29,5 +29,6 @@ namespace SmartStart.Model.Setting
         [ColumnDataType(DataBaseTypes.TINYINT)]
         public AdvertisementTypes Type { get; set; }
 
+        public string? Description { get; set; }
     }
 }

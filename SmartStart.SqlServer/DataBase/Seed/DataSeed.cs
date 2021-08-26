@@ -88,7 +88,8 @@ namespace SmartStart.SqlServer.DataBase.Seed
                         EndDate = new DateTime(2021, RandomInteger(7, 12), RandomInteger(1, 29)),
                         ImagePath = "",
                         Type = f == 0? AdvertisementTypes.Offer : AdvertisementTypes.Offer, 
-                        Price = f == 0? 500 * RandomInteger(7, 15) : null
+                        Price = f == 0? RandomInteger(0, 100) : null,
+                        Description = f == 0? RandomString(RandomInteger(20, 30)) : null
                     });
                 }
                 await context.AddRangeAsync(res);
@@ -157,7 +158,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                     Name = names[i],
                     PhoneNumber = PhoneNumberGenerator(),
                     Type = UserTypes.User,
-                    UserName = engNames[i]
+                    UserName = PhoneNumberGenerator()
                 };
                 var createResult = await userManager.CreateAsync(user, "1234");
                 if (createResult.Succeeded)
