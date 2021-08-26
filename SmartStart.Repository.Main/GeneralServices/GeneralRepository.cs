@@ -169,6 +169,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             {
                                                                                                 SemesterId = s4.SemesterId,
                                                                                                 SemesterName = s4.Semester.Name,
+                                                                                                SelectedId = s4.Id,
                                                                                                 Subjects = s.Select(p => fillDto(p.Subject, p.PackageSubjectFaculties.ToList(), UserId)).ToList()
                                                                                             }).ToList()
                                                                                         }).ToList()
@@ -213,11 +214,41 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             AppUserId = UserId,
                                                                                         }).ToList();
               Context.AddRange(temp);
-              var res = new List<object>(); 
-              foreach (var item in temp)
-              {
-                  res.Add(fillDto(item.SubjectFaculty.Subject, item.SubjectFaculty.PackageSubjectFaculties.ToList(), UserId));
-              }
+              var res = _query<SubjectFaculty>().Where(s => temp.Where(t => t.SubjectFacultyId == s.Id).Any())
+                                                .Include(s => s.Section)
+                                                .Include(s => s.Semester)
+                                                .Include("Faculty.University")
+                                                .Include("Subject.SubjectTags.Tag")
+                                                .Include("Subject.Exams.ExamDocuments.Document")
+                                                .Include("Subject.Exams.ExamTags.Tag")
+                                                .Include("Subject.Exams.ExamQuestions.Question.QuestionTags")
+                                                .Include("Subject.Exams.ExamQuestions.Question.QuestionDocuments")
+                                                .Include("Subject.Exams.ExamQuestions.Question.Answers")
+                                                .ToList()
+                                                .GroupBy(s => new { s.FacultyId, s.Faculty.Name, UniversityName = s.Faculty.University.Name })
+                                                .Select(s => new
+                                                {
+                                                    FacultyId = s.Key.FacultyId,
+                                                    FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
+                                                    Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
+                                                                .Select(s2 => new 
+                                                                {
+                                                                    SectionId = s2.Key.SectionId,
+                                                                    SectionName = s2.Key.Name,
+                                                                    Years = s2.GroupBy(s3 => s3.Year)
+                                                                                    .Select(s3 => new
+                                                                                    {
+                                                                                        Year = s3.Key,
+                                                                                        Semesters = s3.Select(s4 => new
+                                                                                        {
+                                                                                            SemesterId = s4.SemesterId,
+                                                                                            SemesterName = s4.Semester.Name,
+                                                                                            SelectedId = s4.Id,
+                                                                                            Subjects = s.Select(p => fillDto(p.Subject, p.PackageSubjectFaculties.ToList(), UserId)).ToList()
+                                                                                        }).ToList()
+                                                                                    }).ToList()
+                                                                }).ToList()
+                                                }).ToList();
               return operation.SetSuccess(res);
           };
 
@@ -233,8 +264,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                 SubjectTags = p.SubjectTags.Select(t => t.TagId).ToList(),
                 Type = p.Type,
                 IsActive = ps.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
-                Exams = p.Exams.Where(e => e.Type == TabTypes.Exam)
-                               .GroupBy(e => e.Type)
+                Exams = p.Exams.GroupBy(e => e.Type)
                                .Select(e => new
                                {
                                    Type = e.Key,

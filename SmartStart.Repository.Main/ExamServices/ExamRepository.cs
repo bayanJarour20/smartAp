@@ -444,6 +444,7 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
             dto.Id = exam.Id;
             return await Query.Where(exam => exam.Id == dto.Id)
+                              .Include(exam => exam.Subject)
                               .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync();
         }
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
@@ -463,6 +464,7 @@ namespace SmartStart.Repository.Main.ExamServices
             await Context.SaveChangesAsync();
 
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
+                            .Include(exam => exam.Subject)
                             .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync());
         }
         private async Task<IEnumerable<ExamDetailsQuestionDto>> GetAllQuestionAsync(Expression<Func<Exam, bool>> predicate)
