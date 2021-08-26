@@ -39,7 +39,7 @@ namespace SmartStart.Repository.Setting.FeedbackService
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRange(IEnumerable<Guid> ids)
             => async operation =>
             {
-                var Feedbacks = await Query.Where(f => ids.Contains(f.Id)).ToListAsync();
+                var Feedbacks = await TrackingQuery.Where(f => ids.Contains(f.Id)).ToListAsync();
                 if (Feedbacks == null)
                     return (OperationResultTypes.NotExist, $"{ids} not exists.");
 
