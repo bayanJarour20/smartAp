@@ -36,14 +36,20 @@ namespace SmartStart.Repository.Setting.AdvertisementService
         public async Task<OperationResult<IEnumerable<AdvertisementDto>>> GetAdvertisement()
             => await RepositoryHandler(_getAdvertisement());
 
-        
+        public async Task<OperationResult<bool>> DeleteRange(IEnumerable<Guid> ids)
+            => await RepositoryHandler(_deleteRange(ids));
+
+
         private Func<OperationResult<AdvertisementDto>, Task<OperationResult<AdvertisementDto>>> _delete(Guid id)
             => async operation =>
             {
                 var advertisement = await FindAsync(id);
+
                 if (advertisement is null)
                     return (OperationResultTypes.NotExist);
+
                 TryDeleteFile(advertisement.ImagePath);
+
                 return await base.DeleteAsync(id);
             };
 
@@ -76,7 +82,7 @@ namespace SmartStart.Repository.Setting.AdvertisementService
                 var newFile = TryUploadFile(file, out string newPath);
                 if (newFile.IsSuccess)
                 {
-                    dto.ImagePath = newPath;
+                    dto.ImagePath = (!dto.ImagePath.IsNullOrEmpty() && file is null) ? advertisement.ImagePath : newPath;
                     Context.Entry(advertisement).State = EntityState.Detached;
                     var newAdvertisement = await base.UpdateAsync(dto);
                     if (newAdvertisement.IsSuccess)
@@ -106,6 +112,19 @@ namespace SmartStart.Repository.Setting.AdvertisementService
                 return operation.SetSuccess(advertisements);
             };
 
+        private Func<OperationResult<bool>, Task<OperationResult<bool>>> _deleteRange(IEnumerable<Guid> ids)
+            => async operation =>
+            {
+                var Ads = await TrackingQuery.Where(ads => ids.Contains(ads.Id)).ToListAsync();
+                if (Ads == null)
+                    return (OperationResultTypes.NotExist, $"{ids} : not exist. ");
+
+                Ads.ForEach(ads => Context.SoftDelete(ads));
+
+                await Context.SaveChangesAsync();
+
+                return operation.SetSuccess(true);
+            };
 
 
         #region Helper Methods

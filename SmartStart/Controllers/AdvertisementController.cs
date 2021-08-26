@@ -9,6 +9,7 @@ using SmartStart.SharedKernel.Security;
 using SmartStart.ViewModels.Settings;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,5 +48,9 @@ namespace SmartStart.Controllers
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.User)]
         public async Task<IActionResult> GetAdvertisement()
             => await repository.GetAdvertisement().ToJsonResultAsync();
+
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin)]
+        public async Task<IActionResult> DeleteRange([Required] IEnumerable<Guid> ids)
+            => await repository.DeleteRange(ids).IntoAsync(o => o).ToJsonResultAsync();
     }
 }
