@@ -158,7 +158,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                     Name = names[i],
                     PhoneNumber = PhoneNumberGenerator(),
                     Type = UserTypes.User,
-                    UserName = engNames[i]
+                    UserName = PhoneNumberGenerator()
                 };
                 var createResult = await userManager.CreateAsync(user, "1234");
                 if (createResult.Succeeded)
