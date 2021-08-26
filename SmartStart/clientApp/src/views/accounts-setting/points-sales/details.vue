@@ -102,6 +102,12 @@
                             <EKInputText
                                 v-model="posDto.password"
                                 label="كلمة السر"
+                                :rules="[
+                                    {
+                                        type: 'min:4',
+                                        message: 'لايجب أن يقل عن أربعة'
+                                    }
+                                ]"
                                 placeholder="ادخل كلمة السر"
                                 name="password"
                             />
