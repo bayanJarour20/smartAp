@@ -7,6 +7,7 @@
     <b-form-group
         v-bind="$attrs"
         :label-for="'label-for-select-' + id"
+        class="ek-input-select"
     >
         <v-select
             :id="'label-for-select-' + id"
@@ -168,5 +169,8 @@ export default {
     input::placeholder {
         color: #B9BFD3
     }
+}
+.ek-input-select ::v-deep label {
+    padding: calc(0.438rem + 1px) 5px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-card no-body class="mb-1 ">
+        <b-card no-body class="mb-1">
             <b-card-header>
                 <strong>فلترة حسب</strong>
             </b-card-header>
@@ -63,9 +63,6 @@
             <template slot="items.dateCreated" slot-scope="{ value }">
                 {{ new Date(value).toLocaleDateString("en-GB") }}
             </template>
-            <template slot="items.subject" slot-scope="{ value }">
-                {{ value.name }}
-            </template>
         </EKTable>  
     </div>
 </template>
@@ -83,7 +80,7 @@ export default {
         ...mapState({
             faculties: state => state.faculties.faculties,
             filterDto: state => state.filter.filterDto,
-            subjectsList: state => state.subjects.subjectsList,
+            subjectsList: state => state.subjects.subjectsList
         }),
          ...mapGetters(["courcesList", "semester", "years"])
     },
@@ -106,7 +103,7 @@ export default {
             },
             {
                 label: "اسم المادة",
-                field: "subject",
+                field: "subjectName",
                 sortable: false
             },
             {
@@ -133,7 +130,6 @@ export default {
             this.$router.push("/courses/" + props.row.id);
         },
         fireDeleteEvent(list) {
-            console.log(list)
             this.deleteCourceList(list)
         },
           rowStyleClassFn(row) {
