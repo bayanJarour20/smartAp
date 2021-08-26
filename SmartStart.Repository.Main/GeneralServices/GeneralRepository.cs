@@ -60,7 +60,8 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                                   Semesters = s3.Select(s4 => new
                                                                                                   {
                                                                                                       SemesterId = s4.SemesterId,
-                                                                                                      SemesterName = s4.Semester.Name
+                                                                                                      SemesterName = s4.Semester.Name,
+                                                                                                      SelectedId = s4.Id
                                                                                                   }).ToList()
                                                                                               }).ToList()
                                                                           }).ToList()
@@ -106,7 +107,8 @@ namespace SmartStart.Repository.Main.GeneralServices
                       SectionName = SubjectFaculties.First().Section.Name,
                       SemesterId = SubjectFaculties.First().SemesterId,
                       SemesterName = SubjectFaculties.First().Semester.Name,
-                      Year = SubjectFaculties.First().Year
+                      Year = SubjectFaculties.First().Year,
+                      SelectedId = SubjectFaculties.First().Id
                   },
                   Tags = _query<Tag>().Select(t => new
                   {
