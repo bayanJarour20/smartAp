@@ -331,7 +331,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                         await context.SubjectTags.AddAsync(new SubjectTag
                         {
                             SubjectId = subject.Id,
-                            TagId = tags[i].Id
+                            TagId = tags[j].Id
                         });
                     }
                 }
@@ -362,7 +362,7 @@ namespace SmartStart.SqlServer.DataBase.Seed
                         await context.SubjectTags.AddAsync(new SubjectTag
                         {
                             SubjectId = subject.Id,
-                            TagId = tags[j].Id
+                            TagId = tags[j].Id  
                         });
                     }
                 }
