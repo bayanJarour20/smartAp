@@ -169,6 +169,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             {
                                                                                                 SemesterId = s4.SemesterId,
                                                                                                 SemesterName = s4.Semester.Name,
+                                                                                                SelectedId = s4.Id,
                                                                                                 Subjects = s.Select(p => fillDto(p.Subject, p.PackageSubjectFaculties.ToList(), UserId)).ToList()
                                                                                             }).ToList()
                                                                                         }).ToList()
