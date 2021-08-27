@@ -77,33 +77,59 @@
                             {
                                 type: 'required',
                                 message:
-                                    'أدخل المادة التي تكون المادة تابعة  لها'
+                                    'أدخل المادة التي تكون الدورة تابعة  لها'
                             }
                         ]"
                         :options="subjectsList"
                         v-model="courcesDto.subjectId"
                         name="subjectId"
                     />
-                    <b-col>
-                        <b-row>
-                            <EKInputText
-                                label="السعر الإفتراضي"
-                                v-model="courcesDto.price"
-                                placeholder="ادخل السعر الإفتراضي"
-                                name="price"
-                                type="number"
-                                :readonly="courcesDto.isFree"
-                            />
-                            <div class="text-center">
-                                <label class="m-0">مجانية</label>
-                                <b-form-checkbox
-                                    class="ml-1 mt-1"
-                                    v-model="courcesDto.isFree"
-                                    switch
-                                ></b-form-checkbox>
-                            </div>
-                        </b-row>
-                    </b-col>
+                    <EKInputText
+                        label="السعر الإفتراضي"
+                        v-model="courcesDto.price"
+                        placeholder="ادخل السعر الإفتراضي"
+                        name="price"
+                        type="number"
+                        :readonly="courcesDto.isFree"
+                    />
+                    <div class="text-center d-flex align-items-center">
+                        <b-form-checkbox
+                            class="mr-1"
+                            v-model="courcesDto.isFree"
+                            switch
+                        ></b-form-checkbox>
+                        <label class="m-0">مجانية</label>
+                    </div>
+                    <EKInputSelect
+                        label="تصنيفات الدورة"
+                        placeholder="اختر تصنيفات"
+                        :rules="[
+                            {
+                                type: 'required',
+                                message:
+                                    'اختر التصنيفات التي تكون الدورة تابعة  لها'
+                            }
+                        ]"
+                        multiple
+                        :options="tagsList"
+                        v-model="courcesDto.categories"
+                        name="categories"
+                    />
+                    <EKInputSelect
+                        label="دكاترة المادة"
+                        placeholder="اختر دكاترة"
+                        :rules="[
+                            {
+                                type: 'required',
+                                message:
+                                    'اختر الدكاترة التي تكون الدورة تابعة  لها'
+                            }
+                        ]"
+                        multiple
+                        :options="doctors"
+                        v-model="courcesDto.doctors"
+                        name="doctors"
+                    />
                 </template>
             </EKDialog>
         </b-form>
@@ -128,7 +154,7 @@ export default {
         id: String
     },
     computed: {
-        ...mapGetters(["years"]),
+        ...mapGetters(["years", "doctors", "tagsList"]),
         ...mapState({
             courcesDto: state => state.cources.courcesDto,
             courcesQuestionList: state => state.cources.courcesQuestionList,
@@ -157,7 +183,7 @@ export default {
                             price: this.courcesDto.price,
                             isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
-                            tagIds: []
+                            tagIds: [...this.courcesDto.categories, ...this.courcesDto.doctors]
                         });
                     } else {
                         this.updateCourse({
@@ -168,9 +194,10 @@ export default {
                             price: this.courcesDto.price,
                             isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
-                            tagIds: []
+                            tagIds: [...this.courcesDto.categories, ...this.courcesDto.doctors]
                         });
                     }
+                    this.$refs.courseDialog.close()
                 }
             });
         },

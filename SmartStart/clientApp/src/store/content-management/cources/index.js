@@ -27,6 +27,9 @@ export default {
             price: 0,
             isFree: true,
             subjectId: "",
+            tagIds: [],
+            doctors: [],
+            categories: []
         }
     },
     mutations: {
@@ -43,9 +46,11 @@ export default {
                     name: "",
                     year: 0,
                     type: 0,
-                    price: 2000,
+                    price: 0,
                     isFree: true,
                     subjectId: "",
+                    doctors: [],
+                    categories: []
                 });
             } else {
                 Object.assign(state.courcesDto, {
@@ -101,11 +106,17 @@ export default {
         addCourse({ commit }, payload) {
             api.post("Exam/Add", payload, ({ data }) => {
                 commit("Add_Course", data);
+            },{
+                success:"تم إضافة الدورة بنجاح",
+                error:"فشل إضافة الدورة"
             });
         },
         updateCourse({ commit }, payload) {
             api.put("Exam/Update", payload, ({ data }) => {
                 commit("Update_Course", data);
+            },{
+                success:"تم تعديل الدورة بنجاح",
+                error:"فشل تعديل الدورة"
             });
         },
         deleteCourse(ctx, id) {
