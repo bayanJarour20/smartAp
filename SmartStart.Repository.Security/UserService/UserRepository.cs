@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using SmartStart.DataTransferObject.AccountDto;
 using SmartStart.DataTransferObject.FacultyDto;
 using SmartStart.DataTransferObject.UserDto;
+using SmartStart.Model.Main;
 using SmartStart.Model.Security;
 using SmartStart.SharedKernel.Enums;
 using SmartStart.SharedKernel.ExtensionMethods;
@@ -128,15 +129,19 @@ namespace SmartStart.Repository.Security.UserService
               User.Type = UserTypes.User;
 
 
-              var setPasswordValidation = await PasswordValidator.ValidateAsync(UserManager, User, account.Password);
-              if (!setPasswordValidation.Succeeded)
+              if (!account.Password.IsNullOrEmpty())
               {
-                  var PasswordError = String.Join(",", setPasswordValidation.Errors.Select(x => x.Description));
-                  return operation.SetFailed(PasswordError);
+                  User.PasswordHash = UserManager.PasswordHasher.HashPassword(User, account.Password);
+                  {
+                      var setPasswordValidation = await PasswordValidator.ValidateAsync(UserManager, User, account.Password);
+                      if (!setPasswordValidation.Succeeded)
+                      {
+                          var PasswordError = String.Join(",", setPasswordValidation.Errors.Select(x => x.Description));
+                          return operation.SetFailed(PasswordError);
+                      }
+                  }
               }
 
-              if (!account.Password.IsNullOrEmpty())
-                  User.PasswordHash = UserManager.PasswordHasher.HashPassword(User, account.Password);
 
               IdentityResult identityResult = await UserManager.UpdateAsync(User);
               if (!identityResult.Succeeded)
@@ -223,6 +228,7 @@ namespace SmartStart.Repository.Security.UserService
                     Birthday = account.Birthday,
                     Address = account.Address,
                     Gender = account.Gender,
+                    Faculties = new List<FacultyPOSUser>(),
                     //FacultyId = account.FacultyId,
                     SubscriptionDate = account.SubscriptionDate,
                     Type = UserTypes.User,

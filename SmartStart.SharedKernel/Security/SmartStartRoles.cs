@@ -8,10 +8,10 @@ namespace SmartStart.SharedKernel.Security
     public enum SmartStartRoles
     {
         [Display(Description = "مسؤول")]
-        Admin = 0,
-        User = 1,
-        Seller = 2,
+        Admin = 1,
+        User = 2,
+        Seller = 3,
         [Display(Description = "مدخل بيانات")]
-        Entry = 3,
+        Entry = 4,
     }
 }

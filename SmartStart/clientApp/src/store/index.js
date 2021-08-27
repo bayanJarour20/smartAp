@@ -15,12 +15,14 @@ import faculties from "./content-management/faculties"
 import advertising from './content-management/advertising'
 import invoices from "./invoices"
 import cources from './content-management/cources'
+import interviews from './content-management/interviews'
+import telescope from './content-management/telescope'
+import banks from './content-management/banks'
 import questions from './content-management/questions'
 
 
 
 import subjects from './content-management/subjects'
-
 import natification from "./content-management/notifications"
 
 import accounts from './accounts'
@@ -33,13 +35,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     app,
-    cources,
     appConfig,
     verticalMenu,
     codes,
     packages,
     accounts,
     invoices,
+    cources,
+    banks,
+    interviews,
+    telescope,
     home,
     questions,
 

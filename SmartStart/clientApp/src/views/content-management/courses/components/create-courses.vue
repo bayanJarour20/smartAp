@@ -13,7 +13,6 @@
                         @search="search"
                         :placeholder="'ابحث عن دورة محددة'"
                     >
-                     
                         <template slot="default">
                             <b-button
                                 size="sm"
@@ -134,7 +133,7 @@ export default {
             courcesDto: state => state.cources.courcesDto,
             courcesQuestionList: state => state.cources.courcesQuestionList,
             subjectsList: state => state.subjects.subjectsList
-        }),
+        })
     },
     created() {
         this.fetchTotalTag();
@@ -158,6 +157,7 @@ export default {
                             price: this.courcesDto.price,
                             isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
+                            tagIds: []
                         });
                     } else {
                         this.updateCourse({
@@ -168,32 +168,37 @@ export default {
                             price: this.courcesDto.price,
                             isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
+                            tagIds: []
                         });
                     }
                 }
             });
         },
         goToAddQuestion() {
-            this.$router.push(`/questions/1/set/0/${this.id}/${this.courcesQuestionList.subjectId}`)
+            this.$router.push(
+                `/questions/1/set/0/${this.id}/${this.courcesQuestionList.subjectId}`
+            );
         },
         open() {
             this.$refs.courseDialog.open();
         },
         search(query) {
-            if(!this.id) {
-                this.$store.commit('Set_Search_Dto', {
-                    keys: ['name'],
+            if (!this.id) {
+                this.$store.commit("Set_Search_Dto", {
+                    keys: ["name"],
                     query
-                })
+                });
             } else {
-                this.$store.commit('Set_Search_Dto', {
-                    keys: ['title', 'hint'],
+                this.$store.commit("Set_Search_Dto", {
+                    keys: ["title", "hint"],
                     query
-                })
+                });
             }
-        },
+        }
     }
 };
 </script>
 
-//   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+// accept=".csv,
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+application/vnd.ms-excel"

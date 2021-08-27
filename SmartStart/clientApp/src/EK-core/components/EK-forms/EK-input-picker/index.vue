@@ -3,10 +3,10 @@
         <b-form-group
             slot-scope="{ valid, errors }"
             v-bind="$attrs"
+            class="ek-input-picker"
             :label-for="'label-for-picker-' + id"
         >
             <b-form-datepicker
-                class="ek-input-picker"
                 :id="'label-for-picker-' + id"
                 v-model="innerVal"
                 v-bind="$attrs"
@@ -92,5 +92,14 @@ export default {
 <style lang="scss" scoped>
 .ek-input-picker ::v-deep .dropdown-menu {
     width: 286px;
+}
+.ek-input-picker ::v-deep label {
+    padding: calc(0.438rem + 1px) 5px;
+}
+.ek-input-picker ::v-deep .dropdown.b-form-datepicker {
+    height: 37px!important;
+}
+.ek-input-picker ::v-deep .dropdown.b-form-datepicker label {
+    padding: 5px 14px;
 }
 </style>

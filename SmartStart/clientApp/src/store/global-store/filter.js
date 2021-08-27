@@ -62,8 +62,8 @@ export default {
                     getSearchResultOnRow(state, bank) &&
                     (bank.semesterId == state.filterDto.semesterId ||
                         !state.filterDto.semesterId) &&
-                    (bank.subject.facultyId == state.filterDto.facultyId ||
-                        !state.filterDto.facultyId) &&
+                    // (bank.subject.facultyId == state.filterDto.facultyId ||
+                    //     !state.filterDto.facultyId) &&
                     (bank.year == state.filterDto.examYear ||
                         !state.filterDto.examYear) &&
                     (bank.subjectId == state.filterDto.subjectId ||
@@ -82,8 +82,8 @@ export default {
                     getSearchResultOnRow(state, interview) &&
                     (interview.semesterId == state.filterDto.semesterId ||
                         !state.filterDto.semesterId) &&
-                    (interview.subject.facultyId == state.filterDto.facultyId ||
-                        !state.filterDto.facultyId) &&
+                    // (interview.subject.facultyId == state.filterDto.facultyId ||
+                    //     !state.filterDto.facultyId) &&
                     (interview.year == state.filterDto.year ||
                         !state.filterDto.year) &&
                     (interview.subjectId == state.filterDto.subjectId ||
@@ -152,8 +152,7 @@ export default {
         },
         usersList(state, getter, glState){
             return glState.accounts.usersList.filter(pack => {
-                return getSearchResultOnRow(state, pack) &&
-                    (pack.faculties.findIndex(fa => fa.id == state.filterDto.facultyId) != -1 ||!state.filterDto.facultyId)
+                return getSearchResultOnRow(state, pack)
             }) 
         }
     },

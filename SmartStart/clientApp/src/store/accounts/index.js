@@ -2,7 +2,7 @@ import api from "@api";
 import router from "@/router";
 export default {
     state: {
-        rolesList:[],
+        rolesList: [],
         usersList: [],
         posDto: {
             id: "",
@@ -39,7 +39,7 @@ export default {
             dateActivated: new Date(),
             gender: false,
             facultyId: null,
-            role:0,
+            role: 0
         },
         userDto: {
             id: "",
@@ -95,7 +95,7 @@ export default {
                 dateActivated: new Date(),
                 gender: false,
                 facultyId: null,
-                role:0
+                role: 0
             });
         },
         Reset_Pos_Dto(state) {
@@ -136,7 +136,7 @@ export default {
                 dateBlocked: null,
                 dateActivated: new Date(),
                 gender: false,
-                facultyId: null,
+                facultyId: null
             });
         },
 
@@ -155,54 +155,58 @@ export default {
                 ? null
                 : new Date();
         },
-        Delete_Users_List(state,payload){
-            let MapOfIds = new Map(); 
-                var idx; 
-                var tempList = []; 
-                for(idx = 0 ; idx < payload.length ; idx++) {
-                    MapOfIds.set(payload[idx] , 1);
-                }
-                for(idx = 0 ; idx < state.usersList.length ; idx++) {
-                    if(MapOfIds.has(state.usersList[idx].id) === false) {
-                        tempList.push(state.usersList[idx]); 
-                    }
-                }
-                state.usersList = tempList; 
-        },
-        User_List_Dto(state,payload){
-            let MapOfIds = new Map(); 
-            var idx; 
-            var tempList = []; 
-            for(idx = 0 ; idx < payload.length ; idx++) {
-                 MapOfIds.set(payload[idx] , 1);
+        Delete_Users_List(state, payload) {
+            let MapOfIds = new Map();
+            var idx;
+            var tempList = [];
+            for (idx = 0; idx < payload.length; idx++) {
+                MapOfIds.set(payload[idx], 1);
             }
-            for(idx = 0 ; idx < state.userDto.codes.length ; idx++) {
-                if(MapOfIds.has(state.userDto.codes[idx].id) === false) {
-                    tempList.push(state.userDto.codes[idx]); 
+            for (idx = 0; idx < state.usersList.length; idx++) {
+                if (MapOfIds.has(state.usersList[idx].id) === false) {
+                    tempList.push(state.usersList[idx]);
                 }
             }
-            state.userDto.codes = tempList; 
-         
+            state.usersList = tempList;
         },
-        Code_Point_List_Dto(state,payload){
-            let MapOfIds = new Map(); 
-                var idx; 
-                var tempList = []; 
-                for(idx = 0 ; idx < payload.length ; idx++) {
-                    MapOfIds.set(payload[idx] , 1);
+        User_List_Dto(state, payload) {
+            let MapOfIds = new Map();
+            var idx;
+            var tempList = [];
+            for (idx = 0; idx < payload.length; idx++) {
+                MapOfIds.set(payload[idx], 1);
+            }
+            for (idx = 0; idx < state.userDto.codes.length; idx++) {
+                if (MapOfIds.has(state.userDto.codes[idx].id) === false) {
+                    tempList.push(state.userDto.codes[idx]);
                 }
-                for(idx = 0 ; idx < state.posDto.codeDetailsSimpleDto.length ; idx++) {
-                    if(MapOfIds.has(state.posDto.codeDetailsSimpleDto[idx].id) === false) {
-                        tempList.push(state.posDto.codeDetailsSimpleDto[idx]); 
-                    }
+            }
+            state.userDto.codes = tempList;
+        },
+        Code_Point_List_Dto(state, payload) {
+            let MapOfIds = new Map();
+            var idx;
+            var tempList = [];
+            for (idx = 0; idx < payload.length; idx++) {
+                MapOfIds.set(payload[idx], 1);
+            }
+            for (
+                idx = 0;
+                idx < state.posDto.codeDetailsSimpleDto.length;
+                idx++
+            ) {
+                if (
+                    MapOfIds.has(state.posDto.codeDetailsSimpleDto[idx].id) ===
+                    false
+                ) {
+                    tempList.push(state.posDto.codeDetailsSimpleDto[idx]);
                 }
-                state.posDto.codeDetailsSimpleDto = tempList; 
+            }
+            state.posDto.codeDetailsSimpleDto = tempList;
         }
-        
-     
     },
     actions: {
-        getRoles({ commit }){
+        getRoles({ commit }) {
             api.get("Account/Roles", ({ data }) => {
                 commit("Get_Roles", data);
             });
@@ -242,78 +246,98 @@ export default {
                     allowDiscount: payload.allowDiscount,
                     cityId: payload.cityId,
                     dateActivated: new Date(payload.dateActivated),
-                    rate: (payload.rate / 100),
+                    rate: payload.rate / 100,
                     facList: payload.facIds
                 },
                 ({ data }) => {
                     commit("Create_User", data);
-                },{
-                    success:"تم إضافة نقطة البيع بنجاح",
-                    error:"فشل إضافة نقطة البيع"
+                },
+                {
+                    success: "تم إضافة نقطة البيع بنجاح",
+                    error: "فشل إضافة نقطة البيع"
                 }
             );
         },
         blockPOS({ commit }, id) {
-            api.put("PointOfSale/Block/" + id, {}, () => {
-                commit("Block_Pos");
-            },
-            {
-                success:"تمت العملية بنجاح",
-                error:"فشلت العملية"
-            }
+            api.put(
+                "PointOfSale/Block/" + id,
+                {},
+                () => {
+                    commit("Block_Pos");
+                },
+                {
+                    success: "تمت العملية بنجاح",
+                    error: "فشلت العملية"
+                }
             );
         },
         deletePOS(ctx, id) {
-            api.delete("PointOfSale/Delete?id=" + id, ({ data }) => {
-                if (data) {
-                    router.push("/users/1");
+            api.delete(
+                "PointOfSale/Delete?id=" + id,
+                ({ data }) => {
+                    if (data) {
+                        router.push("/users/1");
+                    }
+                },
+                {
+                    confirm: "هل أنت متأكد من حذف نقاط البيع",
+                    success: "تم تعديل نقاط البيع بنجاح",
+                    error: "فشل تعديل نقاط البيع"
                 }
-            },
-            {
-                confirm:"هل أنت متأكد من حذف نقاط البيع",
-                success:"تم تعديل نقاط البيع بنجاح",
-                error:"فشل تعديل نقاط البيع"
-            });
+            );
         },
         updatePOS(ctx, payload) {
-            api.put("PointOfSale/Update", {
-                id: payload.id,
-                address: payload.address,
-                birthday: payload.birthday,
-                dateBlocked: new Date(payload.dateBlocked),
-                email: payload.email,
-                name: payload.name,
-                password: payload.password,
-                phoneNumber: payload.phoneNumber,
-                subscriptionDate: new Date(payload.subscriptionDate),
-                userName: payload.userName,
-                gender: payload.gender,
-                moneyLimit: payload.moneyLimit,
-                codeSoldCount: payload.codeSoldCount,
-                allowDiscount: payload.allowDiscount,
-                cityId: payload.cityId,
-                dateActivated: new Date(payload.dateActivated),
-                rate: (payload.rate / 100),
-                facList : payload.facList
-            },
-            () => {},
-            {
-                success:"تم تعديل نقاط البيع بنجاح",
-                error:"فشل تعديل نقاط البيع"
-            });
+            api.put(
+                "PointOfSale/Update",
+                {
+                    id: payload.id,
+                    address: payload.address,
+                    birthday: payload.birthday,
+                    dateBlocked: !payload.dateBlocked
+                        ? payload.dateBlocked
+                        : new Date(payload.dateBlocked),
+                    email: payload.email,
+                    name: payload.name,
+                    password: payload.password,
+                    phoneNumber: payload.phoneNumber,
+                    subscriptionDate: new Date(payload.subscriptionDate),
+                    userName: payload.userName,
+                    gender: payload.gender,
+                    moneyLimit: payload.moneyLimit,
+                    codeSoldCount: payload.codeSoldCount,
+                    allowDiscount: payload.allowDiscount,
+                    cityId: payload.cityId,
+                    dateActivated: new Date(payload.dateActivated),
+                    rate: payload.rate / 100,
+                    facList: payload.facList
+                },
+                () => {},
+                {
+                    success: "تم تعديل نقاط البيع بنجاح",
+                    error: "فشل تعديل نقاط البيع"
+                }
+            );
         },
         posDetails({ commit }, id) {
             api.get("PointOfSale/Details/" + id, ({ data }) => {
                 commit("POS_Details", data);
             });
         },
-        PosDetailsDto({commit},ids){
-            api.delete("PointOfSale/MultiDelete",({ data }) => {
-                if(data) {
-                    commit("Pos_Details_Dto", ids);
-                }
-            },{confirm: 'هل تريد فعلا حذف نقاط البيع المحددة', success: 'تم حذف نقاط البيع المحددة بنجاح', error: "فشل حذف نقاط البيع المحددة " },
-            ids)
+        PosDetailsDto({ commit }, ids) {
+            api.delete(
+                "PointOfSale/MultiDelete",
+                ({ data }) => {
+                    if (data) {
+                        commit("Pos_Details_Dto", ids);
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف نقاط البيع المحددة",
+                    success: "تم حذف نقاط البيع المحددة بنجاح",
+                    error: "فشل حذف نقاط البيع المحددة "
+                },
+                ids
+            );
         },
 
         // account
@@ -333,13 +357,14 @@ export default {
                     subscriptionDate: new Date(payload.subscriptionDate),
                     gender: payload.gender,
                     facultyId: payload.facultyId,
-                    role: payload.role,
+                    role: payload.role
                 },
                 ({ data }) => {
                     commit("Create_User", data);
-                },{
-                    success:"تم إضافة المستخدم بنجاح",
-                    error:"فشل إضافة المستخدم "
+                },
+                {
+                    success: "تم إضافة المستخدم بنجاح",
+                    error: "فشل إضافة المستخدم "
                 }
             );
         },
@@ -349,51 +374,58 @@ export default {
             });
         },
         blockAccount({ commit }, id) {
-            api.put("Account/Block/" + id, {}, () => {
-                commit("Block_Account");
-            }
-            ,
-            {
-                success:"تمت العملية بنجاح",
-                error:"فشلت العملية"
-            });
+            api.put(
+                "Account/Block/" + id,
+                {},
+                () => {
+                    commit("Block_Account");
+                },
+                {
+                    success: "تمت العملية بنجاح",
+                    error: "فشلت العملية"
+                }
+            );
         },
         deleteAccount(ctx, id) {
-            api.delete("Account/Delete?id=" + id, ({ data }) => {
-                if (data) {
-                    router.push("/users/2");
+            api.delete(
+                "Account/Delete?id=" + id,
+                ({ data }) => {
+                    if (data) {
+                        router.push("/users/2");
+                    }
+                },
+                {
+                    confirm: "هل أنت متأكد من حذف المستخدم",
+                    success: "تم تعديل المستخدم بنجاح",
+                    error: "فشل تعديل  المستخدم"
                 }
-            },
-            {
-                confirm:"هل أنت متأكد من حذف المستخدم",
-                success:"تم تعديل المستخدم بنجاح",
-                error:"فشل تعديل  المستخدم"
-            });
+            );
         },
         updateAccount(ctx, payload) {
-            api.put("Account/Update", {
-                id: payload.id,
-                userName: payload.userName,
-                password: payload.password,
-                email: payload.email,
-                name: payload.name,
-                address: payload.address,
-                phoneNumber: payload.phoneNumber,
-                birthday: new Date(payload.birthday),
-                dateBlocked: null,
-                dateActivated: new Date(payload.dateActivated),
-                subscriptionDate: new Date(payload.subscriptionDate),
-                gender: payload.gender,
-                facultyId: payload.facultyId,
-                role: payload.role,
-            }
-            , () => {}
-            ,
-            {
-                
-                success: "تم تعديل المستخدم بنجاح",
-                error: "فشل تعديل المستخدم"
-            });
+            api.put(
+                "Account/Update",
+                {
+                    id: payload.id,
+                    userName: payload.userName,
+                    password: payload.password,
+                    email: payload.email,
+                    name: payload.name,
+                    address: payload.address,
+                    phoneNumber: payload.phoneNumber,
+                    birthday: new Date(payload.birthday),
+                    dateBlocked: !payload.dateBlocked ? payload.dateBlocked : new Date(payload.dateBlocked),
+                    dateActivated: new Date(payload.dateActivated),
+                    subscriptionDate: new Date(payload.subscriptionDate),
+                    gender: payload.gender,
+                    facultyId: payload.facultyId,
+                    role: payload.role
+                },
+                () => {},
+                {
+                    success: "تم تعديل المستخدم بنجاح",
+                    error: "فشل تعديل المستخدم"
+                }
+            );
         },
 
         // user
@@ -416,11 +448,11 @@ export default {
                 },
                 ({ data }) => {
                     commit("Create_User", data);
-                }
-                ,{
+                },
+                {
                     success: "تم إضافة المستخدم بنجاح",
                     error: "فشل  إضافة المستخدم"
-                    }
+                }
             );
         },
         userDetails({ commit }, id) {
@@ -429,76 +461,106 @@ export default {
             });
         },
         blockUser({ commit }, id) {
-            api.put("User/Block/" + id, {}, () => {
-                commit("Block_User");
-            },
-            {
-                
-                success: "تمت العملية بنجاح",
-                error: " فشلت العملية"
-            });
+            api.put(
+                "User/Block/" + id,
+                {},
+                () => {
+                    commit("Block_User");
+                },
+                {
+                    success: "تمت العملية بنجاح",
+                    error: " فشلت العملية"
+                }
+            );
         },
         updateUser(ctx, payload) {
-            api.put("User/Update", {
-                id: payload.id,
-                userName: payload.userName,
-                password: payload.password,
-                email: payload.email,
-                name: payload.name,
-                address: payload.address,
-                phoneNumber: payload.phoneNumber,
-                birthday: new Date(payload.birthday),
-                dateBlocked: null,
-                dateActivated: new Date(payload.dateActivated),
-                subscriptionDate: new Date(payload.subscriptionDate),
-                gender: payload.gender,
-                facultyId: payload.facultyId
-            }, () => {}
-            ,
-            {
-                
-                success: "تم تعديل المستخدم بنجاح",
-                error: "فشل تعديل المستخدم"
-            });
+            api.put(
+                "User/Update",
+                {
+                    id: payload.id,
+                    userName: payload.userName,
+                    password: payload.password,
+                    email: payload.email,
+                    name: payload.name,
+                    address: payload.address,
+                    phoneNumber: payload.phoneNumber,
+                    birthday: new Date(payload.birthday),
+                    dateBlocked: !payload.dateBlocked ? payload.dateBlocked : new Date(payload.dateBlocked),
+                    dateActivated: new Date(payload.dateActivated),
+                    subscriptionDate: new Date(payload.subscriptionDate),
+                    gender: payload.gender,
+                    facultyId: payload.facultyId
+                },
+                () => {},
+                {
+                    success: "تم تعديل المستخدم بنجاح",
+                    error: "فشل تعديل المستخدم"
+                }
+            );
         },
         deleteUser(ctx, id) {
-            api.delete("User/Delete?id=" + id, ({ data }) => {
-                if (data) {
-                    router.push("/users/0");
+            api.delete(
+                "User/Delete?id=" + id,
+                ({ data }) => {
+                    if (data) {
+                        router.push("/users/0");
+                    }
+                },
+                {
+                    confirm: "هل انت متأكد من حذف المستخدم",
+                    success: "تم حذف المستخدم بنجاح",
+                    error: "فشل حذف المستخدم"
                 }
-            },
-            {
-                confirm: "هل انت متأكد من حذف المستخدم",
-                success: "تم حذف المستخدم بنجاح",
-                error: "فشل حذف المستخدم"
-            });
+            );
         },
-        deleteUsersList({ commit }, ids){
-            console.log(ids)
-            api.delete("User/DeleteRange",({ data }) => {
-                if(data) {
-                    commit("Delete_Users_List", ids);
-                }
-            },{confirm: 'هل تريد فعلا حذف المستخدمين المحددين', success: 'تم حذف المستخدمين المحددين بنجاح', error: "فشل حذف المستخدمين المحددين " },
-            ids)
+        deleteUsersList({ commit }, ids) {
+            console.log(ids);
+            api.delete(
+                "User/DeleteRange",
+                ({ data }) => {
+                    if (data) {
+                        commit("Delete_Users_List", ids);
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف المستخدمين المحددين",
+                    success: "تم حذف المستخدمين المحددين بنجاح",
+                    error: "فشل حذف المستخدمين المحددين "
+                },
+                ids
+            );
         },
-        UserListDto({commit},ids){
-            api.delete("Code/RemoveCodes",({ data }) => {
-                if(data) {
-                    commit("User_List_Dto", ids);
-                }
-            },{confirm: 'هل تريد فعلا حذف الإشتركات المحددة', success: 'تم حذف الإشتركات المحددة بنجاح', error: "فشل حذف الإشتركات المحددة " },
-            ids)
+        UserListDto({ commit }, ids) {
+            api.delete(
+                "Code/RemoveCodes",
+                ({ data }) => {
+                    if (data) {
+                        commit("User_List_Dto", ids);
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف الإشتركات المحددة",
+                    success: "تم حذف الإشتركات المحددة بنجاح",
+                    error: "فشل حذف الإشتركات المحددة "
+                },
+                ids
+            );
         },
-        CodePointListDto({commit},ids){
-            api.delete("Code/RemoveCodes",({ data }) => {
-                if(data) {
-                    commit("Code_Point_List_Dto", ids);
-                }
-            },{confirm: 'هل تريد فعلا حذف الأكواد المحددة', success: 'تم حذف الأكواد المحددة بنجاح', error: "فشل حذف الأكواد المحددة " },
-            ids)
+        CodePointListDto({ commit }, ids) {
+            api.delete(
+                "Code/RemoveCodes",
+                ({ data }) => {
+                    if (data) {
+                        commit("Code_Point_List_Dto", ids);
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف الأكواد المحددة",
+                    success: "تم حذف الأكواد المحددة بنجاح",
+                    error: "فشل حذف الأكواد المحددة "
+                },
+                ids
+            );
         }
-
-
     }
 };

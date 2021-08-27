@@ -30,202 +30,214 @@
                         >
                     </div>
                 </b-card-header>
-                <b-card-body>
-                    <b-col>
-                        <b-row>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.name"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'الاسم الكامل مطلوب'
-                                        }
-                                    ]"
-                                    label="الاسم الكامل"
-                                    placeholder="ادخل الاسم الكامل"
-                                    name="name"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.userName"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'اسم المستخدم مطلوب'
-                                        }
-                                    ]"
-                                    label="اسم المستخدم"
-                                    placeholder="ادخل اسم المستخدم"
-                                    name="userName"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.phoneNumber"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'رقم الهاتف مطلوب'
-                                        },
-                                        {
-                                            type: 'digits:10',
-                                            message:
-                                                'يجب أن يكون رقم الهاتف عشرة أرقام'
-                                        }
-                                    ]"
-                                    label="رقم الهاتف"
-                                    placeholder="ادخل رقم الهاتف"
-                                    name="phoneNumber"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.email"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'بريد الإلكتروني مطلوب'
-                                        },
-                                        {
-                                            type: 'email',
-                                            message:
-                                                'يجب أن يكون بريد إلكتلروني'
-                                        }
-                                    ]"
-                                    label="بريد الإلكتروني"
-                                    placeholder="ادخل بريد الإلكتروني"
-                                    name="emailname"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.password"
-                                    label="كلمة السر"
-                                    placeholder="ادخل كلمة السر"
-                                    name="password"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputPicker
-                                    v-model="posDto.birthday"
-                                    label="تاريخ الميلاد"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'تاريخ الميلاد مطلوب'
-                                        }
-                                    ]"
-                                    name="birthday"
-                                    placeholder="ادخل تاريخ الميلاد"
-                                >
-                                </EKInputPicker>
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputPicker
-                                    v-model="posDto.subscriptionDate"
-                                    label="تاريخ الإشتراك"
-                                    readonly
-                                    name="subscriptionDate"
-                                >
-                                </EKInputPicker>
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.codeSoldCount"
-                                    readonly
-                                    label="عدد الرموز المولدة"
-                                    name="codeSoldCount"
-                                    type="number"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <label class="mb-50">الجنس</label>
-                                <div class="d-flex align-items-center mb-1">
-                                    <label class="mb-0">ذكر</label>
-                                    <b-form-checkbox
-                                        switch
-                                        v-model="posDto.gender"
-                                    ></b-form-checkbox>
-                                    <label class="mb-0">انثى</label>
-                                </div>
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    v-model="posDto.moneyLimit"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message:
-                                                'الحد الاعظمي من المبيعات مطلوب'
-                                        }
-                                    ]"
-                                    label="الحد المالي الاعظمي"
-                                    placeholder="ادخل الحد المالي الاعظمي "
-                                    name="moneyLimit"
-                                    type="number"
-                                />
-                            </b-col>
-                              <b-col cols="12" md="6" lg="4">
-                         <EKInputSelect
-                        label="الكليات التابعة لنقطة البيع"
-                        placeholder="كل الكليات"
-                       
-                        multiple
-                        :options="facList"
-                        v-model="posDto.facList"
-                        name="facList"
-                    />
-                    
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputSelect
-                                    label="المدينة"
-                                    placeholder="اختر المدينة"
-                                    :options="citiesList"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'المدينة مطلوبة'
-                                        }
-                                    ]"
-                                    v-model="posDto.cityId"
-                                    name="cityId"
-                                    :clearable="true"
-                                />
-                            </b-col>
-                            <b-col cols="12" md="6" lg="4">
-                                <EKInputText
-                                    :rules="[
-                                        { type: 'required', message: 'نسبة نقطة البيع مطلوبة' },
-                                        { type: 'min_value:0', message: 'يجب ان تكون القيمة موجبة' },
-                                        { type: 'max_value:100', message: 'لا يجب أن تتجاوز القيمة العدد 100' }
-                                    ]"
-                                    label="نسبة نقطة البيع"
-                                     placeholder="ادخل نسبة نقطة البيع"
-                                    v-model="posDto.rate"
-                                    type="number"
-                                    name="packageDiscountRate"
-                                    
-                                />
-                            </b-col>
-                            <b-col cols="12">
-                                <EKInputTextarea
-                                    v-model="posDto.address"
-                                    :rules="[
-                                        {
-                                            type: 'required',
-                                            message: 'العنوان  مطلوب'
-                                        }
-                                    ]"
-                                    label="العنوان "
-                                    placeholder="ادخل العنوان "
-                                    name="address"
-                                />
-                            </b-col>
-                        </b-row>
-                    </b-col>
+                <b-card-body class="px-2 py-0">
+                    <b-row>
+                        <b-col cols="12" md="6">
+                            <EKInputText
+                                v-model="posDto.name"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'الاسم الكامل مطلوب'
+                                    }
+                                ]"
+                                label="الاسم الكامل"
+                                placeholder="ادخل الاسم الكامل"
+                                name="name"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6">
+                            <EKInputText
+                                v-model="posDto.userName"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'اسم المستخدم مطلوب'
+                                    }
+                                ]"
+                                label="اسم المستخدم"
+                                placeholder="ادخل اسم المستخدم"
+                                name="userName"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6">
+                            <EKInputText
+                                v-model="posDto.phoneNumber"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'رقم الهاتف مطلوب'
+                                    },
+                                    {
+                                        type: 'digits:10',
+                                        message:
+                                            'يجب أن يكون رقم الهاتف عشرة أرقام'
+                                    }
+                                ]"
+                                label="رقم الهاتف"
+                                placeholder="ادخل رقم الهاتف"
+                                name="phoneNumber"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6">
+                            <EKInputText
+                                v-model="posDto.email"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'بريد الإلكتروني مطلوب'
+                                    },
+                                    {
+                                        type: 'email',
+                                        message:
+                                            'يجب أن يكون بريد إلكتلروني'
+                                    }
+                                ]"
+                                label="بريد الإلكتروني"
+                                placeholder="ادخل بريد الإلكتروني"
+                                name="emailname"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputText
+                                v-model="posDto.password"
+                                label="كلمة السر"
+                                :rules="[
+                                    {
+                                        type: 'min:4',
+                                        message: 'لايجب أن يقل عن أربعة'
+                                    }
+                                ]"
+                                placeholder="ادخل كلمة السر"
+                                name="password"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputPicker
+                                v-model="posDto.birthday"
+                                label="تاريخ الميلاد"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'تاريخ الميلاد مطلوب'
+                                    }
+                                ]"
+                                name="birthday"
+                                placeholder="ادخل تاريخ الميلاد"
+                            >
+                            </EKInputPicker>
+                        </b-col>
+
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputText
+                                v-model="posDto.moneyLimit"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message:
+                                            'الحد الاعظمي من المبيعات مطلوب'
+                                    }
+                                ]"
+                                label="الحد المالي الاعظمي"
+                                placeholder="ادخل الحد المالي الاعظمي "
+                                name="moneyLimit"
+                                type="number"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputPicker
+                                v-model="posDto.subscriptionDate"
+                                label="تاريخ الإشتراك"
+                                readonly
+                                name="subscriptionDate"
+                            >
+                            </EKInputPicker>
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputText
+                                v-model="posDto.codeSoldCount"
+                                readonly
+                                label="عدد الرموز المولدة"
+                                name="codeSoldCount"
+                                type="number"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <label class="mt-1">الجنس</label>
+                            <div class="d-flex align-items-center mb-1 mt-50">
+                                <label class="mb-0">ذكر</label>
+                                <b-form-checkbox
+                                    switch
+                                    v-model="posDto.gender"
+                                ></b-form-checkbox>
+                                <label class="mb-0">انثى</label>
+                            </div>
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputSelect
+                                label="الكليات التابعة لنقطة البيع"
+                                placeholder="كل الكليات"
+                                multiple
+                                :options="faculties"
+                                v-model="posDto.facList"
+                                name="facList"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputSelect
+                                label="المدينة"
+                                placeholder="اختر المدينة"
+                                :options="citiesList"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'المدينة مطلوبة'
+                                    }
+                                ]"
+                                v-model="posDto.cityId"
+                                name="cityId"
+                                :clearable="true"
+                            />
+                        </b-col>
+                        <b-col cols="12" md="6" lg="4">
+                            <EKInputText
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'نسبة نقطة البيع مطلوبة'
+                                    },
+                                    {
+                                        type: 'min_value:0',
+                                        message: 'يجب ان تكون القيمة موجبة'
+                                    },
+                                    {
+                                        type: 'max_value:100',
+                                        message:
+                                            'لا يجب أن تتجاوز القيمة العدد 100'
+                                    }
+                                ]"
+                                label="نسبة نقطة البيع"
+                                placeholder="ادخل نسبة نقطة البيع"
+                                v-model="posDto.rate"
+                                type="number"
+                                name="packageDiscountRate"
+                            />
+                        </b-col>
+                        <b-col cols="12">
+                            <EKInputTextarea
+                                v-model="posDto.address"
+                                :rules="[
+                                    {
+                                        type: 'required',
+                                        message: 'العنوان  مطلوب'
+                                    }
+                                ]"
+                                label="العنوان "
+                                placeholder="ادخل العنوان "
+                                name="address"
+                            />
+                        </b-col>
+                    </b-row>
                 </b-card-body>
                 <b-card-footer class="d-flex">
                     <b-button class="mr-1" variant="primary" @click="onSubmit"
@@ -263,7 +275,7 @@
                 name="qrcode-scan"
                 class="mr-1"
             ></unicon>
-         الرموز المولدة
+            الرموز المولدة
         </h3>
         <EKTable
             :items="posDto.codeDetailsSimpleDto"
@@ -272,7 +284,7 @@
             @delete-selected="CodesOfpointSales"
         >
             <template slot="items.userName" slot-scope="{ value }">
-                {{value ? value : '---' }}
+                {{ value ? value : "---" }}
             </template>
             <template slot="items.dateActivated" slot-scope="{ value }">
                 <b-badge :variant="value ? 'success' : 'warning'">{{
@@ -280,13 +292,18 @@
                 }}</b-badge>
             </template>
             <template slot="items.maxEndDate" slot-scope="{ value }">
-                {{new Date("0001-01-01T00:00:00").getTime() == new Date(value).getTime() ? '---' : new Date(value).toLocaleDateString("en-GB")}}
+                {{
+                    new Date("0001-01-01T00:00:00").getTime() ==
+                    new Date(value).getTime()
+                        ? "---"
+                        : new Date(value).toLocaleDateString("en-GB")
+                }}
             </template>
-               <template slot="items.createDate" slot-scope="{ value }">
-                 {{ moment(new Date(value)).format("YYYY/MM/DD HH:mm:ss") }}
+            <template slot="items.createDate" slot-scope="{ value }">
+                {{ moment(new Date(value)).format("YYYY/MM/DD HH:mm:ss") }}
             </template>
-             <template slot="items.package" slot-scope="{ value }">
-                 {{value.name}}
+            <template slot="items.package" slot-scope="{ value }">
+                {{ value.name }}
             </template>
         </EKTable>
     </div>
@@ -321,7 +338,7 @@ export default {
         ...mapState({
             citiesList: state => state.globalStore.citiesList,
             posDto: state => state.accounts.posDto,
-             facList: state => state.globalStore.facList,
+            faculties: state => state.faculties.faculties
         })
     },
     props: {
@@ -351,7 +368,7 @@ export default {
                 field: "dateActivated",
                 sortable: false
             },
-               {
+            {
                 label: "تاريخ الإنشاء",
                 field: "createDate",
                 sortable: false
@@ -364,12 +381,21 @@ export default {
     }),
     created() {
         this.fetchCity();
-      this.fetchFaculitiesList();
         this.posDetails(this.id);
-  
+        this.getFacultiesDetails();
     },
-    methods: {moment,
-        ...mapActions(["fetchFaculitiesList","posDetails", "updatePOS", "blockPOS", "deletePOS", "fetchCity","CodeListDto","CodePointListDto"]),
+    methods: {
+        moment,
+        ...mapActions([
+            "posDetails",
+            "updatePOS",
+            "blockPOS",
+            "deletePOS",
+            "fetchCity",
+            "CodeListDto",
+            "CodePointListDto",
+            "getFacultiesDetails"
+        ]),
         onSubmit() {
             this.$refs.observer.validate().then(success => {
                 if (success) {
@@ -377,9 +403,8 @@ export default {
                 }
             });
         },
-        CodesOfpointSales(list){
-            console.log(list)
-            this.CodePointListDto(list)
+        CodesOfpointSales(list) {
+            this.CodePointListDto(list);
         }
     }
 };
