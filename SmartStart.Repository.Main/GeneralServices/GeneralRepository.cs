@@ -262,6 +262,11 @@ namespace SmartStart.Repository.Main.GeneralServices
                 Description = p.Description,
                 ImagePath = p.ImagePath,
                 SubjectTags = p.SubjectTags.Select(t => t.TagId).ToList(),
+                InterviewQuestionCount = p.Exams.Where(e => e.Type == TabTypes.Interview)
+                                                .Sum(e => e.ExamQuestions.Where(e => e.Question.QuestionType == QuestionTypes.Single).Count()),
+                ImageCount = p.Exams.Where(e => e.Type == TabTypes.Microscope)
+                                    .Sum(e => e.ExamQuestions.Sum(eq => eq.Question.QuestionDocuments.Count())),
+                CorrectionQuestionCount = p.Exams.Sum(e => e.ExamQuestions.Where(e => e.Question.IsCorrected).Count()),
                 Type = p.Type,
                 IsActive = ps.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
                 Exams = p.Exams.GroupBy(e => e.Type)
