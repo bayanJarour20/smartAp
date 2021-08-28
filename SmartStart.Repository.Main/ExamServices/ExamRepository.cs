@@ -455,7 +455,7 @@ namespace SmartStart.Repository.Main.ExamServices
         }
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
         {
-            var exam = await TrackingQuery.Include(x => x.ExamTags).SingleOrDefaultAsync(x => x.Id == dto.Id);
+            var exam = await Query.Include(x => x.ExamTags).SingleOrDefaultAsync(x => x.Id == dto.Id);
             
             if (exam is null || exam.Type != examType)
                 return OperationResultTypes.NotExist;
