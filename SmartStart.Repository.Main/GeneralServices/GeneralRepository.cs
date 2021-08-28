@@ -74,6 +74,7 @@ namespace SmartStart.Repository.Main.GeneralServices
               var SubjectFaculties = (await _query<SubjectFaculty>().Include(s => s.Section)
                                                                     .Include(s => s.Semester)
                                                                     .Include(s => s.Faculty)
+                                                                    .Include(s => s.Doctor)
                                                                     .Include("Subject.SubjectTags.Tag")
                                                                     .Include("Subject.Exams.ExamDocuments.Document")
                                                                     .Include("Subject.Exams.ExamTags.Tag")
@@ -142,6 +143,7 @@ namespace SmartStart.Repository.Main.GeneralServices
             {
                 var res = _query<SubjectFaculty>().Include(s => s.Section)
                                                   .Include(s => s.Semester)
+                                                  .Include(s => s.Doctor)
                                                   .Include("Faculty.University")
                                                   .Include("Subject.SubjectTags.Tag")
                                                   .Include("Subject.Exams.ExamDocuments.Document")
@@ -217,6 +219,7 @@ namespace SmartStart.Repository.Main.GeneralServices
               var res = _query<SubjectFaculty>().Where(s => temp.Where(t => t.SubjectFacultyId == s.Id).Any())
                                                 .Include(s => s.Section)
                                                 .Include(s => s.Semester)
+                                                .Include(s => s.Doctor)
                                                 .Include("Faculty.University")
                                                 .Include("Subject.SubjectTags.Tag")
                                                 .Include("Subject.Exams.ExamDocuments.Document")
@@ -262,6 +265,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                 Description = p.Description,
                 ImagePath = p.ImagePath,
                 SubjectTags = p.SubjectTags.Select(t => t.TagId).ToList(),
+                TeacherName = p.SubjectFaculties.Select(sf => sf.Doctor.Name), 
                 InterviewQuestionCount = p.Exams.Where(e => e.Type == TabTypes.Interview)
                                                 .Sum(e => e.ExamQuestions.Where(e => e.Question.QuestionType == QuestionTypes.Single).Count()),
                 ImageCount = p.Exams.Where(e => e.Type == TabTypes.Microscope)
