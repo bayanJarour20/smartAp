@@ -5,7 +5,7 @@
             @ok="onSubmit()"
             title="إضافة سؤال"
             btnText="سؤال جديد"
-            @open="$store.commit('Reset_Question_Telescope_Dto')"
+           
         >
             <template #body>
                 <EKInputText
