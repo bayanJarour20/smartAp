@@ -11,7 +11,7 @@
                 <template slot="activator">
                     <activaitor
                         @search="search"
-                        :placeholder="'ابحث عن دورة محددة'"
+                         :placeholder="!id ? 'ابحث عن دورة محدد' : 'ابحث عن سؤال محدد'"
                     >
                         <template slot="default">
                             <b-button

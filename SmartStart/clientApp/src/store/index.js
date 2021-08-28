@@ -46,7 +46,6 @@ export default new Vuex.Store({
     telescope,
     home,
     questions,
-    banks,
     advertising,
 
     faculties,
@@ -54,7 +53,7 @@ export default new Vuex.Store({
     filter,
     globalStore,
     subjects,
-   
+   banks,
     natification
   },
   strict: process.env.DEV,

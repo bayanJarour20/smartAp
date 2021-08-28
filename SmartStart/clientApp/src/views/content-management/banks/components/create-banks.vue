@@ -181,9 +181,10 @@ export default {
             this.$refs.bankDialog.open()
         },
         search(query) {
+            console.log(this.id)
             if(!this.id) {
                 this.$store.commit('Set_Search_Dto', {
-                    keys: ['name', 'subject.name'],
+                    keys: ['name', 'subjectName'],
                     query   
                 })
             } else {

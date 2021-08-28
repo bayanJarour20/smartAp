@@ -122,6 +122,7 @@
                           },
                         ]"
                       />
+                     
                       <b-button
                         v-if="selectedSection"
                         variant="warning"
@@ -145,6 +146,7 @@
                       >
                       </input-gallery>
                     </b-col>
+                   
                     <b-col
                       cols="3"
                       v-for="(doc, index) in selectedSectionDto.documents"
@@ -192,7 +194,7 @@
                           variant="flat-secondary"
                           @click="toggleImage(index, doc)"
                         >
-                        {{doc.isDeleted}}
+                        
                           <unicon
                             :name="doc.isDeleted ? 'history-alt' : 'trash-alt'"
                             :fill="doc.isDeleted ? '#11cc22' : '#ea5455'"
