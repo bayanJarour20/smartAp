@@ -122,8 +122,8 @@ export default {
                 headers: { 'Content-Type': 'multipart/form-data' } 
             };
             console.log(payload)
-            api.put(
-                "Microscope/Sections/Update",
+            api.post(
+                "Microscope/Sections/Add",
                 payload,
                 ({ data }) => {
                     data.sections.forEach(element => {
