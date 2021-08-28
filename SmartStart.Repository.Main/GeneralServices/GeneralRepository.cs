@@ -216,6 +216,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             AppUserId = UserId,
                                                                                         }).ToList();
               Context.AddRange(temp);
+              await Context.SaveChangesAsync(); 
               var res = _query<SubjectFaculty>().Where(s => temp.Where(t => t.SubjectFacultyId == s.Id).Any())
                                                 .Include(s => s.Section)
                                                 .Include(s => s.Semester)

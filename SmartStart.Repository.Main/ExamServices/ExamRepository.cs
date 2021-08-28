@@ -95,6 +95,8 @@ namespace SmartStart.Repository.Main.ExamServices
             => await RepositoryHandler(_addMicroscope(dto));
         public async Task<OperationResult<ExamDetailsDto>> UpdateMicroscope(ExamDto dto)
             => await RepositoryHandler(_updateMicroscope(dto));
+        public async Task<OperationResult<MicroscopeDocumentsDto>> AddSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
+        => await RepositoryHandler(_addSectionsMicroscope(dto));
         public async Task<OperationResult<MicroscopeDocumentsDto>> UpdateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
             => await RepositoryHandler(_updateSectionsMicroscope(dto));
         public async Task<OperationResult<bool>> DeleteSectionsMicroscope(Guid id)
@@ -314,6 +316,88 @@ namespace SmartStart.Repository.Main.ExamServices
             };
         private Func<OperationResult<ExamDetailsDto>, Task<OperationResult<ExamDetailsDto>>> _updateMicroscope(ExamDto dto)
             => async operation => await UpdateAsync(operation, dto, TabTypes.Microscope);
+
+        private Func<OperationResult<MicroscopeDocumentsDto>, Task<OperationResult<MicroscopeDocumentsDto>>> _addSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
+         => async operation =>
+         {
+             using (var transaction = await Context.Database.BeginTransactionAsync())
+             {
+                 List<string> savedPaths = new List<string>();
+
+                 try
+                 {
+                     var ExamQuestions = dto.Sections?.Select(section => new ExamQuestion()
+                     {
+                         ExamId = dto.Id,
+                         Order = section.Order,
+                         Question = new Question()
+                         {
+                             Title = section.Title,
+                             Hint = section.Hint,
+                             IsCorrected = section.IsCorrected,
+                             QuestionType = section.QuestionType,
+                             AnswerType = section.AnswerType,
+                             QuestionTags = section.Tags?.Select(id => new QuestionTag()
+                             {
+                                 TagId = id
+                             }).ToList(),
+                             QuestionDocuments = section.Documents?.Select(doc => new QuestionDocument()
+                             {
+                                 Note = doc.Note,
+                                 Document = new Document()
+                                 {
+                                     Type = DocumentTypes.Image,
+                                 }
+                             }).ToList(),
+                         }
+                     }).ToList();
+
+
+
+                     foreach (var doc in ExamQuestions?.Zip(dto.Sections ?? new List<ExamQuestionDocumnetsDto>())?.
+                              SelectMany(section => section.First?.Question?.QuestionDocuments?.Zip(section.Second?.Documents ?? new List<QuestionDocumentNote>())))
+                     {
+                         doc.First.Document.Name = doc.Second?.File?.FileName;
+                         var result = (await TryUploadImageAsync(doc.Second?.File));
+                         if (result.Result)
+                         {
+                             doc.First.Document.Path = result.Message;
+                             doc.Second.Path = result.Message;
+                             savedPaths.Add(result.Message);
+                         }
+                         else
+                         {
+                             savedPaths.ForEach(d => TryDeleteImage(d));
+                             return operation.SetFailed("Faild to save images");
+                         }
+                     }
+
+                     await Context.AddRangeAsync<ExamQuestion>(ExamQuestions);
+                     await Context.SaveChangesAsync();
+
+                     await transaction.CommitAsync();
+
+                     foreach (var item in dto.Sections?.Zip(ExamQuestions))
+                     {
+                         item.First.Id = item.Second.Id;
+                         foreach (var doc in item.First?.Documents.Zip(item.Second?.Question?.QuestionDocuments))
+                         {
+                             doc.First.SectionImageId = doc.Second.Id;
+                             doc.First.File = null;
+                         }
+                     }
+
+                     return operation.SetSuccess(new MicroscopeDocumentsDto() { Id = dto.Id, Sections = dto.Sections });
+                 }
+                 catch (Exception e)
+                 {
+                     await transaction.RollbackAsync();
+                     savedPaths.ForEach(d => TryDeleteImage(d));
+                     return operation.SetException(e);
+                 }
+
+             }
+         };
         private Func<OperationResult<MicroscopeDocumentsDto>, Task<OperationResult<MicroscopeDocumentsDto>>> _updateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
             => async operation =>
             {
@@ -331,18 +415,18 @@ namespace SmartStart.Repository.Main.ExamServices
                 {
                     try
                     {
-                        foreach (var examQuestions in microscope.ExamQuestions)
+                        foreach (var examQuestion in microscope.ExamQuestions)
                         {
-                            var section = dto.Sections.SingleOrDefault(sec => sec.Id == examQuestions.Id);
+                            var section = dto.Sections.SingleOrDefault(sec => sec.Id == examQuestion.Id);
                             if (section is not null)
                             {
-                                examQuestions.Order = section.Order;
-                                examQuestions.Question.Title = section.Title;
-                                examQuestions.Question.Hint = section.Hint;
-                                examQuestions.Question.IsCorrected = section.IsCorrected;
-                                examQuestions.Question.QuestionType = section.QuestionType;
-                                examQuestions.Question.AnswerType = section.AnswerType;
-                                foreach (var docs in examQuestions.Question.QuestionDocuments)
+                                examQuestion.Order = section.Order;
+                                examQuestion.Question.Title = section.Title;
+                                examQuestion.Question.Hint = section.Hint;
+                                examQuestion.Question.IsCorrected = section.IsCorrected;
+                                examQuestion.Question.QuestionType = section.QuestionType;
+                                examQuestion.Question.AnswerType = section.AnswerType;
+                                foreach (var docs in examQuestion.Question.QuestionDocuments)
                                 {
                                     var doc = section.Documents.Where(d => d.SectionImageId == docs.Id).SingleOrDefault();
                                     if (doc is not null)
@@ -350,18 +434,18 @@ namespace SmartStart.Repository.Main.ExamServices
                                 }
                             }
 
-                            (IEnumerable<Guid> newTags, IEnumerable<Guid> oldTags) = examQuestions.Question.QuestionTags.IsolatedExcept(section?.Tags ?? new List<Guid>(), x => x.TagId, x => x);
+                            (IEnumerable<Guid> newTags, IEnumerable<Guid> oldTags) = examQuestion.Question.QuestionTags.IsolatedExcept(section?.Tags ?? new List<Guid>(), x => x.TagId, x => x);
                             foreach (var oldTag in oldTags)
-                                examQuestions.Question.QuestionTags.Remove(examQuestions.Question.QuestionTags.Single(t => t.TagId == oldTag));
+                                examQuestion.Question.QuestionTags.Remove(examQuestion.Question.QuestionTags.Single(t => t.TagId == oldTag));
                             
                             var AddTag = section?.Tags.Where(tag => newTags.Contains(tag)).Select(tag => new QuestionTag { TagId = tag, QuestionId = section.Id });
                             foreach (var newTag in AddTag)
-                                examQuestions.Question.QuestionTags.Add(newTag);
+                                examQuestion.Question.QuestionTags.Add(newTag);
 
-                            (IEnumerable<QuestionDocumentNote> newDocs, IEnumerable<QuestionDocument> oldDocs) = examQuestions.Question.QuestionDocuments.IsolatedExceptOldNew(section?.Documents ?? new List<QuestionDocumentNote>(), x => x.DocumentId, x => x.SectionImageId);
+                            (IEnumerable<QuestionDocumentNote> newDocs, IEnumerable<QuestionDocument> oldDocs) = examQuestion.Question.QuestionDocuments.IsolatedExceptOldNew(section?.Documents ?? new List<QuestionDocumentNote>(), x => x.DocumentId, x => x.SectionImageId);
                             foreach (var oldDoc in oldDocs)
                             {
-                                examQuestions.Question.QuestionDocuments.Remove(oldDoc);
+                                examQuestion.Question.QuestionDocuments.Remove(oldDoc);
                                 var exams = Context.QuestionDocuments.Where(q => q.DocumentId == oldDoc.Id && q.DateDeleted == null).ToList();
                                 if (!exams.Any())
                                 {
@@ -371,7 +455,7 @@ namespace SmartStart.Repository.Main.ExamServices
                             }
                             foreach (var newDoc in newDocs)
                             {
-                                examQuestions.Question.QuestionDocuments.Add(new QuestionDocument
+                                examQuestion.Question.QuestionDocuments.Add(new QuestionDocument
                                 {
                                     Note = newDoc.Note,
                                     Document = new Document
@@ -734,6 +818,35 @@ namespace SmartStart.Repository.Main.ExamServices
             }
             return new OperationResult<bool>().SetSuccess(true);
         }
+
+        private async Task<OperationResult<bool>> TryUploadImageAsync(IFormFile image)
+        {
+            string path = null;
+            try
+            {
+                if (image != null)
+                {
+                    var documentsDirectory = Path.Combine("wwwroot", "Documents", "Exam_Image");
+
+                    if (!Directory.Exists(documentsDirectory))
+                        Directory.CreateDirectory(documentsDirectory);
+
+                    path = Path.Combine("Documents", "Exam_Image", Guid.NewGuid().ToString() + "_" + image.FileName);
+                    string filePath = Path.Combine(webHostEnvironment.WebRootPath, path);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fileStream);
+                        // fileStream.Flush();
+                    }
+                }
+                return new OperationResult<bool>().SetSuccess(true, path);
+            }
+            catch (Exception e) when (e is IOException || e is Exception)
+            {
+                return new OperationResult<bool>().SetException(e);
+            }
+        }
+
 
         #endregion
     }

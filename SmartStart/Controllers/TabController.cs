@@ -167,6 +167,12 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> UpdateMicroscope(ExamDto dto)
             => await repository.UpdateMicroscope(dto).ToJsonResultAsync();
 
+
+        [Route("api/Microscope/Sections/Add")]
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> AddSectionsMicroscope([FromForm] SectionsMicroscopeDocumentsDto dto)
+        => await repository.AddSectionsMicroscope(dto).ToJsonResultAsync();
+
         [Route("api/Microscope/Sections/Update")]
         [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> UpdateSectionsMicroscope([FromForm]SectionsMicroscopeDocumentsDto dto)
