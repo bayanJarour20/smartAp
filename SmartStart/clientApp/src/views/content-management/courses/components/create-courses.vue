@@ -13,7 +13,6 @@
                         @search="search"
                         :placeholder="'ابحث عن دورة محددة'"
                     >
-                     
                         <template slot="default">
                             <b-button
                                 size="sm"
@@ -78,33 +77,43 @@
                             {
                                 type: 'required',
                                 message:
-                                    'أدخل المادة التي تكون المادة تابعة  لها'
+                                    'أدخل المادة التي تكون الدورة تابعة  لها'
                             }
                         ]"
                         :options="subjectsList"
                         v-model="courcesDto.subjectId"
                         name="subjectId"
                     />
-                    <b-col>
-                        <b-row>
-                            <EKInputText
-                                label="السعر الإفتراضي"
-                                v-model="courcesDto.price"
-                                placeholder="ادخل السعر الإفتراضي"
-                                name="price"
-                                type="number"
-                                :readonly="courcesDto.isFree"
-                            />
-                            <div class="text-center">
-                                <label class="m-0">مجانية</label>
-                                <b-form-checkbox
-                                    class="ml-1 mt-1"
-                                    v-model="courcesDto.isFree"
-                                    switch
-                                ></b-form-checkbox>
-                            </div>
-                        </b-row>
-                    </b-col>
+                    <EKInputSelect
+                        label="تصنيفات الدورة"
+                        placeholder="اختر تصنيفات"
+                        :rules="[
+                            {
+                                type: 'required',
+                                message:
+                                    'اختر التصنيفات التي تكون الدورة تابعة  لها'
+                            }
+                        ]"
+                        multiple
+                        :options="tagsList"
+                        v-model="courcesDto.categories"
+                        name="categories"
+                    />
+                    <EKInputSelect
+                        label="دكاترة الدورة"
+                        placeholder="اختر الدكاترة"
+                        :rules="[
+                            {
+                                type: 'required',
+                                message:
+                                    'اختر الدكاترة التي تكون الدورة تابعة  لها'
+                            }
+                        ]"
+                        multiple
+                        :options="doctors"
+                        v-model="courcesDto.doctors"
+                        name="doctors"
+                    />
                 </template>
             </EKDialog>
         </b-form>
@@ -129,12 +138,12 @@ export default {
         id: String
     },
     computed: {
-        ...mapGetters(["years"]),
+        ...mapGetters(["years", "doctors", "tagsList"]),
         ...mapState({
             courcesDto: state => state.cources.courcesDto,
             courcesQuestionList: state => state.cources.courcesQuestionList,
             subjectsList: state => state.subjects.subjectsList
-        }),
+        })
     },
     created() {
         this.fetchTotalTag();
@@ -155,9 +164,11 @@ export default {
                             name: this.courcesDto.name,
                             year: this.courcesDto.year,
                             type: this.courcesDto.type,
-                            price: this.courcesDto.price,
-                            isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
+                            tagIds: [
+                                ...this.courcesDto.categories,
+                                ...this.courcesDto.doctors
+                            ]
                         });
                     } else {
                         this.updateCourse({
@@ -165,35 +176,38 @@ export default {
                             name: this.courcesDto.name,
                             year: this.courcesDto.year,
                             type: this.courcesDto.type,
-                            price: this.courcesDto.price,
-                            isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
+                            tagIds: [
+                                ...this.courcesDto.categories,
+                                ...this.courcesDto.doctors
+                            ]
                         });
                     }
+                    this.$refs.courseDialog.close()
                 }
             });
         },
         goToAddQuestion() {
-            this.$router.push(`/questions/1/set/0/${this.id}/${this.courcesQuestionList.subjectId}`)
+            this.$router.push(
+                `/questions/1/set/0/${this.id}/${this.courcesQuestionList.subjectId}`
+            );
         },
         open() {
             this.$refs.courseDialog.open();
         },
         search(query) {
-            if(!this.id) {
-                this.$store.commit('Set_Search_Dto', {
-                    keys: ['name'],
+            if (!this.id) {
+                this.$store.commit("Set_Search_Dto", {
+                    keys: ["name"],
                     query
-                })
+                });
             } else {
-                this.$store.commit('Set_Search_Dto', {
-                    keys: ['title', 'hint'],
+                this.$store.commit("Set_Search_Dto", {
+                    keys: ["title", "hint"],
                     query
-                })
+                });
             }
-        },
+        }
     }
 };
 </script>
-
-//   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"

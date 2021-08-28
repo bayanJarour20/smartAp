@@ -17,10 +17,12 @@ namespace SmartStart.DataTransferObject.AdvertisementDto
         public string ImagePath { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public double? Price { get; set; }
         public AdvertisementTypes Type { get; set; }
+        public string Description { get; set; }
 
-        public static Expression<Func<Advertisement, AdvertisementDto>> Selector { get; set; } = advertisement => new AdvertisementDto() { Id = advertisement.Id, Title = advertisement.Title, ImagePath = advertisement.ImagePath, StartDate = advertisement.StartDate, EndDate = advertisement.EndDate, Type = advertisement.Type, };
-        public static Expression<Func<AdvertisementDto, Advertisement>> InverseSelector { get; set; } = advertisement => new Advertisement() { Id = advertisement.Id, Title = advertisement.Title, ImagePath = advertisement.ImagePath, StartDate = advertisement.StartDate, EndDate = advertisement.EndDate, Type = advertisement.Type, };
-        public static Action<AdvertisementDto, Advertisement> AssignSelector { get; set; } = (dto, entity) => { entity.Title = dto.Title; entity.ImagePath = dto.ImagePath; entity.StartDate = dto.StartDate; entity.EndDate = dto.EndDate; entity.Type = dto.Type; };
+        public static Expression<Func<Advertisement, AdvertisementDto>> Selector { get; set; } = advertisement => new AdvertisementDto() { Id = advertisement.Id, Title = advertisement.Title, ImagePath = advertisement.ImagePath, StartDate = advertisement.StartDate, EndDate = advertisement.EndDate, Price = advertisement.Price, Type = advertisement.Type, };
+        public static Expression<Func<AdvertisementDto, Advertisement>> InverseSelector { get; set; } = advertisement => new Advertisement() { Id = advertisement.Id, Title = advertisement.Title, ImagePath = advertisement.ImagePath, StartDate = advertisement.StartDate, EndDate = advertisement.EndDate, Price = advertisement.Price, Type = advertisement.Type, };
+        public static Action<AdvertisementDto, Advertisement> AssignSelector { get; set; } = (dto, entity) => { entity.Title = dto.Title; entity.ImagePath = dto.ImagePath; entity.StartDate = dto.StartDate; entity.EndDate = dto.EndDate; entity.Price = dto.Price; entity.Type = dto.Type; };
     }
 }

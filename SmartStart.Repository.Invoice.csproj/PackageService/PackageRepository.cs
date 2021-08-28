@@ -144,7 +144,7 @@ namespace SmartStart.Repository.Invoice.PackageService
                 SubjectFaculties = package.PackageSubjectFaculties.Select(pe => new PriceSubjectDto
                 {
                     Price = pe.Price,
-                    SubjectFacultyId = pe.SubjectFaculty.SubjectId,
+                    SubjectFacultyId = pe.SubjectFacultyId,
                 }),
             }).FirstOrDefaultAsync();
 
@@ -163,7 +163,7 @@ namespace SmartStart.Repository.Invoice.PackageService
                     {
                         FacultyId = subjectFac.FacultyId,
                         Year = subjectFac.Year,
-                        SemesteId = subjectFac.Subject.SubjectTags.Where(s => s.Tag.Type == TagTypes.Semester).Select(x => x.TagId).FirstOrDefault(),
+                        SemesteId = subjectFac.SemesterId// .Where(s => s.Tag.Type == TagTypes.Semester).Select(x => x.TagId).FirstOrDefault(),
                     }).FirstOrDefaultAsync();
             }
             one.Filter = filter;

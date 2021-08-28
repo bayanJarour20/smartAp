@@ -1,5 +1,6 @@
 import api from "@api";
 import router from "@/router";
+import store from "@/store";
 
 export default {
     state: {
@@ -10,8 +11,6 @@ export default {
             subject: {},
             semesterId: "",
             questionsCount: 0,
-            price: 0,
-            isFree: false,
             tagIds: [],
             id: "",
             name: "",
@@ -24,9 +23,10 @@ export default {
             name: "",
             year: 0,
             type: 0,
-            price: 0,
-            isFree: true,
             subjectId: "",
+            tagIds: [],
+            doctors: [],
+            categories: []
         }
     },
     mutations: {
@@ -43,9 +43,10 @@ export default {
                     name: "",
                     year: 0,
                     type: 0,
-                    price: 2000,
-                    isFree: true,
                     subjectId: "",
+                    tagIds: [],
+                    doctors: [],
+                    categories: []
                 });
             } else {
                 Object.assign(state.courcesDto, {
@@ -53,10 +54,18 @@ export default {
                     name: state.courcesQuestionList.name,
                     year: state.courcesQuestionList.year,
                     type: state.courcesQuestionList.type,
-                    price: state.courcesQuestionList.price,
-                    isFree: state.courcesQuestionList.isFree,
                     subjectId: state.courcesQuestionList.subjectId,
-                    semesterId: state.courcesQuestionList.semesterId,
+                    tagIds: [],
+                    doctors: state.courcesQuestionList.tagIds.filter(tag => {
+                        return store.getters.doctors.find(Gtag => Gtag.id == tag);
+                    }),
+                    categories: state.courcesQuestionList.tagIds.filter(tag => {
+                        console.log(store.getters.tagsList)
+                        return store.getters.tagsList.find(Gtag => {
+                            console.log(Gtag.id, tag)
+                            return Gtag.id == tag
+                        })
+                    }),
                 });
             }
         },
@@ -67,24 +76,21 @@ export default {
             state.courcesQuestionList.name = payload.name;
             state.courcesQuestionList.year = payload.year;
             state.courcesQuestionList.type = payload.type;
-            state.courcesQuestionList.price = payload.price;
-            state.courcesQuestionList.isFree = payload.isFree;
-            state.courcesQuestionList.subjectId = payload.subjectId;
-            state.courcesQuestionList.semesterId = payload.semesterId;
+            state.courcesQuestionList.tagIds = payload.tagIds;
         },
-        delete_Cource_List(state,payload){
-            let MapOfIds = new Map(); 
-            var idx; 
-            var tempList = []; 
-            for(idx = 0 ; idx < payload.length ; idx++) {
-                 MapOfIds.set(payload[idx] , 1);
+        delete_Cource_List(state, payload) {
+            let MapOfIds = new Map();
+            var idx;
+            var tempList = [];
+            for (idx = 0; idx < payload.length; idx++) {
+                MapOfIds.set(payload[idx], 1);
             }
-            for(idx = 0 ; idx < state.courcesList.length ; idx++) {
-                if(MapOfIds.has(state.courcesList[idx].id) === false) {
-                    tempList.push(state.courcesList[idx]); 
+            for (idx = 0; idx < state.courcesList.length; idx++) {
+                if (MapOfIds.has(state.courcesList[idx].id) === false) {
+                    tempList.push(state.courcesList[idx]);
                 }
             }
-            state.courcesList = tempList; 
+            state.courcesList = tempList;
         }
     },
     actions: {
@@ -99,33 +105,61 @@ export default {
             });
         },
         addCourse({ commit }, payload) {
-            api.post("Exam/Add", payload, ({ data }) => {
-                commit("Add_Course", data);
-            });
+            api.post(
+                "Exam/Add",
+                payload,
+                ({ data }) => {
+                    commit("Add_Course", data);
+                },
+                {
+                    success: "تم إضافة الدورة بنجاح",
+                    error: "فشل إضافة الدورة"
+                }
+            );
         },
         updateCourse({ commit }, payload) {
-            api.put("Exam/Update", payload, ({ data }) => {
-                commit("Update_Course", data);
-            });
+            api.put(
+                "Exam/Update",
+                payload,
+                ({ data }) => {
+                    commit("Update_Course", data);
+                },
+                {
+                    success: "تم تعديل الدورة بنجاح",
+                    error: "فشل تعديل الدورة"
+                }
+            );
         },
         deleteCourse(ctx, id) {
-            api.delete("Exam/Delete?id=" + id, ({ data }) => {
-                if (data.isSuccess) {
-                    router.push("/courses");
+            api.delete(
+                "Exam/Delete/" + id,
+                ({ data }) => {
+                    if (data.isSuccess) {
+                        router.push("/courses");
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف الدورة",
+                    success: "تم حذف الدورة بنجاح",
+                    error: "فشل حذف الدورة"
                 }
-            },{
-                confirm:"هل تريد فعلا حذف الدورة",
-                success:"تم حذف الدورة بنجاح",
-                error:"فشل حذف الدورة"
-            });
+            );
         },
-        deleteCourceList({commit},ids){
-            api.delete("Exam/MultiDelete",({ data }) => {
-                if(data) {
-                    commit("delete_Cource_List", ids);
-                }
-            },{confirm: 'هل تريد فعلا حذف الدورات المحددة', success: 'تم حذف الدورات المحددة بنجاح', error: "فشل حذف الدورات المحددة " },
-            ids)
+        deleteCourceList({ commit }, ids) {
+            api.delete(
+                "Exam/deleterange",
+                ({ data }) => {
+                    if (data) {
+                        commit("delete_Cource_List", ids);
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف الدورات المحددة",
+                    success: "تم حذف الدورات المحددة بنجاح",
+                    error: "فشل حذف الدورات المحددة "
+                },
+                ids
+            );
         }
     }
 };

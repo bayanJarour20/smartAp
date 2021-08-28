@@ -1,7 +1,7 @@
 <template>
     <EKDialog
         title=" نقاط  بيع جديدة"
-        placeholder="ابحث عن نقاط  بيع جديدة" 
+        placeholder="ابحث عن نقاط  بيع جديدة"
         btnText=" نقاط  بيع جديدة"
         @open="$store.commit('Reset_Pos_Dto')"
         @ok="onSubmit"
@@ -32,7 +32,8 @@
                         },
                         {
                             type: 'english_letters_numbers',
-                            message: 'اسم المستخدم يجب ان يحوي على احرف انجليزية وأرقام فقط'
+                            message:
+                                'اسم المستخدم يجب ان يحوي على احرف انجليزية وأرقام فقط'
                         }
                     ]"
                     name="userName"
@@ -85,7 +86,10 @@
                 <label class="mb-50">الجنس</label>
                 <div class="d-flex align-items-center mb-1">
                     <label class="mb-0">ذكر</label>
-                    <b-form-checkbox switch v-model="posDto.gender"></b-form-checkbox>
+                    <b-form-checkbox
+                        switch
+                        v-model="posDto.gender"
+                    ></b-form-checkbox>
                     <label class="mb-0">انثى</label>
                 </div>
                 <EKInputText
@@ -95,7 +99,10 @@
                             type: 'required',
                             message: 'الحد الاعظمي من المبيعات مطلوب'
                         },
-                        { type: 'min_value:0', message: 'يجب ان تكون القيمة موجبة' }
+                        {
+                            type: 'min_value:0',
+                            message: 'يجب ان تكون القيمة موجبة'
+                        }
                     ]"
                     label="الحد الاعظمي"
                     placeholder="ادخل الحد الاعظمي "
@@ -105,8 +112,14 @@
                 <EKInputText
                     :rules="[
                         { type: 'required', message: 'نسبة نقطة البيع مطلوبة' },
-                        { type: 'min_value:0', message: 'يجب ان تكون القيمة موجبة' },
-                        { type: 'max_value:100', message: 'لا يجب أن تتجاوز القيمة العدد 100' }
+                        {
+                            type: 'min_value:0',
+                            message: 'يجب ان تكون القيمة موجبة'
+                        },
+                        {
+                            type: 'max_value:100',
+                            message: 'لا يجب أن تتجاوز القيمة العدد 100'
+                        }
                     ]"
                     label="نسبة نقطة البيع"
                     placeholder="ادخل نسبة نقطة البيع"
@@ -114,16 +127,17 @@
                     type="number"
                     name="packageDiscountRate"
                 />
-                    <EKInputSelect
-                        label="الكليات التابعة لنقطة البيع"
-                        placeholder="كل الكليات"
-                      
-                        multiple
-                        :options="facList"
-                        v-model="posDto.facIds"
-                        name="facIds"
-                    />
-                <b-form-checkbox v-model="posDto.allowDiscount" switch>إمكانية الحسم</b-form-checkbox>
+                <EKInputSelect
+                    label="الكليات التابعة لنقطة البيع"
+                    placeholder="كل الكليات"
+                    multiple
+                    :options="faculties"
+                    v-model="posDto.facIds"
+                    name="facIds"
+                />
+                <b-form-checkbox v-model="posDto.allowDiscount" switch
+                    >إمكانية الحسم</b-form-checkbox
+                >
                 <EKInputSelect
                     label="المدينة"
                     placeholder="اختر المدينة"
@@ -138,7 +152,7 @@
                     name="cityId"
                     :clearable="true"
                 />
-             
+
                 <EKInputTextarea
                     v-model="posDto.address"
                     :rules="[{ type: 'required', message: 'العنوان مطلوب' }]"
@@ -167,21 +181,18 @@ export default {
         EKInputTextarea,
         EKInputSelect
     },
-    computed: {  
-     
+    computed: {
         ...mapState({
             citiesList: state => state.globalStore.citiesList,
             posDto: state => state.accounts.posDto,
-            facList: state => state.globalStore.facList,
+            faculties: state => state.faculties.faculties
         })
     },
     created() {
         this.fetchCity();
-        this.fetchFaculitiesList();
-
     },
     methods: {
-        ...mapActions(["createPOS", "fetchCity","fetchFaculitiesList"]),
+        ...mapActions(["createPOS", "fetchCity"]),
         onSubmit() {
             this.$refs.observer.validate().then(success => {
                 if (success) {
@@ -189,14 +200,12 @@ export default {
                 }
             });
         },
-         search(query) {
-            this.$store.commit('Set_Search_Dto', {
-                keys: [
-                    "userName","email","name"
-                ],
-                query   
-            })
-        },
+        search(query) {
+            this.$store.commit("Set_Search_Dto", {
+                keys: ["userName", "email"],
+                query
+            });
+        }
     }
 };
 </script>

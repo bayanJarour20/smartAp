@@ -1,8 +1,9 @@
 <template>
     <div>
-        <b-card no-body class="mb-1 ">
+        <b-card no-body class="mb-1">
             <b-card-header>
                 <strong>فلترة حسب</strong>
+                <b-button @click="$store.commit('Set_filter_Dto', localeFilterDto)" variant="primary">فلترة</b-button>
             </b-card-header>
             <b-card-body class="pb-1">
                 <b-row>
@@ -46,25 +47,17 @@
                             v-model="localeFilterDto.examYear"
                         />
                     </b-col>
-                    <b-col cols="12" class="text-right">
-                        <b-button type="submit" @click="$store.commit('Set_filter_Dto', localeFilterDto)" variant="primary">تم</b-button>
-                    </b-col>
                 </b-row>
             </b-card-body>
         </b-card>
         <EKTable 
             :items="courcesList"
             :columns="columns"
-            selectedLabel="name"
-              :row-style-class="rowStyleClassFn"
             @details="openCourcesDetails"
             @delete-selected="fireDeleteEvent"
         >
             <template slot="items.dateCreated" slot-scope="{ value }">
                 {{ new Date(value).toLocaleDateString("en-GB") }}
-            </template>
-            <template slot="items.subject" slot-scope="{ value }">
-                {{ value.name }}
             </template>
         </EKTable>  
     </div>
@@ -83,7 +76,7 @@ export default {
         ...mapState({
             faculties: state => state.faculties.faculties,
             filterDto: state => state.filter.filterDto,
-            subjectsList: state => state.subjects.subjectsList,
+            subjectsList: state => state.subjects.subjectsList
         }),
          ...mapGetters(["courcesList", "semester", "years"])
     },
@@ -106,7 +99,7 @@ export default {
             },
             {
                 label: "اسم المادة",
-                field: "subject",
+                field: "subjectName",
                 sortable: false
             },
             {
@@ -133,11 +126,7 @@ export default {
             this.$router.push("/courses/" + props.row.id);
         },
         fireDeleteEvent(list) {
-            console.log(list)
             this.deleteCourceList(list)
-        },
-          rowStyleClassFn(row) {
-            return row.isFree ? 'bg-success' : '';
         },
     },
     beforeDestroy() {

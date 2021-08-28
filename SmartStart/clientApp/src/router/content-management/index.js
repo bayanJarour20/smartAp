@@ -99,10 +99,7 @@ export default [
         name: "subjects",
         components: {
             default: () => import("@/views/content-management/subjects"),
-            "bread-actions": () =>
-                import(
-                    "@/views/content-management/subjects/components/create-subject.vue"
-                )
+            'bread-actions' : () => import("@/views/content-management/subjects/components/create-subject.vue"),
         },
         meta: () => ({
             pageTitle: "المواد",
@@ -110,17 +107,16 @@ export default [
             breadcrumb: [
                 {
                     text: "المواد",
-                    active: true
-                }
+                    active: true,
+                },
             ]
-        })
+        }),
     },
     {
         path: "/subjects/:id",
         name: "subjects details",
         components: {
-            default: () =>
-                import("@/views/content-management/subjects/pages/details.vue")
+            default: () => import("@/views/content-management/subjects/pages/details.vue")
         },
         props: {
             default: true
@@ -132,14 +128,14 @@ export default [
                 {
                     text: "المواد",
                     active: false,
-                    to: "/subjects"
+                    to:"/subjects"
                 },
                 {
                     text: "تفاصيل",
-                    active: true
-                }
+                    active: true,
+                },
             ]
-        })
+        }),
     },
     // --- questions
     {
@@ -147,10 +143,7 @@ export default [
         name: "questions",
         components: {
             default: () => import("@/views/content-management/questions"),
-            "bread-actions": () =>
-                import(
-                    "@/views/content-management/questions/components/create-question.vue"
-                )
+            'bread-actions' : () => import("@/views/content-management/questions/components/create-question.vue"),
         },
         props: {
             default: true
@@ -164,14 +157,13 @@ export default [
                     active: true
                 }
             ]
-        })
+        }),
     },
     {
         path: "/questions/:ansType/set/:id/:examId/:subjectId",
         name: "questions details",
         components: {
-            default: () =>
-                import("@/views/content-management/questions/pages/details.vue")
+            default: () => import("@/views/content-management/questions/pages/details.vue"),
         },
         props: {
             default: true
@@ -183,17 +175,14 @@ export default [
                 {
                     text: "الأسئلة",
                     active: false,
-                    to: "/questions"
+                    to: '/questions'
                 },
                 {
-                    text:
-                        store.state.questions.questonsDto.id == ""
-                            ? "إضافة سؤال"
-                            : "تفاصيل السؤال",
+                    text: store.state.questions.questonsDto.id == '' ? "إضافة سؤال" : "تفاصيل السؤال",
                     active: true
                 }
             ]
-        })
+        }),
     },
     // ---courses
     {
@@ -201,10 +190,7 @@ export default [
         name: "courses",
         components: {
             default: () => import("@/views/content-management/courses"),
-            "bread-actions": () =>
-                import(
-                    "@/views/content-management/courses/components/create-courses.vue"
-                )
+            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
         },
         meta: () => ({
             pageTitle: "الدورات",
@@ -212,25 +198,21 @@ export default [
             breadcrumb: [
                 {
                     text: "الدورات",
-                    active: true
-                }
+                    active: true,
+                },
             ]
-        })
+        }),
     },
     {
         path: "/courses/:id",
         name: "courses details",
         components: {
-            default: () =>
-                import("@/views/content-management/courses/pages/details.vue"),
-            "bread-actions": () =>
-                import(
-                    "@/views/content-management/courses/components/create-courses.vue"
-                )
+            default: () => import("@/views/content-management/courses/pages/details.vue"),
+            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
         },
         props: {
             default: true,
-            "bread-actions": true
+            'bread-actions': true
         },
         meta: () => ({
             pageTitle: "الدورات",
@@ -239,36 +221,14 @@ export default [
                 {
                     text: "الدورات",
                     active: false,
-                    to: "/courses"
+                    to:"/courses"
                 },
                 {
                     text: "تفاصيل",
-                    active: true
-                }
+                    active: true,
+                },
             ]
-        })
-    },
-    // --- notifications
-    {
-        path: "/notifications",
-        name: "notifications",
-        components: {
-            default: () => import("@/views/content-management/notifications"),
-            "bread-actions": () =>
-                import(
-                    "@/views/content-management/notifications/components/create-notifications.vue"
-                )
-        },
-        meta: () => ({
-            pageTitle: "الإشعارات",
-            roles: [All],
-            breadcrumb: [
-                {
-                    text: "الإشعارات",
-                    active: true
-                }
-            ]
-        })
+        }),
     },
     // --- banks
     {
@@ -316,4 +276,116 @@ export default [
             ]
         }),
     },
+    // ---telescope
+    {
+        path: "/telescope",
+        name: "telescope",
+        components: {
+            default: () => import("@/views/content-management/telescope"),
+            'bread-actions' : () => import("@/views/content-management/telescope/components/create-telescope.vue"),
+        },
+        meta: () => ({
+            pageTitle: "المجاهر",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "المجاهر",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/telescope/:id",
+        name: "telescope details",
+        components: {
+            default: () => import("@/views/content-management/telescope/pages/details.vue")
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "المجاهر",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "المجاهر",
+                    active: false,
+                    to:"/telescope"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    // ---interviews
+    {
+        path: "/interviews",
+        name: "interviews",
+        components: {
+            default: () => import("@/views/content-management/interviews"),
+            'bread-actions' : () => import("@/views/content-management/interviews/components/create-interviews.vue"),
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة الكتابية",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة الكتابية",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/interviews/:id",
+        name: "interviews details",
+        components: {
+            default: () => import("@/views/content-management/interviews/pages/details.vue"),
+            'bread-actions' : () => import("@/views/content-management/interviews/components/create-interviews.vue"),
+        },
+        props: {
+            default: true,
+            'bread-actions': true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة الكتابية",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة الكتابية",
+                    active: false,
+                    to:"/interviews"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    // --- notifications
+    {
+        path: "/notifications",
+        name: "notifications",
+        components: {
+            default: () => import("@/views/content-management/notifications"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/notifications/components/create-notifications.vue"
+                )
+        },
+        meta: () => ({
+            pageTitle: "الإشعارات",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الإشعارات",
+                    active: true
+                }
+            ]
+        })
+    }
 ];

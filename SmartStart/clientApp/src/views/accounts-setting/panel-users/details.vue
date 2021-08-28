@@ -101,6 +101,12 @@
                             <b-col cols="12" md="6" lg="4">
                                 <EKInputText
                                     label="كلمة السر"
+                                    :rules="[
+                                        {
+                                            type: 'min:4',
+                                            message: 'لايجب أن يقل عن أربعة'
+                                        }
+                                    ]"
                                     placeholder="ادخل كلمة السر"
                                     name="password"
                                     v-model="accountDto.password"

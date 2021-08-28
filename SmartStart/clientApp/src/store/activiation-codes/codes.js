@@ -26,8 +26,7 @@ export default {
                     tempList.push(state.codesList[idx]); 
                 }
             }
-            state.codesList = tempList; 
-         
+            state.codesList = tempList;
         },
         Reset_code_Dto(state){
            

@@ -1,52 +1,47 @@
 <template>
     <div>
-        <b-card no-body class="mb-1 ">
-            <b-card-header class="py-1">
-                <strong>فلترة حسب:</strong>
+        <b-card no-body class="mb-1">
+            <b-card-header class="pt-1 pb-0">
+                <strong>فلترة حسب</strong>
+                <b-button
+                    class="mb-1"
+                    @click="getAllQuestion(localeFilterDto)"
+                    variant="primary"
+                    >تم</b-button
+                >
             </b-card-header>
-            <b-card-body
-                class="pb-0 px-0"
-            >
+            <b-card-body class="py-0 px-0">
                 <b-col cols="12">
                     <b-row class="align-items-center">
-                        <b-col cols="12" md="4" lg="3">
+                        <b-col cols="12" md="4">
                             <EKInputSelect
                                 label="السنة"
-                                placeholder="اختر السنة "
+                                placeholder="اختر السنة"
                                 :options="[{id: 0, name: 'الكل'}, ...years]"
                                 name="examYear"
                                 :clearable="true"
                                 v-model="localeFilterDto.examYear"
                             />
                         </b-col>
-                        <b-col cols="12" md="4" lg="3">
+                        <b-col cols="12" md="4">
                             <EKInputSelect
                                 label="الفصل"
-                                placeholder="اختر الفصل "
+                                placeholder="اختر الفصل"
                                 :options="[{id: 0, name: 'الكل'}, ...semester]"
                                 name="semesterId"
                                 :clearable="true"
                                 v-model="localeFilterDto.semesterId"
                             />
                         </b-col>
-                        <b-col cols="12" md="4" lg="3">
+                        <b-col cols="12" md="4">
                             <EKInputSelect
                                 label="المادة"
-                                placeholder="اختر المادة "
+                                placeholder="اختر المادة"
                                 :options="[{id: 0, name: 'الكل'}, ...subjectsList]"
                                 name="subjectId"
                                 :clearable="true"
                                 v-model="localeFilterDto.subjectId"
                             />
-                        </b-col>
-                        <b-col cols="12" lg="3" class="text-right">
-                            <b-button
-                                type="submit"
-                                class="mb-1"
-                                @click="getAllQuestion(localeFilterDto)"
-                                variant="primary"
-                                >تم</b-button
-                            >
                         </b-col>
                     </b-row>
                 </b-col>
@@ -60,6 +55,7 @@
             childrenLabel="answers"
             customHeaderLabel="label"
             :colapseHeader="questionHeader"
+            no_delete
             @details="details"
             @changeParentcheck="chaingeSelect"
             @changeSelectChildren="changeSelectChildren"

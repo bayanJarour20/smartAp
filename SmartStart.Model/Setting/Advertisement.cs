@@ -23,7 +23,12 @@ namespace SmartStart.Model.Setting
         [ColumnDataType(DataBaseTypes.DATETIME2)]
         public DateTime EndDate { get; set; }
 
+        [ColumnDataType(DataBaseTypes.FLOAT)]
+        public double? Price { get; set; }
+
         [ColumnDataType(DataBaseTypes.TINYINT)]
         public AdvertisementTypes Type { get; set; }
+
+        public string? Description { get; set; }
     }
 }

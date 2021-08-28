@@ -77,10 +77,8 @@
             :items="banksList"
             :columns="columns"
             @details="openBanksDetails"
+            @delete-selected="fireDeleteEvent"
         >
-            <template slot="items.subject" scope="{value}">
-                {{ value.name }}
-            </template>
             <template slot="items.dateCreated" slot-scope="{ value }">
                 {{ new Date(value).toLocaleDateString("en-GB") }}
             </template>
@@ -109,10 +107,13 @@ export default {
                 type: "number"
             },
             {
+                label: "اسم المادة",
+                field: "subjectName"
+            },
+            {
                 label: "تاريخ الإضافة",
                 field: "dateCreated"
             },
-            { label: "اسم المادة", field: "subject", sortable: false },
             {
                 label: "تفاصيل",
                 field: "details",
@@ -145,8 +146,12 @@ export default {
             "getBanksList",
             "fetchSubject",
             "fetchTotalTag",
-            "getFacultiesDetails"
+            "getFacultiesDetails",
+            "deleteBankList"
         ]),
+        fireDeleteEvent(list) {
+            this.deleteBankList(list)
+        },
         openBanksDetails(props) {
             this.$router.push("/banks/" + props.row.id);
         }

@@ -89,8 +89,9 @@ export default {
         }
     },
     actions: {
-        fetchSubject({ commit }) {
-            api.get("Subject/GetAll", ({ data }) => {
+        fetchSubject({ commit }, payload) {
+            api.get(!payload ? "Subject/GetAll" : "Subject/GetAll?facultyId=" + payload.faculity +
+            "&year=" + payload.year + "&semesterId=" + payload.semester, ({ data }) => {
                 commit("Fetch_Subject", data);
             });
         },

@@ -86,7 +86,7 @@
                         <EKInputSelect
                             label="السنة"
                             placeholder="اختر السنة"
-                            :options="year"
+                            :options="subjectYear"
                             name="year"
                             :rules="[
                                 {
@@ -283,7 +283,7 @@ export default {
             packageDto: state => state.packages.packageDto,
             tabsFaculty: state => state.packages.tabsFaculty,
             faculties: state => state.faculties.faculties,
-            year: state => state.globalStore.year,
+            subjectYear: state => state.globalStore.subjectYear,
             filterDto: state => state.packages.filterDto
         }),
         ...mapGetters(["semester"])
@@ -296,7 +296,7 @@ export default {
     },
     methods: {
         ...mapActions([
-            "fetchTabsFacultyBy",
+            "fetchSubject",
             "getFacultiesDetails",
             "fetchTotalTag",
             "addPackage",
@@ -359,7 +359,7 @@ export default {
             this.$refs.filterTabsFaculity.validate().then(success => {
                 if (success) {
                     this.packageDto.selectedExams = [];
-                    this.fetchTabsFacultyBy(filterDto);
+                    this.fetchSubject(filterDto);
                 }
             });
         },

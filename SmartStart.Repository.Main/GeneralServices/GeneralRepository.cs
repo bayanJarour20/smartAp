@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartStart.DataTransferObject.GeneralDto;
 using SmartStart.Model.Business;
 using SmartStart.Model.Main;
+using SmartStart.Model.Shared;
 using SmartStart.SharedKernel.Enums;
 using SmartStart.SqlServer.DataBase;
 using System;
@@ -59,7 +60,8 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                                   Semesters = s3.Select(s4 => new
                                                                                                   {
                                                                                                       SemesterId = s4.SemesterId,
-                                                                                                      SemesterName = s4.Semester.Name
+                                                                                                      SemesterName = s4.Semester.Name,
+                                                                                                      SelectedId = s4.Id
                                                                                                   }).ToList()
                                                                                               }).ToList()
                                                                           }).ToList()
@@ -75,6 +77,9 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                     .Include("Subject.SubjectTags.Tag")
                                                                     .Include("Subject.Exams.ExamDocuments.Document")
                                                                     .Include("Subject.Exams.ExamTags.Tag")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionTags")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.QuestionDocuments")
+                                                                    .Include("Subject.Exams.ExamQuestions.Question.Answers")
                                                                     .Where(s => s.FacultyId == selectedDto.FacultyId
                                                                                             && s.SectionId == selectedDto.SectionId
                                                                                             && s.Year == selectedDto.Year
@@ -91,7 +96,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                   res.Add(fillDto(subjectFaculty.Subject, subjectFaculty.PackageSubjectFaculties.ToList(), UserId));
               }
               await Context.SaveChangesAsync();
-              return operation.SetSuccess(new 
+              return operation.SetSuccess(new
               {
                   Subjects = res,
                   SubjectFaculty = new
@@ -102,8 +107,15 @@ namespace SmartStart.Repository.Main.GeneralServices
                       SectionName = SubjectFaculties.First().Section.Name,
                       SemesterId = SubjectFaculties.First().SemesterId,
                       SemesterName = SubjectFaculties.First().Semester.Name,
-                      Year = SubjectFaculties.First().Year
-                  }
+                      Year = SubjectFaculties.First().Year,
+                      SelectedId = SubjectFaculties.First().Id
+                  },
+                  Tags = _query<Tag>().Select(t => new
+                  {
+                      Id = t.Id,
+                      Name = t.Name, 
+                      Type = t.Type
+                  }).ToList()
               });
           };
         private Func<OperationResult<bool>, Task<OperationResult<bool>>> _removeSelected(SelectedDto selectedDto, Guid UserId)
@@ -157,12 +169,22 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             {
                                                                                                 SemesterId = s4.SemesterId,
                                                                                                 SemesterName = s4.Semester.Name,
+                                                                                                SelectedId = s4.Id,
                                                                                                 Subjects = s.Select(p => fillDto(p.Subject, p.PackageSubjectFaculties.ToList(), UserId)).ToList()
                                                                                             }).ToList()
                                                                                         }).ToList()
                                                                     }).ToList()
                                                   }).ToList();
-                return operation.SetSuccess(res);
+                return operation.SetSuccess(new
+                {
+                    Data = res,
+                    Tags = _query<Tag>().Select(t => new
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        Type = t.Type
+                    }).ToList()
+                });
             };
         private Func<OperationResult<object>, Task<OperationResult<object>>> _activateCode(string Hash, Guid UserId)
           => async operation =>
@@ -179,7 +201,7 @@ namespace SmartStart.Repository.Main.GeneralServices
               code.UserId = UserId;
               code.DateActivated = DateTime.Now.ToLocalTime();
               
-              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFaculty.SubjectId));
+              var subjectIds = code.CodePackages.SelectMany(x => x.Package.PackageSubjectFaculties.Select(x => x.SubjectFacultyId));
 
               var temp = subjectIds.Except(await _query<SubjectFacultyAppUser>().Include(s => s.SubjectFaculty)
                                                                                 .ThenInclude(s => s.PackageSubjectFaculties)
@@ -192,11 +214,41 @@ namespace SmartStart.Repository.Main.GeneralServices
                                                                                             AppUserId = UserId,
                                                                                         }).ToList();
               Context.AddRange(temp);
-              var res = new List<object>(); 
-              foreach (var item in temp)
-              {
-                  res.Add(fillDto(item.SubjectFaculty.Subject, item.SubjectFaculty.PackageSubjectFaculties.ToList(), UserId));
-              }
+              var res = _query<SubjectFaculty>().Where(s => temp.Where(t => t.SubjectFacultyId == s.Id).Any())
+                                                .Include(s => s.Section)
+                                                .Include(s => s.Semester)
+                                                .Include("Faculty.University")
+                                                .Include("Subject.SubjectTags.Tag")
+                                                .Include("Subject.Exams.ExamDocuments.Document")
+                                                .Include("Subject.Exams.ExamTags.Tag")
+                                                .Include("Subject.Exams.ExamQuestions.Question.QuestionTags")
+                                                .Include("Subject.Exams.ExamQuestions.Question.QuestionDocuments")
+                                                .Include("Subject.Exams.ExamQuestions.Question.Answers")
+                                                .ToList()
+                                                .GroupBy(s => new { s.FacultyId, s.Faculty.Name, UniversityName = s.Faculty.University.Name })
+                                                .Select(s => new
+                                                {
+                                                    FacultyId = s.Key.FacultyId,
+                                                    FacultyName = s.Key.Name + " - " + s.Key.UniversityName,
+                                                    Sections = s.GroupBy(s2 => new { s2.SectionId, s2.Section.Name })
+                                                                .Select(s2 => new 
+                                                                {
+                                                                    SectionId = s2.Key.SectionId,
+                                                                    SectionName = s2.Key.Name,
+                                                                    Years = s2.GroupBy(s3 => s3.Year)
+                                                                                    .Select(s3 => new
+                                                                                    {
+                                                                                        Year = s3.Key,
+                                                                                        Semesters = s3.Select(s4 => new
+                                                                                        {
+                                                                                            SemesterId = s4.SemesterId,
+                                                                                            SemesterName = s4.Semester.Name,
+                                                                                            SelectedId = s4.Id,
+                                                                                            Subjects = s.Select(p => fillDto(p.Subject, p.PackageSubjectFaculties.ToList(), UserId)).ToList()
+                                                                                        }).ToList()
+                                                                                    }).ToList()
+                                                                }).ToList()
+                                                }).ToList();
               return operation.SetSuccess(res);
           };
 
@@ -205,19 +257,19 @@ namespace SmartStart.Repository.Main.GeneralServices
         {
             return new
             {
+                Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
                 ImagePath = p.ImagePath,
-                SubjectTags = p.SubjectTags.Select(t => new
-                {
-                    TagId = t.TagId,
-                    TagName = t.Tag.Name,
-                    Type = t.Tag.Type
-                }).ToList(),
+                SubjectTags = p.SubjectTags.Select(t => t.TagId).ToList(),
+                InterviewQuestionCount = p.Exams.Where(e => e.Type == TabTypes.Interview)
+                                                .Sum(e => e.ExamQuestions.Where(e => e.Question.QuestionType == QuestionTypes.Single).Count()),
+                ImageCount = p.Exams.Where(e => e.Type == TabTypes.Microscope)
+                                    .Sum(e => e.ExamQuestions.Sum(eq => eq.Question.QuestionDocuments.Count())),
+                CorrectionQuestionCount = p.Exams.Sum(e => e.ExamQuestions.Where(e => e.Question.IsCorrected).Count()),
                 Type = p.Type,
                 IsActive = ps.Where(q => q.Package.CodePackages.Where(c => c.Code.UserId == UserId).Any()).Any(),
-                Exams = p.Exams.Where(e => e.Type == TabTypes.Exam)
-                               .GroupBy(e => e.Type)
+                Exams = p.Exams.GroupBy(e => e.Type)
                                .Select(e => new
                                {
                                    Type = e.Key,
@@ -227,12 +279,7 @@ namespace SmartStart.Repository.Main.GeneralServices
                                        Name = ee.Name,
                                        Price = ee.Price,
                                        Year = ee.Year,
-                                       ExamTags = ee.ExamTags.Select(t => new
-                                       {
-                                           TagId = t.TagId,
-                                           TagName = t.Tag.Name,
-                                           Type = t.Tag.Type
-                                       }).ToList(),
+                                       ExamTags = ee.ExamTags.Select(t => t.TagId).ToList(),
                                        ExamDocuments = ee.ExamDocuments.Select(t => new
                                        {
                                            Name = t.Document.Name,
@@ -241,18 +288,14 @@ namespace SmartStart.Repository.Main.GeneralServices
                                        }),
                                        ExamQuestions = ee.ExamQuestions.Select(q => new
                                        {
+                                           QuestionId = q.QuestionId,
                                            Order = q.Order,
                                            Title = q.Question.Title,
                                            Hint = q.Question.Hint,
                                            IsCorrected = q.Question.IsCorrected,
                                            QuestionType = q.Question.QuestionType,
                                            AnswerType = q.Question.AnswerType,
-                                           QuestionTags = q.Question.QuestionTags.Select(t => new
-                                           {
-                                               TagId = t.TagId,
-                                               TagName = t.Tag.Name,
-                                               Type = t.Tag.Type
-                                           }).ToList(),
+                                           QuestionTags = q.Question.QuestionTags.Select(t => t.TagId).ToList(),
                                            QuestionDocuments = q.Question.QuestionDocuments.Select(d => new
                                            {
                                                DocumentId = d.DocumentId,
@@ -265,7 +308,6 @@ namespace SmartStart.Repository.Main.GeneralServices
                                            {
                                                Id = a.Id,
                                                Title = a.Title,
-                                               Option = a.Option,
                                                IsCorrect = a.IsCorrect,
                                                CorrectionDate = a.CorrectionDate
                                            })

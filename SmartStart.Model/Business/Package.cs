@@ -42,7 +42,6 @@ namespace SmartStart.Model.Business
         [ColumnDataType(DataBaseTypes.BIT)]
         public bool IsHidden { get; set; }
 
-
         public ICollection<CodePackage> CodePackages { get; set; }
         public ICollection<PackageSubjectFaculty> PackageSubjectFaculties { get; set; }
     }

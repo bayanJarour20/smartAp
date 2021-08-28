@@ -29,10 +29,10 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> DeleteExam([Required] Guid id)
             => await repository.DeleteExam(id).IntoAsync(o => o).ToJsonResultAsync();
 
-        [Route("api/Exam/MultiDelete/{ids}")]
+        [Route("api/Exam/DeleteRange")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteExam([Required] IEnumerable<Guid> ids)
-            => await repository.MultiDeleteExam(ids).IntoAsync(o => o).ToJsonResultAsync();
+        public async Task<IActionResult> DeleteRangeExam([Required] IEnumerable<Guid> ids)
+            => await repository.DeleteRangeExam(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Exam/Add")]
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
@@ -48,6 +48,22 @@ namespace SmartStart.Controllers
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> GetAllExamQuestion([Required] Guid id)
             => await repository.GetAllExamQuestion(id).ToJsonResultAsync();
+
+        [Route("api/Exam/Documents")]
+        [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> AddExamDocument([FromForm] ExamDocumentDto dto)
+            => await repository.AddExamDocument(dto).ToJsonResultAsync();
+
+        [Route("api/Exam/Documents/{id}")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> DeleteExamDocument([Required] Guid id)
+            => await repository.DeleteExamDocument(id).ToJsonResultAsync();
+
+        [Route("api/Exam/Documents")]
+        [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> DeleteRangeExamDocument(IEnumerable<Guid> ids)
+           => await repository.DeleteRangeExamDocument(ids).ToJsonResultAsync();
+
         #endregion
 
         #region - Bank -
@@ -61,10 +77,10 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> DeleteBank([Required] Guid id)
             => await repository.DeleteBank(id).IntoAsync(o =>o).ToJsonResultAsync();
 
-        [Route("api/Bank/MultiDelete")]
+        [Route("api/Bank/DeleteRange")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteBank([Required] IEnumerable<Guid> ids)
-           => await repository.MultiDeleteBank(ids).IntoAsync(o => o).ToJsonResultAsync();
+        public async Task<IActionResult> DeleteRangeBank([Required] IEnumerable<Guid> ids)
+           => await repository.DeleteRangeBank(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Bank/Add")]
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
@@ -93,9 +109,9 @@ namespace SmartStart.Controllers
         public async Task<IActionResult> DeleteInterview([Required] Guid id)
             => await repository.DeleteInterview(id).IntoAsync(o => o).ToJsonResultAsync();
 
-        [Route("api/Interview/MultiDelete")]
+        [Route("api/Interview/DeleteRange")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteInterview([Required] IEnumerable<Guid> ids)
+        public async Task<IActionResult> DeleteRangeInterview([Required] IEnumerable<Guid> ids)
             => await repository.MultiDeleteInterview(ids).IntoAsync(o => o).ToJsonResultAsync();
 
         [Route("api/Interview/Add")]
@@ -128,12 +144,12 @@ namespace SmartStart.Controllers
         [Route("api/Microscope/Delete/{id}")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
         public async Task<IActionResult> DeleteMicroscope([Required] Guid id)
-            => await repository.DeleteMicroscope(id).ToJsonResultAsync();
+            => await repository.DeleteMicroscope(id).IntoAsync(o => o).ToJsonResultAsync();
 
-        [Route("api/Microscope/MultiDelete")]
+        [Route("api/Microscope/DeleteRange")]
         [HttpDelete, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> MultiDeleteMicroscope([Required] IEnumerable<Guid> ids)
-            => await repository.MultiDeleteMicroscope(ids).ToJsonResultAsync();
+        public async Task<IActionResult> DeleteRangeMicroscope([Required] IEnumerable<Guid> ids)
+            => await repository.DeleteRangeMicroscope(ids).ToJsonResultAsync();
 
         [Route("api/Microscope/Add")]
         [HttpPost, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
@@ -147,7 +163,7 @@ namespace SmartStart.Controllers
 
         [Route("api/Microscope/Sections/Update")]
         [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> UpdateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
+        public async Task<IActionResult> UpdateSectionsMicroscope([FromForm]SectionsMicroscopeDocumentsDto dto)
             => await repository.UpdateSectionsMicroscope(dto).ToJsonResultAsync();
 
         [Route("api/Microscope/Sections/Delete/{id}")]
