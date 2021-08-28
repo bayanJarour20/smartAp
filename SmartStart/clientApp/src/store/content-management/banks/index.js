@@ -45,7 +45,7 @@ export default {
                     subjectId: "",
                     tagIds: [],
                     categories: [],
-                    teams: []
+                    teams: ""
                 });
             } else {
                 Object.assign(state.bankDto, {

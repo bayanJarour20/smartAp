@@ -109,7 +109,6 @@
                                     'اختر الدكاترة التي تكون الدورة تابعة  لها'
                             }
                         ]"
-                        multiple
                         :options="doctors"
                         v-model="courcesDto.doctors"
                         name="doctors"
@@ -167,7 +166,7 @@ export default {
                             subjectId: this.courcesDto.subjectId,
                             tagIds: [
                                 ...this.courcesDto.categories,
-                                ...this.courcesDto.doctors
+                                this.courcesDto.doctors
                             ]
                         });
                     } else {
@@ -179,7 +178,7 @@ export default {
                             subjectId: this.courcesDto.subjectId,
                             tagIds: [
                                 ...this.courcesDto.categories,
-                                ...this.courcesDto.doctors
+                                this.courcesDto.doctors
                             ]
                         });
                     }
