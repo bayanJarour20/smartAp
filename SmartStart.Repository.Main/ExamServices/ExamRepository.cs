@@ -32,6 +32,9 @@ namespace SmartStart.Repository.Main.ExamServices
             this.webHostEnvironment = webHostEnvironment;
         }
 
+        public async Task<OperationResult<BaseCollectionExamDto>> GetBasicExams()
+            => await RepositoryHandler(_getBasicExams());
+
         #region Exam
         public async Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam()
             => await RepositoryHandler(_getAllExam());
@@ -106,6 +109,28 @@ namespace SmartStart.Repository.Main.ExamServices
         public async Task<OperationResult<bool>> DeleteRangeExamDocument(IEnumerable<Guid> documentIds)
             => await RepositoryHandler(_deleteRangeExamDocuments(documentIds));
         #endregion
+
+        private Func<OperationResult<BaseCollectionExamDto>, Task<OperationResult<BaseCollectionExamDto>>> _getBasicExams()
+        => async operation => {
+
+            var list = await Query.Select(exam => new BaseExamDto()
+            {
+                Id = exam.Id,
+                Name = exam.Name,
+                Type = exam.Type,
+                Year = exam.Year,
+                SubjectId = exam.SubjectId,
+            }).ToListAsync();
+
+            var look = list.ToLookup(x => x.Type);
+
+            return operation.SetSuccess(new BaseCollectionExamDto()
+            {
+                Exams = look[TabTypes.Exam],
+                Banks = look[TabTypes.Bank],
+            });
+        };
+
 
         #region - Exam -
         private Func<OperationResult<IEnumerable<ExamDetailsDto>>, Task<OperationResult<IEnumerable<ExamDetailsDto>>>> _getAllExam()
@@ -455,7 +480,8 @@ namespace SmartStart.Repository.Main.ExamServices
         }
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
         {
-            var exam = await FindAsync(dto.Id);
+            var exam = await Query.Include(x => x.ExamTags).SingleOrDefaultAsync(x => x.Id == dto.Id);
+            
             if (exam is null || exam.Type != examType)
                 return OperationResultTypes.NotExist;
             exam.Name = dto.Name;

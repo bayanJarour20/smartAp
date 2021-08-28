@@ -18,6 +18,12 @@ namespace SmartStart.Controllers
     {
         public TabController(IExamRepository examRepository) : base(examRepository) { }
 
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
+        public async Task<IActionResult> GetBasicExams()
+            => await repository.GetBasicExams().ToJsonResultAsync();
+
         #region  - Exam -
         [Route("api/Exam/GetAll")]
         [HttpGet, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]

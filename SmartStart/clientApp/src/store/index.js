@@ -42,7 +42,6 @@ export default new Vuex.Store({
     accounts,
     invoices,
     cources,
-    banks,
     interviews,
     telescope,
     home,

@@ -103,7 +103,6 @@
                                     'اختر الفرق التي يكون البنك تابع لها'
                             }
                         ]"
-                        multiple
                         :options="teams"
                         v-model="bankDto.teams"
                         name="teams"
@@ -156,7 +155,7 @@ export default {
                             subjectId: this.bankDto.subjectId,
                             tagIds: [
                                 ...this.bankDto.categories,
-                                ...this.bankDto.teams
+                                this.bankDto.teams
                             ]
                         });
                     } else {
@@ -168,7 +167,7 @@ export default {
                             subjectId: this.bankDto.subjectId,
                             tagIds: [
                                 ...this.bankDto.categories,
-                                ...this.bankDto.teams
+                                this.bankDto.teams
                             ]
                         });
                     }

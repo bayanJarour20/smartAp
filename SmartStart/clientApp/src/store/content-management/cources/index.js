@@ -25,8 +25,8 @@ export default {
             type: 0,
             subjectId: "",
             tagIds: [],
-            doctors: [],
-            categories: []
+            categories: [],
+            doctors: ""
         }
     },
     mutations: {
@@ -60,11 +60,7 @@ export default {
                         return store.getters.doctors.find(Gtag => Gtag.id == tag);
                     }),
                     categories: state.courcesQuestionList.tagIds.filter(tag => {
-                        console.log(store.getters.tagsList)
-                        return store.getters.tagsList.find(Gtag => {
-                            console.log(Gtag.id, tag)
-                            return Gtag.id == tag
-                        })
+                        return store.getters.tagsList.find(Gtag => Gtag.id == tag)
                     }),
                 });
             }
