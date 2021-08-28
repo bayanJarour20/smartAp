@@ -146,7 +146,7 @@ export default {
         deleteQuestion(ctx, id) {
             api.delete("Question/Delete/" + id, () => {
                 router.push('/questions')
-            }, {success: "تم حذف السؤال بنجاح", error: "فشل حذف السؤال"});
+            }, {confirm: 'هل انت متأكد من حذف السؤال', success: "تم حذف السؤال بنجاح", error: "فشل حذف السؤال"});
         },
     }
 };

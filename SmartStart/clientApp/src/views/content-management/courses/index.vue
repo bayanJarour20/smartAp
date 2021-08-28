@@ -3,6 +3,7 @@
         <b-card no-body class="mb-1">
             <b-card-header>
                 <strong>فلترة حسب</strong>
+                <b-button @click="$store.commit('Set_filter_Dto', localeFilterDto)" variant="primary">فلترة</b-button>
             </b-card-header>
             <b-card-body class="pb-1">
                 <b-row>
@@ -46,17 +47,12 @@
                             v-model="localeFilterDto.examYear"
                         />
                     </b-col>
-                    <b-col cols="12" class="text-right">
-                        <b-button type="submit" @click="$store.commit('Set_filter_Dto', localeFilterDto)" variant="primary">تم</b-button>
-                    </b-col>
                 </b-row>
             </b-card-body>
         </b-card>
         <EKTable 
             :items="courcesList"
             :columns="columns"
-            selectedLabel="name"
-              :row-style-class="rowStyleClassFn"
             @details="openCourcesDetails"
             @delete-selected="fireDeleteEvent"
         >
@@ -131,9 +127,6 @@ export default {
         },
         fireDeleteEvent(list) {
             this.deleteCourceList(list)
-        },
-          rowStyleClassFn(row) {
-            return row.isFree ? 'bg-success' : '';
         },
     },
     beforeDestroy() {

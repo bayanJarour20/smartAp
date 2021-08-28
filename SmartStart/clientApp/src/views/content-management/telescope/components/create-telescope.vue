@@ -11,18 +11,17 @@
                 @search="search"
             >
                 <template #body>
-                    <EKInputSelect
-                        label="المادة"
-                        placeholder="اختر المادة"
+                    <EKInputText
                         :rules="[
                             {
                                 type: 'required',
-                                message: 'المادة إجبارية'
+                                message: 'اسم المجهر إجباري'
                             }
                         ]"
-                        :options="subjectsList"
-                        v-model="telescopeDto.subjectId"
-                        name="subjectId"
+                        label="اسم المجهر"
+                        placeholder="ادخل اسم المجهر"
+                        name="name"
+                        v-model="telescopeDto.name"
                     />
                     <EKInputSelect
                         label="السنة"
@@ -37,62 +36,33 @@
                         v-model="telescopeDto.year"
                         name="year"
                     />
-                    <EKInputText
+                    <EKInputSelect
+                        label="المادة"
+                        placeholder="اختر المادة"
                         :rules="[
                             {
                                 type: 'required',
-                                message: 'اسم المجهر إجباري'
+                                message: 'المادة إجبارية'
                             }
                         ]"
-                        label="اسم المجهر"
-                        placeholder="ادخل اسم المجهر"
-                        name="name"
-                        v-model="telescopeDto.name"
-                    />
-                    <EKInputText
-                        :rules="[
-                            {
-                                type: 'required',
-                                message: 'السعر الإفتراضي إجباري'
-                            },
-                            {
-                                type: 'min_value:0',
-                                message: 'الحقل يجب ان يكون بقيمة موجبة'
-                            }
-                        ]"
-                        label="السعر الإفتراضي"
-                        placeholder="ادخل السعر الإفتراضي"
-                        name="price"
-                        type="number"
-                        v-model="telescopeDto.price"
+                        :options="subjectsList"
+                        v-model="telescopeDto.subjectId"
+                        name="subjectId"
                     />
                     <EKInputSelect
-                        label="تصنيف المجهر"
+                        label="تصنيفات المجهر"
                         placeholder="اختر تصنيفات"
                         :rules="[
                             {
                                 type: 'required',
-                                message: 'التصنيف إجباري'
+                                message:
+                                    'اختر التصنيفات التي يكون المجهر تابع لها'
                             }
                         ]"
+                        multiple
                         :options="tagsList"
-                        v-model="telescopeDto.tags"
-                        multiple
-                        name="tags"
-                    />
-                    <EKInputSelect
-                        label="دكتور المجهر"
-                        placeholder="اختر الدكتور"
-                        :rules="[
-                            {
-                                type: 'required',
-                                message: 'الدكتور إجباري'
-                            }
-                        ]"
-                        multiple
-                        :options="doctors"
-                        v-model="telescopeDto.doctors"
-                        name="doctor"
+                        v-model="telescopeDto.tagIds"
+                        name="categories"
                     />
                 </template>
             </EKDialog>
@@ -117,7 +87,7 @@ export default {
             telescopeDto: state => state.telescope.telescopeDto,
             subjectsList: state => state.subjects.subjectsList
         }),
-        ...mapGetters(["years", "tagsList", "doctors"])
+        ...mapGetters(["years", "tagsList"]),
     },
     created() {
         this.fetchSubject();
@@ -133,19 +103,17 @@ export default {
                         year: this.telescopeDto.year,
                         type: this.telescopeDto.type,
                         subjectId: this.telescopeDto.subjectId,
-                        price: this.telescopeDto.price,
-                        isFree: this.telescopeDto.isFree,
-                        tagIds: [...this.telescopeDto.doctors, ...this.telescopeDto.tags]
+                        tagIds: this.telescopeDto.tagIds
                     });
-                    this.$refs.telescopeDialog.close()
+                    this.$refs.telescopeDialog.close();
                 }
             });
         },
         search(query) {
-            this.$store.commit('Set_Search_Dto', {
+            this.$store.commit("Set_Search_Dto", {
                 keys: ["name", "subject.name"],
                 query
-            })
+            });
         }
     }
 };

@@ -1,5 +1,5 @@
 import { All } from "@/router";
-// import store from "@/store";
+import store from "@/store";
 export default [
     // --- faculties
     {
@@ -134,6 +134,53 @@ export default [
                     text: "تفاصيل",
                     active: true,
                 },
+            ]
+        }),
+    },
+    // --- questions
+    {
+        path: "/questions",
+        name: "questions",
+        components: {
+            default: () => import("@/views/content-management/questions"),
+            'bread-actions' : () => import("@/views/content-management/questions/components/create-question.vue"),
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة",
+                    active: true
+                }
+            ]
+        }),
+    },
+    {
+        path: "/questions/:ansType/set/:id/:examId/:subjectId",
+        name: "questions details",
+        components: {
+            default: () => import("@/views/content-management/questions/pages/details.vue"),
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة",
+                    active: false,
+                    to: '/questions'
+                },
+                {
+                    text: store.state.questions.questonsDto.id == '' ? "إضافة سؤال" : "تفاصيل السؤال",
+                    active: true
+                }
             ]
         }),
     },

@@ -78,36 +78,35 @@
                         v-model="bankDto.subjectId"
                         name="subjectId"
                     />
-                    <EKInputText
-                        label="سعر البنك"
-                        placeholder="ادخل سعر البنك"
-                        :rules="[
-                            {
-                                type: 'required',
-                                message: 'سعر البنك إجباري'
-                            },
-                            {
-                                type: 'min_value:0',
-                                message: 'سعر البنك قيمة موجبة'
-                            },
-                        ]"
-                        v-model="bankDto.price"
-                        type="number"
-                        name="price"
-                    />
                     <EKInputSelect
                         label="تصنيفات البنك"
-                        placeholder="اختر التصنيف"
+                        placeholder="اختر تصنيفات"
                         :rules="[
                             {
                                 type: 'required',
-                                message: 'تصنيفات البنك إجبارية'
+                                message:
+                                    'اختر التصنيفات التي كون البنك تابع لها'
                             }
                         ]"
                         multiple
                         :options="tagsList"
-                        v-model="bankDto.tagIds"
-                        name="tagIds"
+                        v-model="bankDto.categories"
+                        name="categories"
+                    />
+                    <EKInputSelect
+                        label="فرق البنك"
+                        placeholder="اختر الفرق"
+                        :rules="[
+                            {
+                                type: 'required',
+                                message:
+                                    'اختر الفرق التي يكون البنك تابع لها'
+                            }
+                        ]"
+                        multiple
+                        :options="teams"
+                        v-model="bankDto.teams"
+                        name="teams"
                     />
                 </template>
             </EKDialog>
@@ -133,12 +132,12 @@ export default {
         id: String
     },
     computed: {
-        ...mapGetters(["tagsList", "years"]),
+        ...mapGetters(["years", "tagsList", "teams"]),
         ...mapState({
             bankDto: state => state.banks.bankDto,
-            subjectsList: state => state.subjects.subjectsList
+            banksQuestionList: state => state.banks.banksQuestionList,
+            subjectsList: state => state.subjects.subjectsList,
         }),
-       
     },
     created() {
         this.fetchTotalTag();
@@ -154,10 +153,11 @@ export default {
                             name: this.bankDto.name,
                             year: this.bankDto.year,
                             type: this.bankDto.type,
-                            price: +this.bankDto.price,
-                            isFree: this.bankDto.isFree,
                             subjectId: this.bankDto.subjectId,
-                            tagIds: this.bankDto.tagIds,
+                            tagIds: [
+                                ...this.bankDto.categories,
+                                ...this.bankDto.teams
+                            ]
                         });
                     } else {
                         this.updateBank({
@@ -165,17 +165,18 @@ export default {
                             name: this.bankDto.name,
                             year: this.bankDto.year,
                             type: this.bankDto.type,
-                            price: +this.bankDto.price,
-                            isFree: this.bankDto.isFree,
                             subjectId: this.bankDto.subjectId,
-                            tagIds: this.bankDto.tagIds,
+                            tagIds: [
+                                ...this.bankDto.categories,
+                                ...this.bankDto.teams
+                            ]
                         });
                     }
                 }
             });
         },
         goToAddQuestion() {
-            this.$router.push('/questions/1/set/0/0/0')
+            this.$router.push(`/questions/1/set/0/${this.id}/${this.banksQuestionList.subjectId}`)
         },
         open() {
             this.$refs.bankDialog.open()

@@ -9,8 +9,6 @@ export default {
             subject: {},
             semesterId: "",
             questionsCount: 0,
-            price: 0,
-            isFree: false,
             tagIds: [],
             id: "",
             name: "",
@@ -24,8 +22,6 @@ export default {
             year: 0,
             type: 0,
             subjectId: "",
-            price: 0,
-            isFree: false,
             tagIds: []
         }
     },
@@ -44,8 +40,6 @@ export default {
                     year: 0,
                     type: 0,
                     subjectId: "",
-                    price: 0,
-                    isFree: false,
                     tagIds: []
                 });
             } else {
@@ -54,8 +48,6 @@ export default {
                     name: state.interviewQuestionList.name,
                     year: state.interviewQuestionList.year,
                     type: state.interviewQuestionList.type,
-                    price: state.interviewQuestionList.price,
-                    isFree: state.interviewQuestionList.isFree,
                     subjectId: state.interviewQuestionList.subjectId,
                     tagIds: state.interviewQuestionList.tagIds
                 });
@@ -68,24 +60,22 @@ export default {
             state.interviewQuestionList.name = payload.name;
             state.interviewQuestionList.year = payload.year;
             state.interviewQuestionList.type = payload.type;
-            state.interviewQuestionList.price = payload.price;
-            state.interviewQuestionList.isFree = payload.isFree;
             state.interviewQuestionList.subjectId = payload.subjectId;
             state.interviewQuestionList.tagIds = payload.tagIds;
         },
-        delete_Interview_List(state, payload){
-            let MapOfIds = new Map(); 
-            var idx; 
-            var tempList = []; 
-            for(idx = 0 ; idx < payload.length ; idx++) {
-                 MapOfIds.set(payload[idx] , 1);
+        delete_Interview_List(state, payload) {
+            let MapOfIds = new Map();
+            var idx;
+            var tempList = [];
+            for (idx = 0; idx < payload.length; idx++) {
+                MapOfIds.set(payload[idx], 1);
             }
-            for(idx = 0 ; idx < state.interviewsList.length ; idx++) {
-                if(MapOfIds.has(state.interviewsList[idx].id) === false) {
-                    tempList.push(state.interviewsList[idx]); 
+            for (idx = 0; idx < state.interviewsList.length; idx++) {
+                if (MapOfIds.has(state.interviewsList[idx].id) === false) {
+                    tempList.push(state.interviewsList[idx]);
                 }
             }
-            state.interviewsList = tempList; 
+            state.interviewsList = tempList;
         }
     },
     actions: {
@@ -102,11 +92,19 @@ export default {
         addInterview({ commit }, payload) {
             api.post("Interview/Add", payload, ({ data }) => {
                 commit("Add_Interviews", data);
+            },
+            {
+                success: "تم إضافة السؤال الكتابي بنجاح",
+                error: "فشل إضافة السؤال الكتابي"
             });
         },
         updateInterview({ commit }, payload) {
             api.put("Interview/Update", payload, ({ data }) => {
                 commit("Update_Interview", data);
+            },
+            {
+                success: "تم تعديل السؤال الكتابي بنجاح",
+                error: "فشل تعديل السؤال الكتابي"
             });
         },
         deleteInterview(ctx, id) {
@@ -114,15 +112,28 @@ export default {
                 if (data.isSuccess) {
                     router.push("/interviews");
                 }
+            },
+            {
+                confirm: "هل تريد فعلا حذف السؤال الكتابي",
+                success: "تم حذف السؤال الكتابي بنجاح",
+                error: "فشل حذف السؤال الكتابي"
             });
         },
-        deleteInterviewList({commit},ids){
-            api.delete("Interview/MultiDelete",({ data }) => {
-                if(data) {
-                    commit("delete_Interview_List", ids);
-                }
-            },{confirm: 'هل تريد فعلا حذف الاسئلة الكتابية المحددة', success: 'تم حذف الاسئلة الكتابية المحددة بنجاح', error: "فشل حذف الاسئلة الكتابية المحددة " },
-            ids)
+        deleteInterviewList({ commit }, ids) {
+            api.delete(
+                "Interview/deleterange",
+                ({ data }) => {
+                    if (data) {
+                        commit("delete_Interview_List", ids);
+                    }
+                },
+                {
+                    confirm: "هل تريد فعلا حذف الاسئلة الكتابية المحددة",
+                    success: "تم حذف الاسئلة الكتابية المحددة بنجاح",
+                    error: "فشل حذف الاسئلة الكتابية المحددة "
+                },
+                ids
+            );
         }
     }
 };

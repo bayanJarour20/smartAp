@@ -163,7 +163,7 @@ namespace SmartStart.Controllers
 
         [Route("api/Microscope/Sections/Update")]
         [HttpPut, ElAuthorizeDistributed(SmartStartRoles.Admin, SmartStartRoles.Entry)]
-        public async Task<IActionResult> UpdateSectionsMicroscope(SectionsMicroscopeDocumentsDto dto)
+        public async Task<IActionResult> UpdateSectionsMicroscope([FromForm]SectionsMicroscopeDocumentsDto dto)
             => await repository.UpdateSectionsMicroscope(dto).ToJsonResultAsync();
 
         [Route("api/Microscope/Sections/Delete/{id}")]

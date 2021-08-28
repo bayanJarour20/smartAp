@@ -465,6 +465,8 @@ namespace SmartStart.Repository.Main.ExamServices
 
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
                             .Include(exam => exam.Subject)
+                            .Include(exam => exam.ExamTags)
+                            .Include(exam => exam.ExamQuestions)
                             .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync());
         }
         private async Task<IEnumerable<ExamDetailsQuestionDto>> GetAllQuestionAsync(Expression<Func<Exam, bool>> predicate)
@@ -483,7 +485,7 @@ namespace SmartStart.Repository.Main.ExamServices
                                   QuestionsCount = exam.ExamQuestions.Count(),
                                   SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
                                   SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
-                                  TagIds = exam.ExamTags.Select(et => et.Id),
+                                  TagIds = exam.ExamTags.Select(et => et.TagId),
                                   Questions = exam.ExamQuestions.Select(question => new QuestionImagesTagsAnswersDto
                                   {
                                       Id = question.QuestionId,
@@ -532,7 +534,7 @@ namespace SmartStart.Repository.Main.ExamServices
                 SubjectId = exam.SubjectId,
                 SubjectName = exam.Subject.Name,
                 Price = exam.Price,
-                TagIds = exam.ExamTags.Select(et => et.Id),
+                TagIds = exam.ExamTags.Select(et => et.TagId),
                 SemesterId = exam.Subject.SubjectFaculties.Where(e => e.SemesterId.HasValue).Select(f => f.SemesterId.Value),
                 SectionId = exam.Subject.SubjectFaculties.Where(e => e.SectionId.HasValue).Select(f => f.SectionId.Value),
                 QuestionsCount = exam.ExamQuestions.Count(),

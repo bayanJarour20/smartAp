@@ -40,7 +40,6 @@
         <EKTable
             :items="telescopeList"
             :columns="columns"
-            selectedLabel="name"
             @details="openSubjectDEtails"
             @delete-selected="fireDeleteEvent"
         >

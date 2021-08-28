@@ -61,8 +61,8 @@
                         :rules="[
                             { type: 'required', message: 'سنة السؤال الكتابي إجباري' }
                         ]"
-                        :options="year"
-                        name="year"
+                        :options="years"
+                        name="years"
                     />
                     <EKInputSelect
                         label="المادة"
@@ -77,35 +77,20 @@
                         v-model="interviewsDto.subjectId"
                         name="subjectId"
                     />
-                    <EKInputText
-                        label="سعر السؤال الكتابي"
-                        placeholder="ادخل سعر السؤال الكتابي"
-                        :rules="[
-                            {
-                                type: 'required',
-                                message: 'سعر السؤال الكتابي إجباري'
-                            },
-                            {
-                                type: 'min_value:0',
-                                message: 'سعر السؤال الكتابي قيمة موجبة'
-                            },
-                        ]"
-                        v-model="interviewsDto.price"
-                        name="price"
-                    />
                     <EKInputSelect
                         label="تصنيفات السؤال الكتابي"
-                        placeholder="اختر التصنيف"
+                        placeholder="اختر تصنيفات"
                         :rules="[
                             {
                                 type: 'required',
-                                message: 'تصنيفات السؤال الكتابي إجبارية'
+                                message:
+                                    'اختر التصنيفات التي يكون السؤال الكتابي تابع لها'
                             }
                         ]"
                         multiple
                         :options="tagsList"
                         v-model="interviewsDto.tagIds"
-                        name="tagIds"
+                        name="categories"
                     />
                 </template>
             </EKDialog>
@@ -131,9 +116,8 @@ export default {
         id: String
     },
     computed: {
-        ...mapGetters(["tagsList"]),
+        ...mapGetters(["years", "tagsList"]),
         ...mapState({
-            year: state => state.globalStore.year,
             interviewsDto: state => state.interviews.interviewsDto,
             interviewQuestionList: state => state.interviews.interviewQuestionList,
             subjectsList: state => state.subjects.subjectsList
@@ -154,10 +138,8 @@ export default {
                             name: this.interviewsDto.name,
                             year: this.interviewsDto.year,
                             type: this.interviewsDto.type,
-                            price: +this.interviewsDto.price,
-                            isFree: this.interviewsDto.isFree,
                             subjectId: this.interviewsDto.subjectId,
-                            tagIds: this.interviewsDto.tagIds,
+                            tagIds: this.interviewsDto.tagIds
                         });
                     } else {
                         this.updateInterview({
@@ -165,17 +147,14 @@ export default {
                             name: this.interviewsDto.name,
                             year: this.interviewsDto.year,
                             type: this.interviewsDto.type,
-                            price: +this.interviewsDto.price,
-                            isFree: this.interviewsDto.isFree,
                             subjectId: this.interviewsDto.subjectId,
-                            tagIds: this.interviewsDto.tagIds,
+                            tagIds: this.interviewsDto.tagIds
                         });
                     }
                 }
             });
         },
         goToAddQuestion() {
-            console.log(this.interviewQuestionList)
             this.$router.push(`/questions/0/set/0/${this.interviewQuestionList.id}/${this.interviewQuestionList.subjectId}`)
         },
         open() {

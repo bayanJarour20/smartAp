@@ -84,22 +84,6 @@
                         v-model="courcesDto.subjectId"
                         name="subjectId"
                     />
-                    <EKInputText
-                        label="السعر الإفتراضي"
-                        v-model="courcesDto.price"
-                        placeholder="ادخل السعر الإفتراضي"
-                        name="price"
-                        type="number"
-                        :readonly="courcesDto.isFree"
-                    />
-                    <div class="text-center d-flex align-items-center">
-                        <b-form-checkbox
-                            class="mr-1"
-                            v-model="courcesDto.isFree"
-                            switch
-                        ></b-form-checkbox>
-                        <label class="m-0">مجانية</label>
-                    </div>
                     <EKInputSelect
                         label="تصنيفات الدورة"
                         placeholder="اختر تصنيفات"
@@ -116,8 +100,8 @@
                         name="categories"
                     />
                     <EKInputSelect
-                        label="دكاترة المادة"
-                        placeholder="اختر دكاترة"
+                        label="دكاترة الدورة"
+                        placeholder="اختر الدكاترة"
                         :rules="[
                             {
                                 type: 'required',
@@ -180,10 +164,11 @@ export default {
                             name: this.courcesDto.name,
                             year: this.courcesDto.year,
                             type: this.courcesDto.type,
-                            price: this.courcesDto.price,
-                            isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
-                            tagIds: [...this.courcesDto.categories, ...this.courcesDto.doctors]
+                            tagIds: [
+                                ...this.courcesDto.categories,
+                                ...this.courcesDto.doctors
+                            ]
                         });
                     } else {
                         this.updateCourse({
@@ -191,10 +176,11 @@ export default {
                             name: this.courcesDto.name,
                             year: this.courcesDto.year,
                             type: this.courcesDto.type,
-                            price: this.courcesDto.price,
-                            isFree: this.courcesDto.isFree,
                             subjectId: this.courcesDto.subjectId,
-                            tagIds: [...this.courcesDto.categories, ...this.courcesDto.doctors]
+                            tagIds: [
+                                ...this.courcesDto.categories,
+                                ...this.courcesDto.doctors
+                            ]
                         });
                     }
                     this.$refs.courseDialog.close()
@@ -225,7 +211,3 @@ export default {
     }
 };
 </script>
-
-// accept=".csv,
-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-application/vnd.ms-excel"

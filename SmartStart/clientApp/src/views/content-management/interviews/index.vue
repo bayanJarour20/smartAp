@@ -1,10 +1,21 @@
 <template>
     <div>
         <b-card no-body class="mb-1">
-            <b-card-header class="py-1">
-                <strong>فلترة حسب:</strong>
+            <b-card-header class="pt-1 pb-0">
+                <strong>فلترة حسب</strong>
+                <b-button
+                    variant="primary"
+                    class="mb-1"
+                    @click="
+                        $store.commit(
+                            'Set_filter_Dto',
+                            localeFilterDto
+                        )
+                    "
+                    >فلترة</b-button
+                >
             </b-card-header>
-            <b-card-body class="pb-0 px-1">
+            <b-card-body class="p-0">
                 <b-col cols="12">
                     <b-row class="align-items-end">
                         <b-col cols="12" md="4" lg="3">
@@ -55,20 +66,6 @@
                                 name="semesterId"
                                 :clearable="true"
                             />
-                        </b-col>
-                        <b-col cols="12" class="text-right">
-                            <b-button
-                                type="submit"
-                                variant="primary"
-                                class="mb-1"
-                                @click="
-                                    $store.commit(
-                                        'Set_filter_Dto',
-                                        localeFilterDto
-                                    )
-                                "
-                                >تم</b-button
-                            >
                         </b-col>
                     </b-row>
                 </b-col>
@@ -138,9 +135,6 @@ export default {
         openInterviewsDetails(props) {
             this.$router.push("/interviews/" + props.row.id);
         }
-    },
-    rowStyleClassFn(row) {
-        return row.isFree ? "bg-success" : "";
     },
     beforeDestroy() {
         this.$store.commit("Reset_filter_Dto");

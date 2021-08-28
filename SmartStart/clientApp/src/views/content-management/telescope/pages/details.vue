@@ -12,6 +12,21 @@
                 <b-card-text>
                   <b-row>
                     <b-col cols="12" md="6">
+                        <EKInputText
+                            label="اسم المجهر"
+                            placeholder="اختر اسم المجهر"
+                            :rules="[
+                            {
+                                type: 'required',
+                                message: 'اسم المجهر مطلوب',
+                            },
+                            ]"
+                            v-model="telescopeDto.name"
+                            name="name"
+                            :clearable="true"
+                        />
+                    </b-col>
+                    <b-col cols="12" md="6">
                       <EKInputSelect
                         label="المادة"
                         placeholder="اختر المادة"
@@ -24,21 +39,6 @@
                         :options="subjectsList"
                         v-model="telescopeDto.subjectId"
                         name="subjectId"
-                        :clearable="true"
-                      />
-                    </b-col>
-                    <b-col cols="12" md="6">
-                      <EKInputText
-                        label="اسم المجهر"
-                        placeholder="اختر اسم المجهر"
-                        :rules="[
-                          {
-                            type: 'required',
-                            message: 'اسم المجهر مطلوب',
-                          },
-                        ]"
-                        v-model="telescopeDto.name"
-                        name="name"
                         :clearable="true"
                       />
                     </b-col>
@@ -58,55 +58,21 @@
                       />
                     </b-col>
                     <b-col cols="12" md="6">
-                      <EKInputText
-                        :rules="[
-                          {
-                            type: 'required',
-                            message: 'السعر الإفتراضي إجباري',
-                          },
-                          {
-                            type: 'min_value:0',
-                            message: 'الحقل يجب ان يكون بقيمة موجبة',
-                          },
-                        ]"
-                        label="السعر الإفتراضي"
-                        placeholder="ادخل السعر الإفتراضي"
-                        name="price"
-                        type="number"
-                        v-model="telescopeDto.price"
-                      />
-                    </b-col>
-                    <b-col cols="12" md="6">
-                      <EKInputSelect
-                        label="تصنيف المجهر"
-                        placeholder="اختر تصنيفات"
-                        :rules="[
-                          {
-                            type: 'required',
-                            message: 'التصنيف إجباري',
-                          },
-                        ]"
-                        :options="tagsList"
-                        v-model="telescopeDto.tags"
-                        multiple
-                        name="tags"
-                      />
-                    </b-col>
-                    <b-col cols="12" md="6">
-                      <EKInputSelect
-                        label="دكتور المجهر"
-                        placeholder="اختر الدكتور"
-                        :rules="[
-                          {
-                            type: 'required',
-                            message: 'الدكتور إجباري',
-                          },
-                        ]"
-                        multiple
-                        :options="doctors"
-                        v-model="telescopeDto.doctors"
-                        name="doctor"
-                      />
+                        <EKInputSelect
+                            label="تصنيفات المجهر"
+                            placeholder="اختر تصنيفات"
+                            :rules="[
+                                {
+                                    type: 'required',
+                                    message:
+                                        'اختر التصنيفات التي يكون المجهر تابع لها'
+                                }
+                            ]"
+                            multiple
+                            :options="tagsList"
+                            v-model="telescopeDto.tagIds"
+                            name="categories"
+                        />
                     </b-col>
                   </b-row>
                 </b-card-text>
@@ -128,7 +94,7 @@
         </b-col>
         <b-col cols="12">
           <b-card no-body class="mb-2">
-            <b-card-header class="align-items-center">
+            <b-card-header class="align-items-center pb-0">
               <h4 class="mr-auto mb-0">صور المجهر</h4>
               <addMicroscopeSection
                 ref="microscopeSectionDialog"
@@ -136,7 +102,7 @@
               />
             </b-card-header>
             <ValidationObserver ref="sectionMicroscope">
-              <b-card-body>
+              <b-card-body class="py-0">
                 <b-card-text>
                   <b-row>
                     <b-col cols="12" class="d-flex align-items-center">
@@ -268,30 +234,15 @@
                 </b-card-text>
               </b-card-body>
               <b-card-footer>
-                <b-row>
-                  <b-col>
-                    <div class="d-flex">
-                      <b-button
-                        class="mr-1"
-                        variant="primary"
-                        style="max-width: 100px"
-                        @click="SubmitUpdateSectionMicroscope"
-                        >حفظ</b-button
-                      >
-                      <b-button
-                        variant="outline-primary"
-                        style="max-width: 100px"
-                        to="../telescope"
-                        >تراجع</b-button
-                      >
-                    </div>
-                  </b-col>
-                  <b-col style="display: flex; justify-content: flex-end">
-                    <b-button style="max-width: 100px" variant="outline-primary"
-                      >حذف</b-button
-                    >
-                  </b-col>
-                </b-row>
+                <b-button
+                    class="mr-1"
+                    variant="primary"
+                    @click="SubmitUpdateSectionMicroscope"
+                >حفظ</b-button>
+                <b-button
+                    variant="outline-primary"
+                    to="../telescope"
+                >تراجع</b-button>
               </b-card-footer>
             </ValidationObserver>
           </b-card>
@@ -362,9 +313,7 @@ export default {
             year: this.telescopeDto.year,
             type: this.telescopeDto.type,
             subjectId: this.telescopeDto.subjectId,
-            price: this.telescopeDto.price,
-            isFree: this.telescopeDto.isFree,
-            tagIds: [...this.telescopeDto.doctors, ...this.telescopeDto.tags],
+            tagIds: this.telescopeDto.tagIds
           });
         }
       });

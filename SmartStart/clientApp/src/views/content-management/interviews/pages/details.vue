@@ -21,9 +21,8 @@
             childrenLabel="answers"
             customHeaderLabel="label"
             :colapseHeader="questionHeader"
+            no_delete
             @details="details"
-            @changePareentcheck="chaingeSelect"
-            @changeSelectChildren="changeSelectChildren"
         >
             <template slot="item-order" slot-scope="{ tr }">
                 <b-button variant="primary" class="btn-icon rounded-pill">{{tr.order}}</b-button>
@@ -80,12 +79,6 @@ export default {
         details(props) {
              this.$router.push("/questions/0/set/" + props.id + "/0/0");
         },
-        chaingeSelect(list) {
-            console.log(list);
-        },
-        changeSelectChildren(list) {
-            console.log(list);
-        }
     },
     beforeDestroy() {
         this.$store.commit('Reset_Search_Dto')
