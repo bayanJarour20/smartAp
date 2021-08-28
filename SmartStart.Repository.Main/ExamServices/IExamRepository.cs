@@ -11,7 +11,7 @@ namespace SmartStart.Repository.Main.ExamServices
 {
     public interface IExamRepository : IElRepository
     {
-
+        Task<OperationResult<BaseCollectionExamDto>> GetBasicExams();
         Task<OperationResult<IEnumerable<ExamDetailsDto>>> GetAllExam();
         Task<OperationResult<bool>> DeleteExam(Guid id);
         Task<OperationResult<bool>> DeleteRangeExam(IEnumerable<Guid> ids);
