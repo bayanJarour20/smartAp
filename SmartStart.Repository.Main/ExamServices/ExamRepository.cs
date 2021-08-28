@@ -392,6 +392,9 @@ namespace SmartStart.Repository.Main.ExamServices
         {
             return await Query.Where(predicate)
                               .Include(exam => exam.Subject)
+                              .ThenInclude(exam => exam.SubjectFaculties)
+                              .Include(exam => exam.ExamTags)
+                              .Include(exam => exam.ExamQuestions)
                               .Select(exam => fileExamDetails(exam)).ToListAsync();
         }
         private async Task<bool> TryDeleteAsync(Guid examId, TabTypes examType)
@@ -445,6 +448,9 @@ namespace SmartStart.Repository.Main.ExamServices
             dto.Id = exam.Id;
             return await Query.Where(exam => exam.Id == dto.Id)
                               .Include(exam => exam.Subject)
+                              .Include(exam => exam.ExamTags)
+                              .Include(exam => exam.Subject.SubjectFaculties)
+                              .Include(exam => exam.ExamQuestions)
                               .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync();
         }
         private async Task<OperationResult<ExamDetailsDto>> UpdateAsync(OperationResult<ExamDetailsDto> operation, ExamDto dto, TabTypes examType)
@@ -466,6 +472,7 @@ namespace SmartStart.Repository.Main.ExamServices
             return operation.SetSuccess(await Query.Where(exam => exam.Id == dto.Id)
                             .Include(exam => exam.Subject)
                             .Include(exam => exam.ExamTags)
+                            .Include(exam => exam.Subject.SubjectFaculties)
                             .Include(exam => exam.ExamQuestions)
                             .Select(exam => fileExamDetails(exam)).FirstOrDefaultAsync());
         }

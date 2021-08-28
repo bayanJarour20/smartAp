@@ -13,6 +13,7 @@ using SmartStart.ViewModels.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,7 +45,12 @@ namespace SmartStart.Controllers
             var operationResult = await repository.RefreshToken(user_id, refresh_token, generationStamp?.Value ?? string.Empty);
             return operationResult.ToJsonResult();
         }
-
+        ///TODO fixed in Elkood.web nearest Released
+        /// JwtSecurityToken?  off #nullable disable , or un decode token on return 401 pre-action entered 
+        /// , or is Model Valid with ElMessage  struct see: https://github.com/dotnet/aspnetcore/blob/37764a7f65d5bfb0b0bcdb938f3d218b10986c53/src/Mvc/Mvc.Abstractions/src/ModelBinding/ModelStateDictionary.cs#L147 
+        /// http://git.elkood.com/MHozaifaA/Elkood.Web/src/branch/master/Elkood.Web/MVC/Controller/ElControllerBase.cs#L19
+        protected override JwtSecurityToken DecodeToken => Token is null ? (this.Request.Headers.FirstOrDefault(x => x.Key == ElClaimTypes.Token) switch
+            { { Key: var auth, Value: var value } when auth is not null && value.Count > 0 => new(value[0].Split(" ")[1]), _ => null }) : base.DecodeToken;
         [HttpPost]
         public async Task<IActionResult> Signup(SignupDto signup) => (await repository.Signup(signup)).Into(operation => operation).ToJsonResult();
 
