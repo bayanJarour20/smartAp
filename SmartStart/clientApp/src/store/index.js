@@ -19,6 +19,7 @@ import interviews from './content-management/interviews'
 import telescope from './content-management/telescope'
 import banks from './content-management/banks'
 import questions from './content-management/questions'
+import banks from './content-management/banks'
 
 
 
@@ -47,7 +48,7 @@ export default new Vuex.Store({
     telescope,
     home,
     questions,
-
+    banks,
     advertising,
 
     faculties,
