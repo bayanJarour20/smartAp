@@ -16,6 +16,7 @@ import advertising from './content-management/advertising'
 import invoices from "./invoices"
 import cources from './content-management/cources'
 import questions from './content-management/questions'
+import banks from './content-management/banks'
 
 
 
@@ -42,7 +43,7 @@ export default new Vuex.Store({
     invoices,
     home,
     questions,
-
+    banks,
     advertising,
 
     faculties,

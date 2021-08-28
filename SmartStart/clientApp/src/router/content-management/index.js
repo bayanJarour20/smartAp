@@ -1,5 +1,5 @@
 import { All } from "@/router";
-// import store from "@/store";
+import store from "@/store";
 export default [
     // --- faculties
     {
@@ -99,7 +99,10 @@ export default [
         name: "subjects",
         components: {
             default: () => import("@/views/content-management/subjects"),
-            'bread-actions' : () => import("@/views/content-management/subjects/components/create-subject.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/subjects/components/create-subject.vue"
+                )
         },
         meta: () => ({
             pageTitle: "المواد",
@@ -107,16 +110,17 @@ export default [
             breadcrumb: [
                 {
                     text: "المواد",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
     {
         path: "/subjects/:id",
         name: "subjects details",
         components: {
-            default: () => import("@/views/content-management/subjects/pages/details.vue")
+            default: () =>
+                import("@/views/content-management/subjects/pages/details.vue")
         },
         props: {
             default: true
@@ -128,23 +132,79 @@ export default [
                 {
                     text: "المواد",
                     active: false,
-                    to:"/subjects"
+                    to: "/subjects"
                 },
                 {
                     text: "تفاصيل",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
-   
+    // --- questions
+    {
+        path: "/questions",
+        name: "questions",
+        components: {
+            default: () => import("@/views/content-management/questions"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/questions/components/create-question.vue"
+                )
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة",
+                    active: true
+                }
+            ]
+        })
+    },
+    {
+        path: "/questions/:ansType/set/:id/:examId/:subjectId",
+        name: "questions details",
+        components: {
+            default: () =>
+                import("@/views/content-management/questions/pages/details.vue")
+        },
+        props: {
+            default: true
+        },
+        meta: () => ({
+            pageTitle: "الأسئلة",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "الأسئلة",
+                    active: false,
+                    to: "/questions"
+                },
+                {
+                    text:
+                        store.state.questions.questonsDto.id == ""
+                            ? "إضافة سؤال"
+                            : "تفاصيل السؤال",
+                    active: true
+                }
+            ]
+        })
+    },
     // ---courses
     {
         path: "/courses",
         name: "courses",
         components: {
             default: () => import("@/views/content-management/courses"),
-            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/courses/components/create-courses.vue"
+                )
         },
         meta: () => ({
             pageTitle: "الدورات",
@@ -152,21 +212,25 @@ export default [
             breadcrumb: [
                 {
                     text: "الدورات",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
     {
         path: "/courses/:id",
         name: "courses details",
         components: {
-            default: () => import("@/views/content-management/courses/pages/details.vue"),
-            'bread-actions' : () => import("@/views/content-management/courses/components/create-courses.vue"),
+            default: () =>
+                import("@/views/content-management/courses/pages/details.vue"),
+            "bread-actions": () =>
+                import(
+                    "@/views/content-management/courses/components/create-courses.vue"
+                )
         },
         props: {
             default: true,
-            'bread-actions': true
+            "bread-actions": true
         },
         meta: () => ({
             pageTitle: "الدورات",
@@ -175,14 +239,14 @@ export default [
                 {
                     text: "الدورات",
                     active: false,
-                    to:"/courses"
+                    to: "/courses"
                 },
                 {
                     text: "تفاصيل",
-                    active: true,
-                },
+                    active: true
+                }
             ]
-        }),
+        })
     },
     // --- notifications
     {
@@ -205,5 +269,51 @@ export default [
                 }
             ]
         })
-    }
+    },
+    // --- banks
+    {
+        path: "/banks",
+        name: "banks",
+        components: {
+            default: () => import("@/views/content-management/banks"),
+            'bread-actions' : () => import("@/views/content-management/banks/components/create-banks.vue"),
+        },
+        meta: () => ({
+            pageTitle: "البنوك",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "البنوك",
+                    active: true,
+                },
+            ]
+        }),
+    },
+    {
+        path: "/banks/:id",
+        name: "banks details",
+        components: {
+            default: () => import("@/views/content-management/banks/pages/details.vue"),
+            'bread-actions' : () => import("@/views/content-management/banks/components/create-banks.vue"),
+        },
+        props: {
+            default: true,
+            'bread-actions': true
+        },
+        meta: () => ({
+            pageTitle: "البنوك",
+            roles: [All],
+            breadcrumb: [
+                {
+                    text: "البنوك",
+                    active: false,
+                    to:"/banks"
+                },
+                {
+                    text: "تفاصيل",
+                    active: true,
+                },
+            ]
+        }),
+    },
 ];
